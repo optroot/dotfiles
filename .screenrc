@@ -1,0 +1,24 @@
+
+startup_message off
+shell -${SHELL}
+defscrollback 1024
+hardstatus on
+hardstatus alwayslastline
+hardstatus string "%-w%{= BW}%50>%n %t%{-}%+w%<"
+
+#caption always "%{= kc}%H (system load: %l)%-21=%{= .m}%D %d.%m.%Y %0c"
+
+attrcolor b ".I"
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+defbce "on"
+
+bind j focus down
+bind k focus up
+
+bind = resize =
+bind + resize +1
+bind - resize -1
+bind _ resize max
+
+bind ' ' windowlist -b 
+
