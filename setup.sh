@@ -9,16 +9,16 @@ mkdir -p ~/.vim/bundle
 
 # TODO get pwd
 
-rm ~/.profile
-rm ~/.bashrc
-rm ~/.bash_logout
-rm ~/.bash_aliases
-rm ~/.screenrc
-rm ~/.vimrc
+rm -f ~/.profile
+rm -f ~/.bashrc
+rm -f ~/.bash_logout
+rm -f ~/.bash_aliases
+rm -f ~/.screenrc
+rm -f ~/.vimrc
 
-ln ~/.profile .profile
-ln ~/.bashrc .bashrc
-ln ~/.bash_logout .bash_logout
-ln ~/.bash_aliases .bash_aliases
-ln ~/.screenrc .screenrc
-ln ~/.vimrc .vimrc
+ln .profile      ~/.profile      
+ln .bashrc       ~/.bashrc       
+ln .bash_logout  ~/.bash_logout  
+ln .bash_aliases ~/.bash_aliases 
+ln .screenrc     ~/.screenrc     
+ln .vimrc        ~/.vimrc        
