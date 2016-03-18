@@ -1,236 +1,239 @@
-set nocompatible
-filetype off
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+call plug#begin('~/.vim/plugged')
+Plug 'airblade/vim-gitgutter'
+Plug 'Chiel92/vim-autoformat'
+Plug 'coot/CRDispatcher'
+Plug 'coot/EnchantedVim'
+Plug 'justinmk/vim-sneak'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'michaeljsmith/vim-indent-object'
+Plug 'morhetz/gruvbox'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'scrooloose/nerdtree'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'tommcdo/vim-exchange'
+Plug 'tomtom/tcomment_vim'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-rsi'
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-unimpaired'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'wellle/targets.vim'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 
-Plugin 'VundleVim/Vundle.vim'
+" Experiments
+Plug 'vim-scripts/closetag.vim'
+Plug 'https://github.com/Townk/vim-autoclose'
+let g:closetag_html_style=1 
 
-Plugin 'airblade/vim-gitgutter'
-Plugin 'Chiel92/vim-autoformat'
-Plugin 'coot/CRDispatcher'
-Plugin 'coot/EnchantedVim'
-Plugin 'davidhalter/jedi-vim'
-Plugin 'ervandew/supertab'
-Plugin 'kien/rainbow_parentheses.vim'
-Plugin 'kshenoy/vim-signature'
-Plugin 'ludovicchabant/vim-gutentags'
-Plugin 'mbbill/undotree'
-Plugin 'michaeljsmith/vim-indent-object'
-Plugin 'nanotech/jellybeans.vim'
-Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
-"Plugin 'tmhedberg/matchit'
-Plugin 'tommcdo/vim-exchange'
-Plugin 'tomtom/tcomment_vim'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-rsi'
-Plugin 'tpope/vim-sensible'
-Plugin 'tpope/vim-sleuth'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'vim-airline/vim-airline'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
+" TODO REMOVE
+"Plug 'kbarrette/mediummode'
 
-call vundle#end()
-filetype plugin indent on
-
-"filetype on
-"syn on
+call plug#end()
 
 " Editing
-set autoindent smartindent cindent
+set smartindent cindent
 set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 set noerrorbells visualbell
-set ruler number
+set number
 set report=1
 set ignorecase
 set showcmd
 set showmatch
 set virtualedit=all
-set hidden
-"set backspace=2
-set title
 set scrolloff=8
-set lazyredraw
+set hidden
+set title
 set showmode
-"set nospell
-set cpoptions+=$
 set mouse=
 set nocompatible
 set pastetoggle=<F2>
 set noswapfile
-" TODO F2 broken?
-"set list
-"set relativenumber
 set laststatus=2
-
-" TODO conceal
-
-" Search
-"set noincsearch
-"set gdefault
+set formatoptions+=j
+set cpoptions+=$
 
 " Text Settings
-"TODO
-"scriptencoding utf-8
-"set encoding=utf-8
-"set listchars=tab:▸\ ,eol:\ ,precedes:\ ,extends:\ ,trail:.
-"set nolist
-
-" Enchanted
-let g:VeryMagicSubstitute = 1
-let g:VeryMagicGlobal = 1
-let g:VeryMagicVimGrep = 1
-let g:VeryMagicSearchArg = 1
-let g:VeryMagicFunction = 1
-let g:VeryMagicHelpgrep = 1
-let g:VeryMagicRange = 1
-let g:VeryMagicEscapeBackslashesInSearchArg = 1
-let g:SortEditArgs = 1
-" TODO: use me?
-
-" Jedi
-"let g:jedi#show_call_signatures = 0
-autocmd FileType python setlocal completeopt-=preview
-
-" Supertab
-let g:SuperTabDefaultCompletionType = "<C-N>"
-"let g:SuperTabContextDefaultCompletionType = "<C-N>"
+set listchars=tab:▸\ ,eol:\ ,precedes:\ ,extends:\ ,trail:.
 
 " Save folds and history
-"set history=10000
-set undodir=~/.vim/undodir
+" TODO check if ~/.vim/view is made automatically
 set undofile
+silent execute '!mkdir -p ~/.vim/undo'
+set undodir=~/.vim/undo
+"set viewdir=~/.vim/view
+autocmd BufWinLeave *.* mkview!
+autocmd BufWinEnter *.* silent! loadview
 
 " Wild menu
-set wildmenu
 set wildignore+=*/.git/*,*/.svn/*,*.o,*.pyc,*~,*.so,*.swp,*.zip,*.tar,*.tar.gz,
 set wildmode=full
+set wildignorecase
 
 " Color Settings
+" TODO Tabline background
+" TODO confimation on split window save/open
 syn on
 set t_Co=256
+let g:gruvbox_contrast_dark='hard'
+let g:gruvbox_sign_column='bg0'
+let g:gruvbox_invert_selection=0
+colorscheme gruvbox
 set background=dark
-colorscheme jellybeans
-
-" View
-autocmd BufWinLeave *.* mkview!
-autocmd BufWinEnter *.* silent loadview
 
 " Airline
-autocmd VimEnter * AirlineTheme wombat
+autocmd VimEnter * :AirlineTheme base16
 let g:airline_powerline_fonts=1
 let g:airline#extensions#gutentags#enabled=1
-let g:airline#extensions#syntastic#enabled=1
 let g:airline#extensions#tabline#enabled=1
-let g:airline#extensions#undotree#enabled=1
 let g:airline#extensions#unite#enabled=1
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
+let g:airline#extensions#fugitive#enabled=1
 
 " NERDTree
 autocmd VimEnter * if !argc() | NERDTree | endif
 autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-" Indentguides
-au VimEnter * silent! IndentGuidesToggle
+" Enchanted
+let g:VeryMagicSubstitute=1
+let g:VeryMagicGlobal=1
+
+" Indent guides
+autocmd VimEnter * silent! IndentGuidesToggle
 let g:indent_guides_guide_size=1
-let g:indent_guides_istart_level=2
-"let g:indent_guides_auto_colors = 0
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
+let g:indent_guides_start_level=2
+let g:indent_guides_auto_colors=0
 
 " Gutentags
 let g:gutentags_enabled=0
 let g:gutentags_tagfile='.tags'
 let g:gutentags_project_root=['.git']
-au FileType c,php,java let g:gutentags_enabled=1
+autocmd FileType c,php,java,python let g:gutentags_enabled=1
 
 " Formatting
-let g:formatdef_astyle_c = '"astyle --mode=c -A2ps4CSKNwpUjCk3fH"'
-let g:formatters_c = ['astyle_c']
-"let g:autoformat_verbosemode = 1
-let g:syntastic_error_symbol='✖'
-let g:syntastic_warning_symbol='!'
-let g:syntastic_style_warning_symbol='⚑'
-let g:syntastic_style_erro_symbol='⚑'
-let g:syntastic_python_pylint_args='--disable=C0111,C0103'
-let g:syntastic_always_populate_loc_list=1
-let g:syntastic_auto_loc_list=1
-let g:syntastic_check_on_open=1
-let g:syntastic_check_on_wq=0
+let g:formatdef_astyle_c='"astyle --mode=c -A2ps4CSKNwpUjCk3fH"'
+let g:formatters_c=['astyle_c']
 
 " Git
-let g:gitgutter_max_signs = 999
-" TODO symbols?
-" Style?
-" https://github.com/airblade/vim-gitgutter
+let g:gitgutter_max_signs=999
+nnoremap cog :GitGutterToggle<CR>
+autocmd VimEnter * silent! GitGutterDisable
 
 " RainbowParentheses
-au VimEnter * silent! RainbowParenthesesToggle
-au Syntax * silent! RainbowParenthesesLoadRound
-au Syntax * silent! RainbowParenthesesLoadSquare
-au Syntax * silent! RainbowParenthesesLoadBraces
+autocmd VimEnter * silent! RainbowParenthesesToggle
+autocmd Syntax * silent! RainbowParenthesesLoadRound
+autocmd Syntax * silent! RainbowParenthesesLoadSquare
+autocmd Syntax * silent! RainbowParenthesesLoadBraces
 
 " Turn off automatic line commenting
-au FileType * silent! setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+autocmd FileType * silent! setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " Syntax languages
-au BufRead,BufNewFile *.inc silent! set filetype=php
-au BufRead,BufNewFile *.less silent! set filetype=css   
-au BufRead,BufNewFile *.tex silent! set filetype=tex
+autocmd BufRead,BufNewFile *.inc silent! set filetype=php
+autocmd BufRead,BufNewFile *.less silent! set filetype=css
+autocmd BufRead,BufNewFile *.tex silent! set filetype=tex
+
+"au BufReadPost *.doc,*.docx,*.rtf,*.odp,*.odt,*.pdf silent set ro
+"au BufReadPost *.doc,*.docx,*.rtf,*.odp,*.odt silent %!pandoc "%" -tplain -o /dev/stdout
+"au BufReadPost *.pdf silent %!pdftotext -nopgbrk -layout -q -eol unix "%" - | fmt -w78
 
 " TODO better/more
-au FileType python silent! noremap <F5> :pyf %<CR>
-au FileType c silent! noremap <F5> :make<CR>
+autocmd FileType python silent! noremap <F5> :pyf %<CR>
+autocmd FileType c silent! noremap <F5> :make<CR>
 
 " Leader Commands
 let mapleader="\<SPACE>"
 
 noremap  \\ :NERDTreeToggle<CR>
-nnoremap \vim :e ~/.vimrc
-nnoremap \todo :e ~/VIMTODO.txt
+nnoremap \vim   :e ~/.vimrc<CR>
+nnoremap \vimrc :e ~/.vimrc<CR>
+nnoremap \todo  :e ~/todo/VIMTODO.txt<CR>
+nnoremap \idea  :e ~/projects/ideas.md<CR>
+nnoremap \ideas :e ~/projects/ideas.md<CR>
 
-" Mappings TODO (FKEYS BROKEN?!)
-noremap  <F1> <ESC>
-nnoremap <F3> :Autoformat<CR>
-nnoremap <F4> :SyntasticCheck<CR>
-nnoremap <F6> :SyntasticToggleMode<CR>
-vnoremap <F7> :'<,'>!python<CR>
-nnoremap <F7> :.!python<CR>
-nnoremap <F8> Y:@"<CR>
-nnoremap <F9> :%s/\s\+$//e<CR>
-nnoremap <F10> :UndotreeToggle<CR>
-
-" TODO TEMPORARY
-set pastetoggle=<LEADER>2
-noremap  <LEADER>1 <ESC>
-nnoremap <LEADER>3 :Autoformat<CR>
-nnoremap <LEADER>4 :SyntasticCheck<CR>
-nnoremap <LEADER>6 :SyntasticToggleMode<CR>
-vnoremap <LEADER>7 :'<,'>!python<CR>
-nnoremap <LEADER>7 :.!python<CR>
-nnoremap <LEADER>8 Y:@"<CR>
-nnoremap <LEADER>9 :%s/\s\+$//e<CR>
-nnoremap <LEADER>10 :UndotreeToggle<CR>
+" TODO F mappings
+"nnoremap <F1>
+"nnoremap <F3>
+nnoremap <F4> :Autoformat<CR>
+vnoremap <F6> :!python<CR>
+nnoremap <F6> :.!python<CR>
+nnoremap <F7> Y:@"<CR>
+vnoremap <F7> Y:@"<CR>
+"nnoremap <F8>
+"nnoremap <F9>
+nnoremap <F10> :echo "hi<"   . synIDattr(synID(line("."),col("."),1),"name")."> ".
+            \  "trans<". synIDattr(synID(line("."),col("."),0),"name")."> ".
+            \  "lo<"   . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name")."> ".
+            \  "co<"   . synIDattr(synIDtrans(synID(line("."), col("."), 1)), "fg").">"<CR>
 
 " Navigation
-au Vimenter * silent! nnoremap <C-H> <C-W>h
-au Vimenter * silent! nnoremap <C-K> <C-W>k
-au Vimenter * silent! nnoremap <C-L> <C-W>l
-au Vimenter * silent! nnoremap <C-J> <C-W>j
-nnoremap <UP> {{
-nnoremap <DOWN> }}
-nnoremap <LEFT> :bp<CR>
-nnoremap <RIGHT> :bn<CR>
+autocmd VimEnter * silent! nnoremap <C-H> <C-W>h
+autocmd VimEnter * silent! nnoremap <C-K> <C-W>k
+autocmd VimEnter * silent! nnoremap <C-L> <C-W>l
+autocmd VimEnter * silent! nnoremap <C-J> <C-W>j
+inoremap <C-H> <ESC><C-W>h
+inoremap <C-K> <ESC><C-W>k
+inoremap <C-L> <ESC><C-W>l
+inoremap <C-J> <ESC><C-W>j
+
+command! -bang -nargs=? -complete=file E e<bang> <args>
+command! -bang -nargs=? -complete=file W w<bang> <args>
+command! -bang -nargs=? -complete=file Q q<bang> <args>
+command! -bang -nargs=? -complete=file Wq wq<bang> <args>
+command! -bang -nargs=? -complete=file WQ wq<bang> <args>
+
+nnoremap j gj
+nnoremap k gk
 
 " Moving Visuals
-vnoremap <UP> xkkp`[V`]
-vnoremap <DOWN> xp`[V`]
-vnoremap <RIGHT> >`[V`]
-vnoremap <LEFT> <`[V`]
+nnoremap gV `[V`]
+vmap <DOWN> xpgV
+vmap <LEFT> <gV
+vmap <RIGHT> >gV
+vmap <UP> xkkpgV
+
+nnoremap <UP> {
+nnoremap <DOWN> }
+nnoremap <TAB> :bp<CR>
+nnoremap <S-TAB> :bn<CR>
+" TODO jumplist/quickfix?
+nnoremap <LEFT> <C-O>
+nnoremap <RIGHT> <C-I>
+
+" EXPERIMENTAL
+" CAPS LOCK is ESC
+" TODO MAP CAPS to C-c and map ESC to nop
+" Force C-w over multiple BS in insertmode
+nnoremap ' `
+vnoremap ' `
+inoremap <C-K> <ESC>d$
+"inoremap <C-Y> <C-R>"
+"nnoremap <C-Y> ""P
+
+" Use vim-sneak for f
+let g:sneak#use_ic_scs=1
+
+"replace 'f' with 1-char Sneak
+nmap f <Plug>Sneak_f
+nmap F <Plug>Sneak_F
+xmap f <Plug>Sneak_f
+xmap F <Plug>Sneak_F
+omap f <Plug>Sneak_f
+omap F <Plug>Sneak_F
+"replace 't' with 1-char Sneak
+nmap t <Plug>Sneak_t
+nmap T <Plug>Sneak_T
+xmap t <Plug>Sneak_t
+xmap T <Plug>Sneak_T
+omap t <Plug>Sneak_t
+omap T <Plug>Sneak_T
+
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+inoremap <C-_> </<C-X><C-O><ESC>cit
+inoremap <C-F> <C-X><C-F>
 

@@ -1,5 +1,6 @@
 
 export LD_LIBRARY_PATH=/usr/local/lib # fixes TA-Lib
+export EDITOR=vim
 
 #export PS1='\$ '
 #export PS1='\w \$ '
@@ -8,16 +9,16 @@ export LD_LIBRARY_PATH=/usr/local/lib # fixes TA-Lib
 
 export PROMPT_COMMAND=__prompt_command
 function __prompt_command() {
-    echo -ne "\033]0;${PWD}\007"
-    local EXIT="$?"
-    local Red='\[\e[0;31m\]'
-    local Gre='\[\e[0;32m\]'
-    local RCol='\[\e[0m\]'
-    if [ $EXIT != 0 ]; then
-	PS1="${Red}\$${RCol} "
-    else
-	PS1="${Gre}\$${RCol} "
-    fi
+echo -ne "\033]0;${PWD}\007"
+local EXIT="$?"
+local Red='\[\e[0;31m\]'
+local Gre='\[\e[0;32m\]'
+local RCol='\[\e[0m\]'
+if [ $EXIT != 0 ]; then
+  PS1="${Red}\$${RCol} "
+else
+  PS1="${Gre}\$${RCol} "
+fi
 
 }
 
@@ -27,8 +28,8 @@ function __prompt_command() {
 
 # If not running interactively, don't do anything
 case $- in
-    *i*) ;;
-      *) return;;
+  *i*) ;;
+*) return;;
 esac
 
 # don't put duplicate lines or lines starting with space in the history.
@@ -56,12 +57,12 @@ shopt -s checkwinsize
 
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
+  debian_chroot=$(cat /etc/debian_chroot)
 fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-    xterm-color) color_prompt=yes;;
+  xterm-color) color_prompt=yes;;
 esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
@@ -70,34 +71,36 @@ esac
 #force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
+  if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+    # We have color support; assume it's compliant with Ecma-48
+    # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+    # a case would tend to support setf rather than setaf.)
+    color_prompt=yes
+  else
+    color_prompt=
+  fi
 fi
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
+  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+  alias ls='ls --color=auto'
+  #alias dir='dir --color=auto'
+  #alias vdir='vdir --color=auto'
+  alias grep='grep --color=auto'
+  alias fgrep='fgrep --color=auto'
+  alias egrep='egrep --color=auto'
 fi
 
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
-alias project='. project'
+if [ -f ~/.bash_aliases ]; then
+  . ~/.bash_aliases
+fi
+
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -109,3 +112,11 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+# Allow quickly switch to project directories
+_p() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  COMPREPLY=( $(compgen -W "$(find ~/projects/ -mindepth 1 -maxdepth 1 -type d -printf "%f ")" -- $cur) )
+}
+complete -F _p p
+
