@@ -150,9 +150,13 @@ let mapleader="\<SPACE>"
 noremap  \\ :NERDTreeToggle<CR>
 nnoremap \vim   :e ~/.vimrc<CR>
 nnoremap \vimrc :e ~/.vimrc<CR>
-nnoremap \todo  :e ~/todo/VIMTODO.txt<CR>
-nnoremap \idea  :e ~/projects/ideas.md<CR>
-nnoremap \ideas :e ~/projects/ideas.md<CR>
+nnoremap \bash :e ~/todo/bashtodo.md<CR>
+nnoremap \todo  :e ~/todo/vimtodo.md<CR>
+nnoremap \idea  :e ~/todo/ideas.md<CR>
+nnoremap \ideas :e ~/todo/ideas.md<CR>
+nnoremap \word :e ~/todo/words.md<CR>
+nnoremap \words :e ~/todo/words.md<CR>
+nnoremap \pass :e ~/todo/pass.md<CR>
 
 " TODO F mappings
 "nnoremap <F1>
