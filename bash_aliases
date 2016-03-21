@@ -12,3 +12,6 @@ alias l='ls -CF'
 # other
 alias project='. project'
 alias p='. p'
+
+# fixes
+alias tmux='tmux -2'

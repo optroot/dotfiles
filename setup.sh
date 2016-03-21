@@ -1,24 +1,25 @@
 #!/bin/bash
 
-mkdir -p ~/.vim
+cd "$(dirname "$0")"
 
+mkdir -p ~/.vim
 mkdir -p ~/.vim/view
 mkdir -p ~/.vim/undo
-mkdir -p ~/.vim/bundle
-# TODO get Vundle
+curl -sfLo ~/.vim/autoload/plug.vim --create-dirs 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
-# TODO get pwd
+link() {
+  rm -f ~/.$1
+  ln $1 ~/.$1
+}
 
-rm -f ~/.profile
-rm -f ~/.bashrc
-rm -f ~/.bash_logout
-rm -f ~/.bash_aliases
-rm -f ~/.screenrc
-rm -f ~/.vimrc
+link bash_aliases
+link bash_logout
+link bashrc
+link dircolors
+link gitconfig
+link profile
+link screenrc
+link selected_editor
+link tmux.conf
+link vimrc
 
-ln .profile      ~/.profile      
-ln .bashrc       ~/.bashrc       
-ln .bash_logout  ~/.bash_logout  
-ln .bash_aliases ~/.bash_aliases 
-ln .screenrc     ~/.screenrc     
-ln .vimrc        ~/.vimrc        

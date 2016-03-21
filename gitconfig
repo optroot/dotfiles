@@ -1,0 +1,13 @@
+[user]
+	email = optroot@gmail.com
+	name = optroot
+[core]
+	editor = vim
+[http]
+	postBuffer = 524288000
+[sendpack]
+	sideband = false
+[alias]
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold Cyan)<%an>%Creset' --abbrev-commit
+	co = checkout
+	st = status -sb
