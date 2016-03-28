@@ -48,7 +48,6 @@ set showmatch
 set virtualedit=all
 set scrolloff=8
 set hidden
-set title
 set showmode
 set mouse=
 set nocompatible
@@ -57,6 +56,13 @@ set noswapfile
 set laststatus=2
 set formatoptions+=j
 set cpoptions+=$
+
+set title
+let &titlestring = expand("%:p")
+autocmd BufCreate  *.* let &titlestring = expand("%:p")
+autocmd BufRead    *.* let &titlestring = expand("%:p")
+autocmd BufLeave   *.* let &titlestring = expand("%:p")
+autocmd BufEnter   *.* let &titlestring = expand("%:p")
 
 " Text Settings
 set listchars=tab:▸\ ,eol:\ ,precedes:\ ,extends:\ ,trail:.
@@ -207,8 +213,8 @@ vmap <UP> xkkpgV
 
 nnoremap <UP> {
 nnoremap <DOWN> }
-nnoremap <TAB> :bp<CR>
-nnoremap <S-TAB> :bn<CR>
+nnoremap <TAB> :bn<CR>
+nnoremap <S-TAB> :bp<CR>
 " TODO jumplist/quickfix?
 nnoremap <LEFT> <C-O>
 nnoremap <RIGHT> <C-I>
@@ -217,15 +223,18 @@ nnoremap <RIGHT> <C-I>
 " CAPS LOCK is ESC
 " TODO MAP CAPS to C-c and map ESC to nop
 " Force C-w over multiple BS in insertmode
+set nostartofline
 nnoremap ' `
 vnoremap ' `
 inoremap <C-K> <ESC>d$
 "inoremap <C-Y> <C-R>"
 "nnoremap <C-Y> ""P
+nnoremap Q qq
 
 " Use vim-sneak for f
 let g:sneak#use_ic_scs=1
 
+"map? vmode?
 "replace 'f' with 1-char Sneak
 nmap f <Plug>Sneak_f
 nmap F <Plug>Sneak_F
@@ -265,10 +274,12 @@ nnoremap <leader>sh   :silent! call TmuxSplitCmd('', 12)<CR>
 "autocmd FileType c silent! noremap <F5> :make<CR>
 
 " TODO try to send output to bottom first?
+
 autocmd FileType python silent! noremap <F5> :silent! call TmuxSplitCmd('python %')<CR>
 autocmd FileType c      silent! noremap <F5> :silent! call TmuxSplitCmd('gcc -Wall % && ./a.out')<CR>
 autocmd FileType html   silent! noremap <F5> :silent! call TmuxSplitCmd('x-www-browser %')<CR>
 autocmd FileType matlab silent! noremap <F5> :silent! call TmuxSplitCmd('matlab -nosplash -nodesktop -r "run('%')"')<CR>
+autocmd FileType vim    silent! noremap <F5> :so %<CR>
 
 
 " TODO f5 for web -> x-www-broswer %
@@ -287,15 +298,29 @@ function! TmuxSplitCmd(cmd, ...)
         let l:s=""
     endif
 
-    try
-        silent! execute 'Tmux break-pane -t bottom \; rename-window vimoutput \; select-window -l'
-    endtry
+    " try
+    "     silent! execute 'Tmux break-pane -t bottom \; rename-window vimoutput \; select-window -l'
+    "     execute 'sleep 200m'
+    "     silent! execute 'Tmux send-keys -t vimoutput '.l:s
+    "     silent! execute 'Tmux join-pane -dvl'.l:lines.' -s vimoutput'
+    "     silent! execute 'Tmux select-pane -D'
+    "     echo "THIS HAPPENED"
+    "     return
+    " catch
+    "     echo "WHAT?"
+    " endtry
 
+    silent! execute 'Tmux break-pane -t bottom \; rename-window vimout \; select-window -l'
     silent! execute 'Tmux new-window -dn vimshell -c '.shellescape(getcwd())
     execute 'sleep 200m'
     silent! execute 'Tmux send-keys -t vimshell '.l:s
     silent! execute 'Tmux join-pane -dvl'.l:lines.' -s vimshell'
     silent! execute 'Tmux select-pane -D'
+
+    "execute 'sleep 200m'
+    "silent! execute 'Tmux send-keys -t vimshell '.l:s
+    "silent! execute 'Tmux join-pane -dvl'.l:lines.' -s vimshell'
+    "silent! execute 'Tmux select-pane -D'
 
 endfunction
 

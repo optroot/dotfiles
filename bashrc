@@ -2,26 +2,6 @@
 export LD_LIBRARY_PATH=/usr/local/lib # fixes TA-Lib
 export EDITOR=vim
 
-#export PS1='\$ '
-#export PS1='\w \$ '
-#export PS1="\w \`if [[ \$? = "0" ]]; then echo '\e[32m\$\e[0m'; else echo '\e[31m\$\e[0m' ; fi\` "
-#export PS1="\`if [[ \$? = "0" ]]; then echo '\e[32m\$\e[0m'; else echo '\e[31m\$\e[0m' ; fi\` "
-
-export PROMPT_COMMAND=__prompt_command
-function __prompt_command() {
-echo -ne "\033]0;${PWD}\007"
-local EXIT="$?"
-local Red='\[\e[0;31m\]'
-local Gre='\[\e[0;32m\]'
-local RCol='\[\e[0m\]'
-if [ $EXIT != 0 ]; then
-  PS1="${Red}\$${RCol} "
-else
-  PS1="${Gre}\$${RCol} "
-fi
-
-}
-
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -119,4 +99,79 @@ _p() {
   COMPREPLY=( $(compgen -W "$(find ~/projects/ -mindepth 1 -maxdepth 1 -type d -printf "%f ")" -- $cur) )
 }
 complete -F _p p
+
+#export PS1='\$ '
+#export PS1='\w \$ '
+#export PS1="\w \`if [[ \$? = "0" ]]; then echo '\e[32m\$\e[0m'; else echo '\e[31m\$\e[0m' ; fi\` "
+#export PS1="\`if [[ \$? = "0" ]]; then echo '\e[32m\$\e[0m'; else echo '\e[31m\$\e[0m' ; fi\` "
+
+# export PROMPT_COMMAND=__prompt_command
+# __prompt_command() {
+#   title ${PWD}
+#   local EXIT="$?"
+#   local Red='\[\e[0;31m\]'
+#   local Gre='\[\e[0;32m\]'
+#   local RCol='\[\e[0m\]'
+#   if [ $EXIT != 0 ]; then
+#     PS1="${Red}\$${RCol} "
+#   else
+#     PS1="${Gre}\$${RCol} "
+#   fi
+# }
+
+# TODO clean
+# TODO use PWD
+export PROMPT_COMMAND=__prompt_command
+__prompt_command() {
+  local EXIT="$?"
+  local Red='\[\e[0;31m\]'
+  local Gre='\[\e[0;32m\]'
+  local RCol='\[\e[0m\]'
+  if [ $EXIT != 0 ]; then
+     #PS1="${Red}\$${RCol} "
+    PS1='\[\e[0;31m\]'
+  else
+     #PS1="${Gre}\$${RCol} "
+    PS1='\[\e[0;32m\]'
+  fi
+  PS1+='\$\[\e[0m\] '
+
+  #PS1='\[\e[0;32m\]$\[\e[0m\] '
+  #unset color_prompt force_color_prompt
+  case "$TERM" in
+  xterm*|rxvt*|screen*)
+      #PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+      #PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\w\a\]$PS1"
+      PS1="\[\e]0;${PWD}\a\]$PS1"
+      ;;
+  *)
+      ;;
+  esac
+}
+
+# if [ "$color_prompt" = yes ]; then
+#     #PS1='> '
+#     #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+#     PS1='$ '
+# else
+#     #PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+#     PS1='$ '
+# fi
+
+# PS1='\[\e[0;32m\]$\[\e[0m\] '
+# unset color_prompt force_color_prompt
+# case "$TERM" in
+# xterm*|rxvt*|screen*)
+#     #PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+#     PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\w\a\]$PS1"
+#     ;;
+# *)
+#     ;;
+# esac
+
+# start tmux at login
+#tmux attach &> /dev/null
+#if [[ ! $TERM =~ screen ]]; then
+    #exec tmux -2
+#fi
 
