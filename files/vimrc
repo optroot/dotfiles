@@ -57,6 +57,7 @@ set laststatus=2
 set formatoptions+=j
 set cpoptions+=$
 set nostartofline
+set encoding=utf8
 
 set title
 let &titlestring = expand("%:p")
