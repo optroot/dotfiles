@@ -56,6 +56,7 @@ set noswapfile
 set laststatus=2
 set formatoptions+=j
 set cpoptions+=$
+set nostartofline
 
 set title
 let &titlestring = expand("%:p")
@@ -125,6 +126,9 @@ autocmd FileType c,php,java,python let g:gutentags_enabled=1
 " Formatting
 let g:formatdef_astyle_c='"astyle --mode=c -A2ps4CSKNwpUjCk3fH"'
 let g:formatters_c=['astyle_c']
+let g:formatdef_tidy='"tidy -config ~/.tidy.conf"'
+"let g:formatdef_tidy_html='" -config ~/.tidy.conf "'
+let g:formatters_html=['tidy_html']
 
 " Git
 let g:gitgutter_max_signs=999
@@ -167,6 +171,7 @@ nnoremap \pass  :e ~/todo/pass.md<CR>
 
 " TODO F mappings
 "nnoremap <F1>
+nnoremap <F1> :call TmuxSplitCmd('', 12)<CR>
 nnoremap <F3> :silent! call TmuxSplitCmd('')<CR>
 nnoremap <F4> :Autoformat<CR>
 vnoremap <F6> :!python<CR>
@@ -180,29 +185,14 @@ nnoremap <F10> :echo "hi<"   . synIDattr(synID(line("."),col("."),1),"name")."> 
             \  "lo<"   . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name")."> ".
             \  "co<"   . synIDattr(synIDtrans(synID(line("."), col("."), 1)), "fg").">"<CR>
 
-" Navigation
-autocmd VimEnter * silent! nnoremap <C-H> <C-W>h
-autocmd VimEnter * silent! nnoremap <C-K> <C-W>k
-autocmd VimEnter * silent! nnoremap <C-L> <C-W>l
-autocmd VimEnter * silent! nnoremap <C-J> <C-W>j
-autocmd VimEnter * silent! inoremap <C-H> <ESC><C-W>h
-autocmd VimEnter * silent! inoremap <C-K> <ESC><C-W>k
-autocmd VimEnter * silent! inoremap <C-L> <ESC><C-W>l
-autocmd VimEnter * silent! inoremap <C-J> <ESC><C-W>j
-
-command! -bang -nargs=? -complete=file E e<bang> <args>
-command! -bang -nargs=? -complete=file W w<bang> <args>
-command! -bang -nargs=? -complete=file Q q<bang> <args>
-command! -bang -nargs=? -complete=file Wq wq<bang> <args>
-command! -bang -nargs=? -complete=file WQ wq<bang> <args>
+" Center the cursor
+nnoremap n nzzzv
+nnoremap N Nzzzv
 
 nnoremap j gj
 nnoremap k gk
-" TODO remove leading spaces from joined lines
-" Automatically remove \'s
-"TODO take count
-nnoremap J j^d0i<BS><ESC>
-nnoremap gJ J
+nnoremap gj j
+nnoremap gk k
 
 " Moving Visuals
 nnoremap gV `[V`]
@@ -213,27 +203,14 @@ vmap <UP> xkkpgV
 
 nnoremap <UP> {
 nnoremap <DOWN> }
+
 nnoremap <TAB> :bn<CR>
 nnoremap <S-TAB> :bp<CR>
-" TODO jumplist/quickfix?
-nnoremap <LEFT> <C-O>
-nnoremap <RIGHT> <C-I>
-
-" EXPERIMENTAL
-" CAPS LOCK is ESC
-" TODO MAP CAPS to C-c and map ESC to nop
-" Force C-w over multiple BS in insertmode
-set nostartofline
-nnoremap ' `
-vnoremap ' `
-inoremap <C-K> <ESC>d$
-"inoremap <C-Y> <C-R>"
-"nnoremap <C-Y> ""P
-nnoremap Q qq
+nnoremap <LEFT> :bn<CR>
+nnoremap <RIGHT> :bp<CR>
 
 " Use vim-sneak for f
 let g:sneak#use_ic_scs=1
-
 "map? vmode?
 "replace 'f' with 1-char Sneak
 nmap f <Plug>Sneak_f
@@ -250,39 +227,33 @@ xmap T <Plug>Sneak_T
 omap t <Plug>Sneak_t
 omap T <Plug>Sneak_T
 
-nnoremap n nzzzv
-nnoremap N Nzzzv
+" Navigation
+autocmd VimEnter * silent! nnoremap <C-H> <C-W>h
+autocmd VimEnter * silent! nnoremap <C-K> <C-W>k
+autocmd VimEnter * silent! nnoremap <C-L> <C-W>l
+autocmd VimEnter * silent! nnoremap <C-J> <C-W>j
+"autocmd VimEnter * silent! inoremap <C-H> <ESC><C-W>h
+"autocmd VimEnter * silent! inoremap <C-K> <ESC><C-W>k
+"autocmd VimEnter * silent! inoremap <C-L> <ESC><C-W>l
+"autocmd VimEnter * silent! inoremap <C-J> <ESC><C-W>j
 
-inoremap <C-_> </<C-X><C-O><ESC>cit
-inoremap <C-F> <C-X><C-F>
-
-" TODO common coding misspelling of variables etc.
-"iabbrev
-
-autocmd VimEnter * silent! execute 'try | Tmux rename-window vim | endtry'
-"autocmd VimEnter * silent! execute 'try | Tmux set-option -g status-position top | endtry'
-autocmd VimLeave * silent! execute 'try | Tmux rename-window bash | endtry'
-"autocmd VimLeave * silent! execute 'try | Tmux set-option -g status-position bottom | endtry'
-
-nnoremap <leader>top  :silent! call TmuxSplitCmd('top', 12)<CR>
-nnoremap <leader>htop :silent! call TmuxSplitCmd('htop', 20)<CR>
-nnoremap <leader>bmon :silent! call TmuxSplitCmd('bmon -p eth0', 25)<CR>
-nnoremap <leader>sh   :silent! call TmuxSplitCmd('', 12)<CR>
-
-" TODO better/more
-"autocmd FileType python silent! noremap <F5> :pyf %<CR>
-"autocmd FileType c silent! noremap <F5> :make<CR>
+command! -bang -nargs=? -complete=file E e<bang> <args>
+command! -bang -nargs=? -complete=file W w<bang> <args>
+command! -bang -nargs=? -complete=file Q q<bang> <args>
+command! -bang -nargs=? -complete=file Wq wq<bang> <args>
+command! -bang -nargs=? -complete=file WQ wq<bang> <args>
 
 " TODO try to send output to bottom first?
-
+" TODO Not accuracte with multiple splits
 autocmd FileType python silent! noremap <F5> :silent! call TmuxSplitCmd('python %')<CR>
 autocmd FileType c      silent! noremap <F5> :silent! call TmuxSplitCmd('gcc -Wall % && ./a.out')<CR>
 autocmd FileType html   silent! noremap <F5> :silent! call TmuxSplitCmd('x-www-browser %')<CR>
 autocmd FileType matlab silent! noremap <F5> :silent! call TmuxSplitCmd('matlab -nosplash -nodesktop -r "run('%')"')<CR>
 autocmd FileType vim    silent! noremap <F5> :so %<CR>
 
+autocmd VimEnter * silent! execute 'try | Tmux rename-window vim | endtry'
+autocmd VimLeave * silent! execute 'try | Tmux rename-window bash | endtry'
 
-" TODO f5 for web -> x-www-broswer %
 
 function! TmuxSplitCmd(cmd, ...)
     if a:0 == 1
@@ -298,31 +269,49 @@ function! TmuxSplitCmd(cmd, ...)
         let l:s=""
     endif
 
-    " try
-    "     silent! execute 'Tmux break-pane -t bottom \; rename-window vimoutput \; select-window -l'
-    "     execute 'sleep 200m'
-    "     silent! execute 'Tmux send-keys -t vimoutput '.l:s
-    "     silent! execute 'Tmux join-pane -dvl'.l:lines.' -s vimoutput'
-    "     silent! execute 'Tmux select-pane -D'
-    "     echo "THIS HAPPENED"
-    "     return
-    " catch
-    "     echo "WHAT?"
-    " endtry
-
     silent! execute 'Tmux break-pane -t bottom \; rename-window vimout \; select-window -l'
     silent! execute 'Tmux new-window -dn vimshell -c '.shellescape(getcwd())
     execute 'sleep 200m'
     silent! execute 'Tmux send-keys -t vimshell '.l:s
     silent! execute 'Tmux join-pane -dvl'.l:lines.' -s vimshell'
     silent! execute 'Tmux select-pane -D'
-
-    "execute 'sleep 200m'
-    "silent! execute 'Tmux send-keys -t vimshell '.l:s
-    "silent! execute 'Tmux join-pane -dvl'.l:lines.' -s vimshell'
-    "silent! execute 'Tmux select-pane -D'
-
 endfunction
 
+" EXPERIMENTAL
+" CAPS LOCK is ESC
+" TODO MAP CAPS to C-c and map ESC to nop
+" Force C-w over multiple BS in insertmode
+nnoremap ' `
+vnoremap ' `
+"inoremap <C-K> <ESC>d$
+"inoremap <C-Y> <C-R>"
+"nnoremap <C-Y> ""P
+"nnoremap Q qq
 
-"nnoremap <F1> :execute 'Tmux split-window -v -l 12 -c '.shellescape(getcwd())<CR>
+" TODO remove leading spaces from joined lines
+" Automatically remove \'s
+"TODO take count
+"TODO more advanced
+nnoremap J j^d0i<BS><ESC>
+nnoremap gJ J
+
+inoremap <C-F> <C-X><C-F>
+
+"inoremap <C--> </<C-X><C-O><ESC>cit
+autocmd FileType html,xml inoremap <C-g> </<C-X><C-O><ESC>a
+autocmd FileType html,xml inoremap </ </<C-X><C-O><ESC>a
+"inoremap <C-g> </<C-X><C-O>
+"inoremap </ </<C-X><C-O>
+
+" TODO common coding misspelling of variables etc.
+"iabbrev
+
+"nnoremap <leader>top  :silent! call TmuxSplitCmd('top', 12)<CR>
+"nnoremap <leader>htop :silent! call TmuxSplitCmd('htop', 20)<CR>
+"nnoremap <leader>bmon :silent! call TmuxSplitCmd('bmon -p eth0', 25)<CR>
+"nnoremap <leader>sh   :silent! call TmuxSplitCmd('', 12)<CR>
+
+" TODO better/more
+"autocmd FileType python silent! noremap <F5> :pyf %<CR>
+"autocmd FileType c silent! noremap <F5> :make<CR>
+

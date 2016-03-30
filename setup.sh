@@ -12,14 +12,9 @@ link() {
   ln $1 ~/.$1
 }
 
-link bash_aliases
-link bash_logout
-link bashrc
-link dircolors
-link gitconfig
-link profile
-link screenrc
-link selected_editor
-link tmux.conf
-link vimrc
+cd files
+for f in *
+do
+  link $f
+done
 
