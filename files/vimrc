@@ -58,6 +58,8 @@ set formatoptions+=j
 set cpoptions+=$
 set nostartofline
 set encoding=utf8
+" TODO use Augroups
+
 
 set title
 let &titlestring = expand("%:p")
@@ -128,7 +130,6 @@ autocmd FileType c,php,java,python let g:gutentags_enabled=1
 let g:formatdef_astyle_c='"astyle --mode=c -A2ps4CSKNwpUjCk3fH"'
 let g:formatters_c=['astyle_c']
 let g:formatdef_tidy='"tidy -config ~/.tidy.conf"'
-"let g:formatdef_tidy_html='" -config ~/.tidy.conf "'
 let g:formatters_html=['tidy_html']
 
 " Git
@@ -138,22 +139,32 @@ autocmd VimEnter * silent! GitGutterDisable
 
 " RainbowParentheses
 autocmd VimEnter * silent! RainbowParenthesesToggle
-autocmd Syntax * silent! RainbowParenthesesLoadRound
-autocmd Syntax * silent! RainbowParenthesesLoadSquare
-autocmd Syntax * silent! RainbowParenthesesLoadBraces
+autocmd Syntax   * silent! RainbowParenthesesLoadRound
+autocmd Syntax   * silent! RainbowParenthesesLoadSquare
+autocmd Syntax   * silent! RainbowParenthesesLoadBraces
 
 " Turn off automatic line commenting
 autocmd FileType * silent! setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " Syntax languages
-autocmd BufRead,BufNewFile *.inc silent! set filetype=php
-autocmd BufRead,BufNewFile *.less silent! set filetype=css
-autocmd BufRead,BufNewFile *.tex silent! set filetype=tex
-autocmd BufRead,BufNewFile *.md silent! set filetype=markdown
+" TODO setlocal?
+autocmd BufRead,BufNewFile *.inc  silent! setlocal filetype=php
+autocmd BufRead,BufNewFile *.less silent! setlocal filetype=css
+autocmd BufRead,BufNewFile *.tex  silent! setlocal filetype=tex
+autocmd BufRead,BufNewFile *.md   silent! setlocal filetype=markdown
 
 "au BufReadPost *.doc,*.docx,*.rtf,*.odp,*.odt,*.pdf silent set ro
 "au BufReadPost *.doc,*.docx,*.rtf,*.odp,*.odt silent %!pandoc "%" -tplain -o /dev/stdout
 "au BufReadPost *.pdf silent %!pdftotext -nopgbrk -layout -q -eol unix "%" - | fmt -w78
+
+augroup CursorLine
+    autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+    autocmd WinLeave * setlocal nocursorline
+    "TODO match mode color
+    autocmd VimEnter    * highlight  CursorLine ctermbg=235
+    autocmd InsertEnter * highlight  CursorLine ctermbg=234
+    autocmd InsertLeave * highlight  CursorLine ctermbg=235
+augroup END
 
 
 " Leader Commands
@@ -229,14 +240,15 @@ omap t <Plug>Sneak_t
 omap T <Plug>Sneak_T
 
 " Navigation
+" TODO if nothing below then try tmux
 autocmd VimEnter * silent! nnoremap <C-H> <C-W>h
 autocmd VimEnter * silent! nnoremap <C-K> <C-W>k
 autocmd VimEnter * silent! nnoremap <C-L> <C-W>l
 autocmd VimEnter * silent! nnoremap <C-J> <C-W>j
-"autocmd VimEnter * silent! inoremap <C-H> <ESC><C-W>h
-"autocmd VimEnter * silent! inoremap <C-K> <ESC><C-W>k
-"autocmd VimEnter * silent! inoremap <C-L> <ESC><C-W>l
-"autocmd VimEnter * silent! inoremap <C-J> <ESC><C-W>j
+autocmd VimEnter * silent! inoremap <C-H> <ESC><C-W>h
+autocmd VimEnter * silent! inoremap <C-K> <ESC><C-W>k
+autocmd VimEnter * silent! inoremap <C-L> <ESC><C-W>l
+autocmd VimEnter * silent! inoremap <C-J> <ESC><C-W>j
 
 command! -bang -nargs=? -complete=file E e<bang> <args>
 command! -bang -nargs=? -complete=file W w<bang> <args>
@@ -246,11 +258,12 @@ command! -bang -nargs=? -complete=file WQ wq<bang> <args>
 
 " TODO try to send output to bottom first?
 " TODO Not accuracte with multiple splits
-autocmd FileType python silent! noremap <F5> :silent! call TmuxSplitCmd('python %')<CR>
-autocmd FileType c      silent! noremap <F5> :silent! call TmuxSplitCmd('gcc -Wall % && ./a.out')<CR>
-autocmd FileType html   silent! noremap <F5> :silent! call TmuxSplitCmd('x-www-browser %')<CR>
-autocmd FileType matlab silent! noremap <F5> :silent! call TmuxSplitCmd('matlab -nosplash -nodesktop -r "run('%')"')<CR>
-autocmd FileType vim    silent! noremap <F5> :so %<CR>
+autocmd FileType python silent! nnoremap <buffer> <F5> :silent! call TmuxSplitCmd('python %')<CR>
+autocmd FileType c      silent! nnoremap <buffer> <F5> :silent! call TmuxSplitCmd('gcc -Wall % && ./a.out')<CR>
+autocmd FileType html   silent! nnoremap <buffer> <F5> :silent! call TmuxSplitCmd('x-www-browser %')<CR>
+autocmd FileType sh     silent! nnoremap <buffer> <F5> :silent! call TmuxSplitCmd('source %')<CR>
+autocmd FileType matlab silent! nnoremap <buffer> <F5> :silent! call TmuxSplitCmd('matlab -nosplash -nodesktop -r "run('%')"')<CR>
+autocmd FileType vim    silent! nnoremap <buffer> <F5> :so %<CR>
 
 autocmd VimEnter * silent! execute 'try | Tmux rename-window vim | endtry'
 autocmd VimLeave * silent! execute 'try | Tmux rename-window bash | endtry'
@@ -299,8 +312,8 @@ nnoremap gJ J
 inoremap <C-F> <C-X><C-F>
 
 "inoremap <C--> </<C-X><C-O><ESC>cit
-autocmd FileType html,xml inoremap <C-g> </<C-X><C-O><ESC>a
-autocmd FileType html,xml inoremap </ </<C-X><C-O><ESC>a
+autocmd FileType html,xml inoremap <buffer> <C-g> </<C-X><C-O><ESC>a
+autocmd FileType html,xml inoremap <buffer> </ </<C-X><C-O><ESC>a
 "inoremap <C-g> </<C-X><C-O>
 "inoremap </ </<C-X><C-O>
 
@@ -312,7 +325,4 @@ autocmd FileType html,xml inoremap </ </<C-X><C-O><ESC>a
 "nnoremap <leader>bmon :silent! call TmuxSplitCmd('bmon -p eth0', 25)<CR>
 "nnoremap <leader>sh   :silent! call TmuxSplitCmd('', 12)<CR>
 
-" TODO better/more
-"autocmd FileType python silent! noremap <F5> :pyf %<CR>
-"autocmd FileType c silent! noremap <F5> :make<CR>
 
