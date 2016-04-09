@@ -14,4 +14,4 @@ alias project='. project'
 alias p='. p'
 
 # fixes
-alias tmux='tmux -2'
+alias tmux='tmux -u2'
