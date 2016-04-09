@@ -325,7 +325,7 @@ nnoremap !! :e $MYVIMRC<CR>Go<C-r>:<ESC>
 " TODO common coding misspelling of variables etc.
 "iabbrev
 
-"inoremap <C--> </<C-X><C-O><ESC>cit
+inoremap <C-t> </<C-X><C-O><ESC>a
 " TODO C-t is useful?
 "autocmd FileType html,xml inoremap <buffer> <C-t> </<C-X><C-O><ESC>a
 "autocmd FileType html,xml inoremap <buffer> </ </<C-X><C-O><ESC>a
