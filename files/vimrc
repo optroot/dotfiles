@@ -1,17 +1,26 @@
 
+if empty(glob('~/.vim/autoload/plug.vim'))
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall | source $MYVIMRC
+endif
+
 call plug#begin('~/.vim/plugged')
+
 Plug 'airblade/vim-gitgutter'
 Plug 'Chiel92/vim-autoformat'
 Plug 'coot/CRDispatcher'
 Plug 'coot/EnchantedVim'
+Plug 'https://github.com/tpope/vim-tbone'
 Plug 'justinmk/vim-sneak'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'ludovicchabant/vim-gutentags'
+Plug 'mattn/emmet-vim'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'morhetz/gruvbox'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'scrooloose/nerdtree'
-Plug 'terryma/vim-multiple-cursors'
+Plug 'SirVer/ultisnips'
 Plug 'tommcdo/vim-exchange'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-fugitive'
@@ -19,22 +28,22 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'wellle/targets.vim'
 Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'https://github.com/tpope/vim-tbone'
-
-" Experiments
-Plug 'vim-scripts/closetag.vim'
-Plug 'https://github.com/Townk/vim-autoclose'
-let g:closetag_html_style=1
-
-" TODO REMOVE
-"Plug 'kbarrette/mediummode'
 
 call plug#end()
+
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsEditSplit="horizontal"
+imap <expr> <C-@> emmet#expandAbbrIntelligent("\<C-@>")
+vmap <C-@> :call emmet#expandAbbr(0,'')
+
+"TODO groups
 
 " Editing
 set smartindent cindent
@@ -59,7 +68,6 @@ set cpoptions+=$
 set nostartofline
 set encoding=utf8
 " TODO use Augroups
-
 
 set title
 let &titlestring = expand("%:p")
@@ -129,7 +137,7 @@ autocmd FileType c,php,java,python let g:gutentags_enabled=1
 " Formatting
 let g:formatdef_astyle_c='"astyle --mode=c -A2ps4CSKNwpUjCk3fH"'
 let g:formatters_c=['astyle_c']
-let g:formatdef_tidy='"tidy -config ~/.tidy.conf"'
+let g:formatdef_tidy_html='"tidy -config ~/.tidy.conf "'
 let g:formatters_html=['tidy_html']
 
 " Git
@@ -171,15 +179,14 @@ augroup END
 let mapleader="\<SPACE>"
 
 noremap  \\ :NERDTreeToggle<CR>
-nnoremap \vim   :e ~/.vimrc<CR>
-nnoremap \vimrc :e ~/.vimrc<CR>
-nnoremap \bash  :e ~/todo/bashtodo.md<CR>
-nnoremap \todo  :e ~/todo/vimtodo.md<CR>
-nnoremap \idea  :e ~/todo/ideas.md<CR>
-nnoremap \ideas :e ~/todo/ideas.md<CR>
-nnoremap \word  :e ~/todo/words.md<CR>
-nnoremap \words :e ~/todo/words.md<CR>
-nnoremap \pass  :e ~/todo/pass.md<CR>
+nnoremap \vi  :e $MYVIMRC<CR>
+nnoremap \sh  :e ~/todo/bashtodo.md<CR>
+nnoremap \to  :e ~/todo/vimtodo.md<CR>
+nnoremap \id  :e ~/todo/ideas.md<CR>
+nnoremap \wo  :e ~/todo/words.md<CR>
+nnoremap \pa  :e ~/todo/pass.md<CR>
+nnoremap \tm  :e ~/.tmux.conf<CR>
+nnoremap \s   :UltiSnipsEdit<CR>
 
 " TODO F mappings
 "nnoremap <F1>
@@ -215,11 +222,8 @@ vmap <UP> xkkpgV
 
 nnoremap <UP> {
 nnoremap <DOWN> }
-
-nnoremap <TAB> :bn<CR>
-nnoremap <S-TAB> :bp<CR>
-nnoremap <LEFT> :bn<CR>
-nnoremap <RIGHT> :bp<CR>
+nnoremap <LEFT> :bp<CR>
+nnoremap <RIGHT> :bn<CR>
 
 " Use vim-sneak for f
 let g:sneak#use_ic_scs=1
@@ -239,8 +243,11 @@ xmap T <Plug>Sneak_T
 omap t <Plug>Sneak_t
 omap T <Plug>Sneak_T
 
+inoremap <C-F> <C-X><C-F>
+
 " Navigation
 " TODO if nothing below then try tmux
+
 autocmd VimEnter * silent! nnoremap <C-H> <C-W>h
 autocmd VimEnter * silent! nnoremap <C-K> <C-W>k
 autocmd VimEnter * silent! nnoremap <C-L> <C-W>l
@@ -306,23 +313,51 @@ vnoremap ' `
 " Automatically remove \'s
 "TODO take count
 "TODO more advanced
+" TODO Jx?
 nnoremap J j^d0i<BS><ESC>
 nnoremap gJ J
 
-inoremap <C-F> <C-X><C-F>
+" TODO nremap !
+nnoremap !! :e $MYVIMRC<CR>Go<C-r>:<ESC>
+" !<reg> to save . to register
 
-"inoremap <C--> </<C-X><C-O><ESC>cit
-autocmd FileType html,xml inoremap <buffer> <C-g> </<C-X><C-O><ESC>a
-autocmd FileType html,xml inoremap <buffer> </ </<C-X><C-O><ESC>a
-"inoremap <C-g> </<C-X><C-O>
-"inoremap </ </<C-X><C-O>
 
 " TODO common coding misspelling of variables etc.
 "iabbrev
+
+"inoremap <C--> </<C-X><C-O><ESC>cit
+" TODO C-t is useful?
+"autocmd FileType html,xml inoremap <buffer> <C-t> </<C-X><C-O><ESC>a
+"autocmd FileType html,xml inoremap <buffer> </ </<C-X><C-O><ESC>a
+
 
 "nnoremap <leader>top  :silent! call TmuxSplitCmd('top', 12)<CR>
 "nnoremap <leader>htop :silent! call TmuxSplitCmd('htop', 20)<CR>
 "nnoremap <leader>bmon :silent! call TmuxSplitCmd('bmon -p eth0', 25)<CR>
 "nnoremap <leader>sh   :silent! call TmuxSplitCmd('', 12)<CR>
 
+iabbrev  erturn     return
+iabbrev  foreahc    foreach
+iabbrev  forech     foreach
+iabbrev  fucntion   function
+iabbrev  funciton   function
+iabbrev  functiton  function
+iabbrev  funtion    function
+iabbrev  htis       this
+iabbrev  mispell    misspell
+iabbrev  prinft     printf
+iabbrev  pritn      print
+iabbrev  queyr      query
+iabbrev  retunr     return
+iabbrev  reutn      return
+iabbrev  reutrn     return
+iabbrev  improt     import
+
+" TODO tabularize-vim?
+vnoremap <leader>a :!column -t -s $' '<CR>
+
+set timeoutlen=1000 ttimeoutlen=0
+
+"set mouse=a
+"set selectmode=mouse,key
 
