@@ -11,7 +11,6 @@ Plug 'airblade/vim-gitgutter'
 Plug 'Chiel92/vim-autoformat'
 Plug 'coot/CRDispatcher'
 Plug 'coot/EnchantedVim'
-Plug 'https://github.com/tpope/vim-tbone'
 Plug 'justinmk/vim-sneak'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'ludovicchabant/vim-gutentags'
@@ -29,6 +28,7 @@ Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-tbone'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -37,46 +37,44 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 
 call plug#end()
 
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsEditSplit="horizontal"
-imap <expr> <C-@> emmet#expandAbbrIntelligent("\<C-@>")
-vmap <C-@> :call emmet#expandAbbr(0,'')
-
-"TODO groups
+"TODO groups?
+"TODO if plugin loaded
+"TODO no rainbow in text(ish) files
+"TODO tab only at start of line (togglable)
+"TODO don't use enchanted?
 
 " Editing
+set nocompatible
 set smartindent cindent
-set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+"set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 set noerrorbells visualbell
 set number
 set report=1
 set ignorecase
 set showcmd
-set showmatch
+set noshowmatch
 set virtualedit=all
 set scrolloff=8
 set hidden
 set showmode
-set mouse=
-set nocompatible
+set modeline
+"set mouse=
+set noshowmatch
 set pastetoggle=<F2>
 set noswapfile
-set laststatus=2
-set formatoptions+=j
+""set laststatus=2
+"set formatoptions+=j
 set cpoptions+=$
 set nostartofline
 set encoding=utf8
-" TODO use Augroups
+"set timeoutlen=1000 ttimeoutlen=0
 
-set title
-let &titlestring = expand("%:p")
-autocmd BufCreate  *.* let &titlestring = expand("%:p")
-autocmd BufRead    *.* let &titlestring = expand("%:p")
-autocmd BufLeave   *.* let &titlestring = expand("%:p")
-autocmd BufEnter   *.* let &titlestring = expand("%:p")
+" Wild menu
+set wildignore+=*/.git/*,*/.svn/*,*.o,*.pyc,*~,*.so,*.swp,*.zip,*.tar,*.tar.gz,
+set wildmode=full
+set wildignorecase
 
-" Text Settings
+" TODO no unicode?
 set listchars=tab:▸\ ,eol:\ ,precedes:\ ,extends:\ ,trail:.
 
 " Save folds and history
@@ -88,15 +86,21 @@ set undodir=~/.vim/undo
 autocmd BufWinLeave *.* mkview!
 autocmd BufWinEnter *.* silent! loadview
 
-" Wild menu
-set wildignore+=*/.git/*,*/.svn/*,*.o,*.pyc,*~,*.so,*.swp,*.zip,*.tar,*.tar.gz,
-set wildmode=full
-set wildignorecase
+" Turn off automatic line commenting
+autocmd FileType * silent! setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
+" Title
+set title
+let &titlestring = expand("%:p")
+autocmd BufCreate  *.* let &titlestring = expand("%:p")
+autocmd BufRead    *.* let &titlestring = expand("%:p")
+autocmd BufLeave   *.* let &titlestring = expand("%:p")
+autocmd BufEnter   *.* let &titlestring = expand("%:p")
 
 " Color Settings
 " TODO Tabline background
 " TODO confimation on split window save/open
-syn on
+"syn on
 set t_Co=256
 let g:gruvbox_contrast_dark='hard'
 let g:gruvbox_sign_column='bg0'
@@ -112,8 +116,14 @@ let g:airline#extensions#tabline#enabled=1
 let g:airline#extensions#unite#enabled=1
 let g:airline#extensions#fugitive#enabled=1
 
+" Snippets
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsEditSplit="horizontal"
+imap <silent> <expr> <C-@> emmet#expandAbbrIntelligent("\<C-@>")
+vmap <silent> <C-@> :call emmet#expandAbbr(0,'')
+
 " NERDTree
-"autocmd VimEnter * if !argc() | NERDTree | endif
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | wincmd l | endif
 autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
@@ -151,11 +161,7 @@ autocmd Syntax   * silent! RainbowParenthesesLoadRound
 autocmd Syntax   * silent! RainbowParenthesesLoadSquare
 autocmd Syntax   * silent! RainbowParenthesesLoadBraces
 
-" Turn off automatic line commenting
-autocmd FileType * silent! setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-
 " Syntax languages
-" TODO setlocal?
 autocmd BufRead,BufNewFile *.inc  silent! setlocal filetype=php
 autocmd BufRead,BufNewFile *.less silent! setlocal filetype=css
 autocmd BufRead,BufNewFile *.tex  silent! setlocal filetype=tex
@@ -165,20 +171,18 @@ autocmd BufRead,BufNewFile *.md   silent! setlocal filetype=markdown
 "au BufReadPost *.doc,*.docx,*.rtf,*.odp,*.odt silent %!pandoc "%" -tplain -o /dev/stdout
 "au BufReadPost *.pdf silent %!pdftotext -nopgbrk -layout -q -eol unix "%" - | fmt -w78
 
-augroup CursorLine
-    autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-    autocmd WinLeave * setlocal nocursorline
-    "TODO match mode color
-    autocmd VimEnter    * highlight  CursorLine ctermbg=235
-    autocmd InsertEnter * highlight  CursorLine ctermbg=234
-    autocmd InsertLeave * highlight  CursorLine ctermbg=235
-augroup END
-
+autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+autocmd WinLeave    * setlocal  nocursorline
+autocmd VimEnter    * highlight CursorLine   ctermbg=235
+autocmd InsertEnter * highlight CursorLine   ctermbg=234
+autocmd InsertLeave * highlight CursorLine   ctermbg=235
 
 " Leader Commands
 let mapleader="\<SPACE>"
+" TODO leader commands
 
-noremap  \\ :NERDTreeToggle<CR>
+" Open file shortcut
+noremap  \\   :NERDTreeToggle<CR>
 nnoremap \vi  :e $MYVIMRC<CR>
 nnoremap \sh  :e ~/todo/bashtodo.md<CR>
 nnoremap \to  :e ~/todo/vimtodo.md<CR>
@@ -188,21 +192,16 @@ nnoremap \pa  :e ~/todo/pass.md<CR>
 nnoremap \tm  :e ~/.tmux.conf<CR>
 nnoremap \s   :UltiSnipsEdit<CR>
 
-" TODO F mappings
-"nnoremap <F1>
-nnoremap <F1> :call TmuxSplitCmd('', 12)<CR>
-nnoremap <F3> :silent! call TmuxSplitCmd('')<CR>
-nnoremap <F4> :Autoformat<CR>
-vnoremap <F6> :!python<CR>
-nnoremap <F6> :.!python<CR>
-nnoremap <F7> Y:@"<CR>
-vnoremap <F7> Y:@"<CR>
+nnoremap <silent> <F1> :call TmuxSplitCmd('', 12)<CR>
+nnoremap <silent> <F3> :silent! call TmuxSplitCmd('')<CR>
+nnoremap <silent> <F4> :Autoformat<CR>
+vnoremap <silent> <F6> :!python<CR>
+nnoremap <silent> <F6> :.!python<CR>
+nnoremap <silent> <F7> Y:@"<CR>
+vnoremap <silent> <F7> Y:@"<CR>
 "nnoremap <F8>
-"nnoremap <F9>
-nnoremap <F10> :echo "hi<"   . synIDattr(synID(line("."),col("."),1),"name")."> ".
-            \  "trans<". synIDattr(synID(line("."),col("."),0),"name")."> ".
-            \  "lo<"   . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name")."> ".
-            \  "co<"   . synIDattr(synIDtrans(synID(line("."), col("."), 1)), "fg").">"<CR>
+nnoremap <silent> <F9>  :call GetColors()<CR>
+nnoremap <silent> <F10> :call SyntaxStack()<CR>
 
 " Center the cursor
 nnoremap n nzzzv
@@ -246,16 +245,14 @@ omap T <Plug>Sneak_T
 inoremap <C-F> <C-X><C-F>
 
 " Navigation
-" TODO if nothing below then try tmux
-
 autocmd VimEnter * silent! nnoremap <C-H> <C-W>h
 autocmd VimEnter * silent! nnoremap <C-K> <C-W>k
 autocmd VimEnter * silent! nnoremap <C-L> <C-W>l
-autocmd VimEnter * silent! nnoremap <C-J> <C-W>j
+autocmd VimEnter * silent! nnoremap <silent> <C-J> :call MoveWindowOrTmux()<CR>
 autocmd VimEnter * silent! inoremap <C-H> <ESC><C-W>h
 autocmd VimEnter * silent! inoremap <C-K> <ESC><C-W>k
 autocmd VimEnter * silent! inoremap <C-L> <ESC><C-W>l
-autocmd VimEnter * silent! inoremap <C-J> <ESC><C-W>j
+autocmd VimEnter * silent! inoremap <silent> <C-J> <ESC>:call MoveWindowOrTmux()<CR>
 
 command! -bang -nargs=? -complete=file E e<bang> <args>
 command! -bang -nargs=? -complete=file W w<bang> <args>
@@ -264,19 +261,21 @@ command! -bang -nargs=? -complete=file Wq wq<bang> <args>
 command! -bang -nargs=? -complete=file WQ wq<bang> <args>
 
 " TODO try to send output to bottom first?
-" TODO Not accuracte with multiple splits
-autocmd FileType python silent! nnoremap <buffer> <F5> :silent! call TmuxSplitCmd('python %')<CR>
-autocmd FileType c      silent! nnoremap <buffer> <F5> :silent! call TmuxSplitCmd('gcc -Wall % && ./a.out')<CR>
-autocmd FileType html   silent! nnoremap <buffer> <F5> :silent! call TmuxSplitCmd('x-www-browser %')<CR>
-autocmd FileType sh     silent! nnoremap <buffer> <F5> :silent! call TmuxSplitCmd('source %')<CR>
-autocmd FileType matlab silent! nnoremap <buffer> <F5> :silent! call TmuxSplitCmd('matlab -nosplash -nodesktop -r "run('%')"')<CR>
-autocmd FileType vim    silent! nnoremap <buffer> <F5> :so %<CR>
+autocmd FileType c      silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('gcc -Wall % && ./a.out')<CR>
+autocmd FileType html   silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('python -m SimpleHTTPServer 8000',4)<CR>
+autocmd FileType matlab silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('matlab -nosplash -nodesktop -r "run('%')"')<CR>
+autocmd FileType python silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('python %')<CR>
+autocmd FileType sh     silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('source %')<CR>
+autocmd FileType vim    silent! nnoremap <silent> <buffer> <F5> :so %<CR>
 
 autocmd VimEnter * silent! execute 'try | Tmux rename-window vim | endtry'
 autocmd VimLeave * silent! execute 'try | Tmux rename-window bash | endtry'
 
 
+" Functions
+" TODO WARNING only use with 1 bottom split
 function! TmuxSplitCmd(cmd, ...)
+
     if a:0 == 1
         let l:lines=a:1
     else
@@ -284,79 +283,93 @@ function! TmuxSplitCmd(cmd, ...)
     endif
 
     if a:cmd != ''
-        let l:s=substitute(a:cmd.'', '%', shellescape(expand('%:p')), 'g')
-        let l:s=substitute(s, ' ', '\\ ', 'g')
+        let cmd=substitute(''.a:cmd.'', '%', shellescape(expand('%:p')), 'g')
+        let cmd=substitute(cmd, ' ', '\\ ', 'g')
     else
-        let l:s=""
+        let cmd=""
     endif
 
-    silent! execute 'Tmux break-pane -t bottom \; rename-window vimout \; select-window -l'
-    silent! execute 'Tmux new-window -dn vimshell -c '.shellescape(getcwd())
-    execute 'sleep 200m'
-    silent! execute 'Tmux send-keys -t vimshell '.l:s
-    silent! execute 'Tmux join-pane -dvl'.l:lines.' -s vimshell'
-    silent! execute 'Tmux select-pane -D'
+    let npanes=len(split(system('tmux list-panes'), "\n"))
+    if npanes == 1
+        silent! execute 'Tmux new-window -dn vimshell -c '.shellescape(getcwd())
+        silent! execute 'Tmux join-pane -dvl'.l:lines.' -s vimshell'
+        execute 'sleep 200m'
+    end
+
+    silent! execute 'Tmux send-keys -t bottom '.cmd
+    "silent! execute 'Tmux select-pane -D'
+    " silent! execute 'Tmux break-pane -t bottom \; rename-window vimout \; select-window -l'
+    " silent! execute 'Tmux new-window -dn vimshell -c '.shellescape(getcwd())
+    " execute 'sleep 200m'
+    " silent! execute 'Tmux send-keys -t vimshell '.l:s
+    " silent! execute 'Tmux join-pane -dvl'.l:lines.' -s vimshell'
+    " silent! execute 'Tmux select-pane -D'
+
 endfunction
 
-" EXPERIMENTAL
-" CAPS LOCK is ESC
-" TODO MAP CAPS to C-c and map ESC to nop
-" Force C-w over multiple BS in insertmode
-nnoremap ' `
-vnoremap ' `
-"inoremap <C-K> <ESC>d$
-"inoremap <C-Y> <C-R>"
-"nnoremap <C-Y> ""P
-"nnoremap Q qq
+function! MoveWindowOrTmux()
+    let n = winnr()
+    wincmd j
+    if winnr() == n
+        silent! execute 'Tmux select-pane -D'
+        return
+    endif
+endfunction
 
-" TODO remove leading spaces from joined lines
-" Automatically remove \'s
-"TODO take count
-"TODO more advanced
-" TODO Jx?
-nnoremap J j^d0i<BS><ESC>
-nnoremap gJ J
+function! GetColors()
+    let fg = "-1"
+    let bg = "-1"
+    for id in synstack(line("."), col("."))
+        let bold = synIDattr(synIDtrans(id), "bold")
+        let italic = synIDattr(synIDtrans(id), "italic")
+        let fg = fg=="-1"? synIDattr(synIDtrans(id), "fg") : fg
+        let bg = bg=="-1"? synIDattr(synIDtrans(id), "bg") : bg
+    endfor
+    let fg = fg=="-1"? synIDattr(hlID("Normal"),"fg") : fg
+    let bg = bg=="-1"? synIDattr(hlID("Normal"),"bg") : bg
+    let fg = fg=="-1"? "Terminal" : fg
+    let bg = bg=="-1"? "Terminal" : bg
+    echo "fg: [".fg."] bg: [".bg."]"
+endfunction
 
-" TODO nremap !
+function! SyntaxStack()
+    let s = []
+    for id in synstack(line("."), col("."))
+        let real_name = synIDattr(id, "name")
+        let syntax_name = synIDattr(synIDtrans(id), "name")
+        if real_name == syntax_name
+            call add(s,'['.real_name.']')
+        else
+            call add(s,'['.real_name.' as '.syntax_name.']')
+        end
+    endfor
+    echo join(s, ' -> ')
+endfunction
+
+" Fix common programmer typos
+iabbrev prinft    printf
+iabbrev pritn     print
+iabbrev retunr    return
+iabbrev retrun    return
+iabbrev reutrn    return
+iabbrev improt    import
+
+" ===================================================================== EXPERIMENTAL
+
+" Learn to use Caps for ESC
+inoremap <ESC> <C-g>uESC
+
+" TODO nremap more !
+" If already in vimrc?
 nnoremap !! :e $MYVIMRC<CR>Go<C-r>:<ESC>
-" !<reg> to save . to register
-
-
-" TODO common coding misspelling of variables etc.
-"iabbrev
-
-inoremap <C-t> </<C-X><C-O><ESC>a
-" TODO C-t is useful?
-"autocmd FileType html,xml inoremap <buffer> <C-t> </<C-X><C-O><ESC>a
-"autocmd FileType html,xml inoremap <buffer> </ </<C-X><C-O><ESC>a
-
-
-"nnoremap <leader>top  :silent! call TmuxSplitCmd('top', 12)<CR>
-"nnoremap <leader>htop :silent! call TmuxSplitCmd('htop', 20)<CR>
-"nnoremap <leader>bmon :silent! call TmuxSplitCmd('bmon -p eth0', 25)<CR>
-"nnoremap <leader>sh   :silent! call TmuxSplitCmd('', 12)<CR>
-
-iabbrev  erturn     return
-iabbrev  foreahc    foreach
-iabbrev  forech     foreach
-iabbrev  fucntion   function
-iabbrev  funciton   function
-iabbrev  functiton  function
-iabbrev  funtion    function
-iabbrev  htis       this
-iabbrev  mispell    misspell
-iabbrev  prinft     printf
-iabbrev  pritn      print
-iabbrev  queyr      query
-iabbrev  retunr     return
-iabbrev  reutn      return
-iabbrev  reutrn     return
-iabbrev  improt     import
 
 " TODO tabularize-vim?
-vnoremap <leader>a :!column -t -s $' '<CR>
+vnoremap <leader>a :!column -t -s $' '<CR>:'<,'>s/\v( *)  /\1 /g<CR>
 
-set timeoutlen=1000 ttimeoutlen=0
+" TODO close all open parens in other languages
+inoremap <C-t> </<C-X><C-O><ESC>a
+"autocmd FileType html,xml inoremap <C-t> </<C-X><C-O><ESC>a
+"autocmd FileType html,xml inoremap <buffer> </ </<C-X><C-O><ESC>a
 
 "set mouse=a
 "set selectmode=mouse,key
