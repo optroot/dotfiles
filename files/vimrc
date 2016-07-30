@@ -11,6 +11,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'Chiel92/vim-autoformat'
 Plug 'coot/CRDispatcher'
 Plug 'coot/EnchantedVim'
+Plug 'editorconfig/editorconfig-vim'
 Plug 'justinmk/vim-sneak'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'ludovicchabant/vim-gutentags'
@@ -28,7 +29,8 @@ Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-tbone'
+"Plug 'tpope/vim-tbone'
+Plug 'https://github.com/tpope/vim-tbone'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -46,7 +48,7 @@ call plug#end()
 " Editing
 set nocompatible
 set smartindent cindent
-"set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 set noerrorbells visualbell
 set number
 set report=1
@@ -57,7 +59,7 @@ set virtualedit=all
 set scrolloff=8
 set hidden
 set showmode
-set modeline
+"set modeline
 "set mouse=
 set noshowmatch
 set pastetoggle=<F2>
@@ -68,6 +70,9 @@ set cpoptions+=$
 set nostartofline
 set encoding=utf8
 "set timeoutlen=1000 ttimeoutlen=0
+
+autocmd FileType js,html  set tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+autocmd FileType Makefile set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
 
 " Wild menu
 set wildignore+=*/.git/*,*/.svn/*,*.o,*.pyc,*~,*.so,*.swp,*.zip,*.tar,*.tar.gz,
@@ -88,6 +93,11 @@ autocmd BufWinEnter *.* silent! loadview
 
 " Turn off automatic line commenting
 autocmd FileType * silent! setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
+" Tcomment insert mode trigger
+let g:tcommentMaps = 0
+let g:tcommentMapLeader1 = ''
+let g:tcommentMapLeader2 = ''
 
 " Title
 set title
@@ -120,6 +130,7 @@ let g:airline#extensions#fugitive#enabled=1
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsEditSplit="horizontal"
+let g:user_emmet_mode='iv'
 imap <silent> <expr> <C-@> emmet#expandAbbrIntelligent("\<C-@>")
 vmap <silent> <C-@> :call emmet#expandAbbr(0,'')
 
@@ -145,10 +156,15 @@ let g:gutentags_project_root=['.git']
 autocmd FileType c,php,java,python let g:gutentags_enabled=1
 
 " Formatting
+let g:autoformat_autoindent = 1
+let g:autoformat_retab = 1
+let g:autoformat_remove_trailing_spaces = 1
 let g:formatdef_astyle_c='"astyle --mode=c -A2ps4CSKNwpUjCk3fH"'
 let g:formatters_c=['astyle_c']
-let g:formatdef_tidy_html='"tidy -config ~/.tidy.conf "'
+"let g:formatdef_tidy_html='"tidy -config ~/.tidy.conf 2> /dev/null"'
+let g:formatdef_tidy_html='"tidy -config ~/.tidy.conf"'
 let g:formatters_html=['tidy_html']
+let g:autoformat_verbosemode=1
 
 " Git
 let g:gitgutter_max_signs=999
@@ -357,7 +373,7 @@ iabbrev improt    import
 " ===================================================================== EXPERIMENTAL
 
 " Learn to use Caps for ESC
-inoremap <ESC> <C-g>uESC
+" inoremap <ESC> <C-g>uESC
 
 " TODO nremap more !
 " If already in vimrc?
@@ -366,11 +382,16 @@ nnoremap !! :e $MYVIMRC<CR>Go<C-r>:<ESC>
 " TODO tabularize-vim?
 vnoremap <leader>a :!column -t -s $' '<CR>:'<,'>s/\v( *)  /\1 /g<CR>
 
+" NOTE <C-_> == <C-/>
 " TODO close all open parens in other languages
-inoremap <C-t> </<C-X><C-O><ESC>a
+inoremap <C-_> </<C-X><C-O><ESC>a
 "autocmd FileType html,xml inoremap <C-t> </<C-X><C-O><ESC>a
 "autocmd FileType html,xml inoremap <buffer> </ </<C-X><C-O><ESC>a
 
 "set mouse=a
 "set selectmode=mouse,key
+
+" Temp meteor helper
+autocmd FileType javascript,html silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('meteor npm run lint --silent')<CR>
+
 
