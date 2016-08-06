@@ -103,9 +103,23 @@ __prompt_command() {
   fi
   PS1+='\$\[\e[0m\] '
 
+  local tmuxtitle=`tmux display-message -p '#W' 2> /dev/null`
+  if [[ $? -eq 0 ]]; then
+    if [[ "$tmuxtitle" =~ ^[A-Z] ]]; then
+      true # Don't touch the title
+    elif [[ -z "$tmuxtitle" ]]; then
+      true # tmux probably not running
+    else      
+      V=${PWD##*projects/}
+      V=${V%%/*}
+      V=${V:-"bash"}
+      tmux rename-window "$V" > /dev/null 2>&1
+    fi
+  fi
+
   case "$TERM" in
     xterm*|rxvt*|screen*)
-      PS1="\[\e]0;${PWD}\a\]$PS1"
+      PS1="\[\e]0;\u@\h: ${PWD}\a\]$PS1"
       ;;
     *)
       ;;

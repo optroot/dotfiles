@@ -36,6 +36,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'wellle/targets.vim'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'groenewege/vim-less'
 
 call plug#end()
 
@@ -95,17 +96,47 @@ autocmd BufWinEnter *.* silent! loadview
 autocmd FileType * silent! setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " Tcomment insert mode trigger
-let g:tcommentMaps = 0
+let g:tcommentMaps = 1
 let g:tcommentMapLeader1 = ''
 let g:tcommentMapLeader2 = ''
+let g:tcommentMapLeaderOp1 = 'gc'
+let g:tcommentMapLeaderUncommentAnyway = 'g<'
+let g:tcommentMapLeaderCommentAnyway = 'g>'
+let g:tcommentTextObjectInlineComment = 'ic'
 
 " Title
+function! SetTmuxTitle(...)
+    let t=system("tmux display-message -p '#W'")
+    if strlen(matchstr(t[0], '\v[A-Z]'))>0
+        return
+    end
+
+    let project=matchstr(expand("%:p:h"), 'projects/\(\w\+\)')
+    if project != ''
+        call system("tmux rename-window ".project[9:])
+    else
+        if a:0 > 0
+            call system("tmux rename-window ".a:1)
+        else
+            call system("tmux rename-window "."vim")
+        endif
+    endif
+endfunction
+
 set title
 let &titlestring = expand("%:p")
-autocmd BufCreate  *.* let &titlestring = expand("%:p")
-autocmd BufRead    *.* let &titlestring = expand("%:p")
-autocmd BufLeave   *.* let &titlestring = expand("%:p")
-autocmd BufEnter   *.* let &titlestring = expand("%:p")
+autocmd BufCreate,BufRead,BufLeave,BufEnter  *.* let &titlestring = expand("%:p")
+
+augroup TmuxTitle
+    autocmd!
+    autocmd BufEnter  *.* call SetTmuxTitle()
+    autocmd VimEnter  *.* call SetTmuxTitle()
+    autocmd VimLeave  *.* call SetTmuxTitle("bash")
+augroup END
+
+"autocmd VimEnter * silent! execute 'try | Tmux rename-window vim | endtry'
+"autocmd VimLeave * silent! execute 'try | Tmux rename-window bash | endtry'
+
 
 " Color Settings
 " TODO Tabline background
@@ -179,7 +210,6 @@ autocmd Syntax   * silent! RainbowParenthesesLoadBraces
 
 " Syntax languages
 autocmd BufRead,BufNewFile *.inc  silent! setlocal filetype=php
-autocmd BufRead,BufNewFile *.less silent! setlocal filetype=css
 autocmd BufRead,BufNewFile *.tex  silent! setlocal filetype=tex
 autocmd BufRead,BufNewFile *.md   silent! setlocal filetype=markdown
 
@@ -261,14 +291,17 @@ omap T <Plug>Sneak_T
 inoremap <C-F> <C-X><C-F>
 
 " Navigation
-autocmd VimEnter * silent! nnoremap <C-H> <C-W>h
-autocmd VimEnter * silent! nnoremap <C-K> <C-W>k
-autocmd VimEnter * silent! nnoremap <C-L> <C-W>l
-autocmd VimEnter * silent! nnoremap <silent> <C-J> :call MoveWindowOrTmux()<CR>
-autocmd VimEnter * silent! inoremap <C-H> <ESC><C-W>h
-autocmd VimEnter * silent! inoremap <C-K> <ESC><C-W>k
-autocmd VimEnter * silent! inoremap <C-L> <ESC><C-W>l
-autocmd VimEnter * silent! inoremap <silent> <C-J> <ESC>:call MoveWindowOrTmux()<CR>
+augroup Navigation
+    autocmd!
+    autocmd VimEnter * silent! nnoremap <C-H> <C-W>h
+    autocmd VimEnter * silent! nnoremap <C-K> <C-W>k
+    autocmd VimEnter * silent! nnoremap <C-L> <C-W>l
+    autocmd VimEnter * silent! nnoremap <silent> <C-J> :call MoveWindowOrTmux()<CR>
+    autocmd VimEnter * silent! inoremap <C-H> <ESC><C-W>h
+    autocmd VimEnter * silent! inoremap <C-K> <ESC><C-W>k
+    autocmd VimEnter * silent! inoremap <C-L> <ESC><C-W>l
+    autocmd VimEnter * silent! inoremap <silent> <C-J> <ESC>:call MoveWindowOrTmux()<CR>
+augroup END
 
 command! -bang -nargs=? -complete=file E e<bang> <args>
 command! -bang -nargs=? -complete=file W w<bang> <args>
@@ -277,16 +310,15 @@ command! -bang -nargs=? -complete=file Wq wq<bang> <args>
 command! -bang -nargs=? -complete=file WQ wq<bang> <args>
 
 " TODO try to send output to bottom first?
-autocmd FileType c      silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('gcc -Wall % && ./a.out')<CR>
-autocmd FileType html   silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('python -m SimpleHTTPServer 8000',4)<CR>
-autocmd FileType matlab silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('matlab -nosplash -nodesktop -r "run('%')"')<CR>
-autocmd FileType python silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('python %')<CR>
-autocmd FileType sh     silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('source %')<CR>
-autocmd FileType vim    silent! nnoremap <silent> <buffer> <F5> :so %<CR>
-
-autocmd VimEnter * silent! execute 'try | Tmux rename-window vim | endtry'
-autocmd VimLeave * silent! execute 'try | Tmux rename-window bash | endtry'
-
+augroup Evaluate
+    autocmd!
+    autocmd FileType c      silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('gcc -Wall % && ./a.out')<CR>
+    autocmd FileType html   silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('python -m SimpleHTTPServer 8000',4)<CR>
+    autocmd FileType matlab silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('matlab -nosplash -nodesktop -r "run('%')"')<CR>
+    autocmd FileType python silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('python %')<CR>
+    autocmd FileType sh     silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('bash %')<CR>
+    autocmd FileType vim    silent! nnoremap <silent> <buffer> <F5> :so %<CR>
+augroup END
 
 " Functions
 " TODO WARNING only use with 1 bottom split
