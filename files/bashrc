@@ -126,6 +126,8 @@ __prompt_command() {
   esac
 }
 
+
+
 # Allow quickly switch to project directories
 _p() {
   local cur=${COMP_WORDS[COMP_CWORD]}
@@ -134,8 +136,12 @@ _p() {
 complete -F _p p
 
 # Turn of C-s/C-Q unlock
+stty stop ''
+stty start ''
 stty -ixon
+stty -ixoff
 
+alias ack='ack-grep'
 
 # start tmux at login
 #tmux attach &> /dev/null
@@ -143,3 +149,9 @@ stty -ixon
 #exec tmux -u2
 #fi
 
+# Use vim for man pages
+export MANPAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
+
+
+export NVM_DIR="/home/optroot/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm

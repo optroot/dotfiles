@@ -12,14 +12,19 @@ Plug 'Chiel92/vim-autoformat'
 Plug 'coot/CRDispatcher'
 Plug 'coot/EnchantedVim'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'justinmk/vim-sneak'
+"Plug 'justinmk/vim-sneak'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'mattn/emmet-vim'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'morhetz/gruvbox'
 Plug 'nathanaelkane/vim-indent-guides'
+"Plug 'Raimondi/delimitMate'
+"Plug 'jiangmiao/auto-pairs'
+Plug 'optroot/auto-pairs'
 Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/syntastic'
+Plug 'sheerun/vim-polyglot'
 Plug 'SirVer/ultisnips'
 Plug 'tommcdo/vim-exchange'
 Plug 'tomtom/tcomment_vim'
@@ -27,18 +32,26 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
-"Plug 'tpope/vim-tbone'
-Plug 'https://github.com/tpope/vim-tbone'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'wellle/targets.vim'
 Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'groenewege/vim-less'
+"Plug 'ternjs/tern_for_vim'
+Plug 'mbbill/undotree'
+"Plug 'Shougo/neocomplete'
+Plug 'godlygeek/tabular'
+Plug 'djoshea/vim-autoread'
+Plug 'rhysd/clever-f.vim'
+
 
 call plug#end()
+
+" Debug
+"let g:syntastic_debug = 33
+"let g:autoformat_verbosemode=1
+"let g:EditorConfig_verbose=1
 
 "TODO groups?
 "TODO if plugin loaded
@@ -48,8 +61,6 @@ call plug#end()
 
 " Editing
 set nocompatible
-set smartindent cindent
-set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 set noerrorbells visualbell
 set number
 set report=1
@@ -69,31 +80,139 @@ set noswapfile
 "set formatoptions+=j
 set cpoptions+=$
 set nostartofline
-set encoding=utf8
-"set timeoutlen=1000 ttimeoutlen=0
 
-autocmd FileType js,html  set tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-autocmd FileType Makefile set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
+set encoding=utf-8
+set fileencodings=utf-8
+
+"set timeoutlen=300 ttimeoutlen=100
+set timeoutlen=1000 ttimeoutlen=100
+
+set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+set autoindent smarttab
+set smartindent
+set cindent
+set cinoptions=(0,u0,U0
+
+filetype plugin indent on
+
+
+function! s:align()
+    let p = '^\s*|\s.*\s|\s*$'
+    if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
+        let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
+        let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
+        Tabularize/|/l1
+        normal! 0
+        call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
+    endif
+endfunction
+
+augroup LanguageOptions
+    autocmd!
+    autocmd FileType javascript,json,css,less,html setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+    autocmd FileType Makefile                      setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
+    autocmd FileType markdown                      inoremap <silent> <Bar> <Bar><Esc>:call <SID>align()<CR>a
+    "autocmd BufRead,BufNewFile *.inc  silent! setlocal filetype=php
+    "autocmd BufRead,BufNewFile *.tex  silent! setlocal filetype=tex
+    "autocmd BufRead,BufNewFile *.md   silent! setlocal filetype=markdown
+    "autocmd BufReadPost *.doc,*.docx,*.rtf,*.odp,*.odt,*.pdf silent set ro
+    "autocmd BufReadPost *.doc,*.docx,*.rtf,*.odp,*.odt silent %!pandoc "%" -tplain -o /dev/stdout
+    "autocmd BufReadPost *.pdf silent %!pdftotext -nopgbrk -layout -q -eol unix "%" - | fmt -w78
+augroup END
+
+augroup ColorSettings
+    autocmd!
+    "autocmd VimEnter * highlight CleverFDefaultLabel cterm=none ctermfg=77 ctermbg=235
+    "autocmd VimEnter * highlight CleverFDefaultLabel cterm=none ctermfg=77
+    "autocmd VimEnter * highlight CleverFDefaultLabel cterm=bold ctermfg=160
+    autocmd VimEnter * highlight CleverFDefaultLabel cterm=bold ctermfg=16 ctermbg=160
+augroup END
 
 " Wild menu
 set wildignore+=*/.git/*,*/.svn/*,*.o,*.pyc,*~,*.so,*.swp,*.zip,*.tar,*.tar.gz,
 set wildmode=full
 set wildignorecase
 
+" Clever-f
+let g:clever_f_smart_case=1
+" TODO which is better?
+let g:clever_f_fix_key_direction=1
+"let g:clever_f_timeout_ms = 500
+
+
+" Encryption
+set cm=blowfish2
+
+augroup DetectEncryption
+    autocmd!
+    autocmd BufReadPre,FileReadPre *.gpg.* call SetStealthMode()
+augroup END
+
+" Call :X for encryption
+" TODO setlocal viminfo isn't working correctly?
+function! SetStealthMode()
+    augroup Encryption
+        autocmd BufReadPost,FileReadPre <buffer> setlocal noswapfile
+        autocmd BufReadPost,FileReadPre <buffer> setlocal nobackup
+        autocmd BufReadPost,FileReadPre <buffer> setlocal nowritebackup
+        autocmd BufReadPost,FileReadPre <buffer> setlocal noundofile
+        autocmd BufReadPost,FileReadPre <buffer> autocmd! views
+        " We shouldn't save any history with an encypted file open
+        autocmd BufReadPost,FileReadPre <buffer> set viminfo=
+    augroup END
+endfunction
+
+
+
 " TODO no unicode?
 set listchars=tab:▸\ ,eol:\ ,precedes:\ ,extends:\ ,trail:.
 
 " Save folds and history
 " TODO check if ~/.vim/view is made automatically
-set undofile
-silent! execute '!mkdir -p ~/.vim/undo'
-set undodir=~/.vim/undo
-"set viewdir=~/.vim/view
-autocmd BufWinLeave *.* mkview!
-autocmd BufWinEnter *.* silent! loadview
 
-" Turn off automatic line commenting
-autocmd FileType * silent! setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+silent! execute '!mkdir -p ~/.vim/undo'
+silent! execute '!mkdir -p ~/.vim/view'
+
+set undodir=~/.vim/undo
+set viewdir=~/.vim/view
+
+set undofile
+
+augroup views
+    autocmd!
+    autocmd BufWinLeave *.* mkview!
+    autocmd BufWinEnter *.* silent! loadview
+augroup END
+
+augroup otheropts
+    autocmd!
+    " Turn off automatic line commenting
+    autocmd FileType * silent! setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+augroup END
+
+" Color Settings
+" TODO Tabline background
+" TODO confimation on split window save/open
+"syn on
+set t_Co=256
+let g:gruvbox_contrast_dark='hard'
+let g:gruvbox_sign_column='bg0'
+let g:gruvbox_invert_selection=0
+colorscheme gruvbox
+set background=dark
+
+highlight SyntasticErrorLine ctermbg=52
+highlight SyntasticWarningLine ctermbg=3
+augroup CursorLine
+    autocmd!
+    autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+    autocmd WinLeave    * setlocal  nocursorline
+    autocmd VimEnter    * highlight CursorLine   ctermbg=235
+    autocmd InsertEnter * highlight CursorLine   ctermbg=234
+    autocmd InsertLeave * highlight CursorLine   ctermbg=235
+augroup END
+
+" TODO faster mappings? better surround mappings?
 
 " Tcomment insert mode trigger
 let g:tcommentMaps = 1
@@ -113,12 +232,12 @@ function! SetTmuxTitle(...)
 
     let project=matchstr(expand("%:p:h"), 'projects/\(\w\+\)')
     if project != ''
-        call system("tmux rename-window ".project[9:])
+        silent! call system("tmux rename-window ".project[9:])
     else
         if a:0 > 0
-            call system("tmux rename-window ".a:1)
+            silent! call system("tmux rename-window ".a:1)
         else
-            call system("tmux rename-window "."vim")
+            silent! call system("tmux rename-window "."vim")
         endif
     endif
 endfunction
@@ -138,17 +257,6 @@ augroup END
 "autocmd VimLeave * silent! execute 'try | Tmux rename-window bash | endtry'
 
 
-" Color Settings
-" TODO Tabline background
-" TODO confimation on split window save/open
-"syn on
-set t_Co=256
-let g:gruvbox_contrast_dark='hard'
-let g:gruvbox_sign_column='bg0'
-let g:gruvbox_invert_selection=0
-colorscheme gruvbox
-set background=dark
-
 " Airline
 autocmd VimEnter * :AirlineTheme base16
 let g:airline_powerline_fonts=1
@@ -157,18 +265,93 @@ let g:airline#extensions#tabline#enabled=1
 let g:airline#extensions#unite#enabled=1
 let g:airline#extensions#fugitive#enabled=1
 
+" " Neocomplete
+" let g:acp_enableAtStartup = 0
+" let g:neocomplete#enable_at_startup = 1
+" let g:neocomplete#enable_smart_case = 1
+" let g:neocomplete#sources#syntax#min_keyword_length = 1
+" let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+
+" Define dictionary.
+"let g:neocomplete#sources#dictionary#dictionaries = {
+"\ 'default' : '',
+"\ 'vimshell' : $HOME.'/.vimshell_hist',
+"\ 'scheme' : $HOME.'/.gosh_completions'
+"\ }
+
+" Define keyword.
+" if !exists('g:neocomplete#keyword_patterns')
+"     let g:neocomplete#keyword_patterns = {}
+" endif
+" let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+" Plugin key-mappings.
+"inoremap <expr><C-g>     neocomplete#undo_completion()
+"inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+"inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+"function! s:my_cr_function()
+"return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+" For no inserting <CR> key.
+" return pumvisible() ? "\<C-y>" : "\<CR>"
+"return pumvisible() ? "\<TAB>\<CR>" : "\<CR>"
+"endfunction
+" <TAB>: completion.
+" inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" " <C-h>, <BS>: close popup and delete backword char.
+" inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+" inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+" " Close popup by <Space>.
+" inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+"
+" AutoComplPop like behavior.
+"let g:neocomplete#enable_auto_select = 1
+
+" Shell like behavior(not recommended).
+"set completeopt+=longest
+"let g:neocomplete#enable_auto_select = 1
+"let g:neocomplete#disable_auto_complete = 1
+"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+
+" Enable omni completion.
+" autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+" autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+" autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+" autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+" autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" Enable heavy omni completion.
+"if !exists('g:neocomplete#sources#omni#input_patterns')
+"let g:neocomplete#sources#omni#input_patterns = {}
+"endif
+"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+" For perlomni.vim setting.
+" https://github.com/c9s/perlomni.vim
+"let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+
 " Snippets
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
+"let g:UltiSnipsExpandTrigger=
+"let g:UltiSnipsJumpForwardTrigger=
 let g:UltiSnipsEditSplit="horizontal"
 let g:user_emmet_mode='iv'
 imap <silent> <expr> <C-@> emmet#expandAbbrIntelligent("\<C-@>")
 vmap <silent> <C-@> :call emmet#expandAbbr(0,'')
 
 " NERDTree
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | wincmd l | endif
-autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+augroup NERDTree
+    autocmd!
+    autocmd StdinReadPre * let s:std_in=1
+    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | wincmd l | endif
+    autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+augroup END
+
+let NERDTreeShowHidden=1
+let NERDTreeIgnore=['\.pyc$','^.git$']
 
 " Enchanted
 let g:VeryMagicSubstitute=1
@@ -184,18 +367,107 @@ let g:indent_guides_auto_colors=0
 let g:gutentags_enabled=0
 let g:gutentags_tagfile='.tags'
 let g:gutentags_project_root=['.git']
-autocmd FileType c,php,java,python let g:gutentags_enabled=1
+"autocmd FileType c,php,java,python let g:gutentags_enabled=1
+"autocmd FileType javascript,html let g:gutentags_enabled=1
 
-" Formatting
+" Formatting/Syntax
+function! FindConfig(prefix, what, where)
+    let cfg = findfile(a:what, escape(a:where, ' ') . ';')
+    return cfg !=# '' ? ' ' . a:prefix . ' ' . shellescape(cfg) : ''
+endfunction
+
+"autocmd FileType javascript let b:syntastic_javascript_jscs_args =
+"\ get(g:, 'syntastic_javascript_jscs_args', '') .
+"\ FindConfig('-c', '.eslintrc', expand('<afile>:p:h', 1))
+
+
+" Syntastic
+augroup Syntastic
+    " Syntastic off by default
+    autocmd!
+    autocmd VimEnter * silent! SyntasticToggleMode
+augroup END
+
+let g:syntastic_always_populate_loc_list = 0
+let g:syntastic_auto_loc_list = 0
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+let g:syntastic_auto_jump = 1
+
+let g:syntastic_error_symbol = "\u00A0X"
+let g:syntastic_warning_symbol = "\u00A0!"
+"let g:syntastic_aggregate_errors = 1
+
+let g:syntastic_quiet_messages = { "type": "style" }
+
+let g:syntastic_python_checkers = ['pylint']
+"let g:syntastic_javascript_checkers = ['jshint']
+let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_html_checkers = ['tidy']
+
+let g:syntastic_css_checkers = ['stylelint']
+"let g:syntastic_scss_checkers = ['stylelint']
+"let g:syntastic_less_checkers = ['stylelint']
+let g:syntastic_less_checkers = ['recess']
+
+" TODO use project first
+"let g:syntastic_css_stylelint_args = '--config ~/.stylelintrc'
+"let g:syntastic_less_stylelint_args = '--config ~/.stylelintrc -s less'
+let g:syntastic_css_stylelint_args = ''
+let g:syntastic_less_recess_args = '--strictPropertyOrder false'
+"let g:syntastic_scss_stylelint_args = '--config ~/.stylelintrc -s scss'
+
+"let g:syntastic_html_tidy_args='" -config ~/.tidy.conf"'
+let g:syntastic_html_tidy_ignore_errors = []
+let g:syntastic_html_tidy_blocklevel_tags = ['template']
+let g:syntastic_html_tidy_inline_tags = []
+let g:syntastic_html_tidy_empty_tags = []
+let g:syntastic_html_tidy_ignore_errors = []
+let g:syntastic_html_tidy_ignore_errors += [ '<template> proprietary attribute "name"' ]
+let g:syntastic_html_tidy_ignore_errors += [ '<script> proprietary attribute "crossorigin"' ]
+let g:syntastic_html_tidy_ignore_errors += [ '<script> proprietary attribute "proprietary"' ]
+let g:syntastic_html_tidy_ignore_errors += [ '<link> proprietary attribute "crossorigin"' ]
+let g:syntastic_html_tidy_ignore_errors += [ '<link> proprietary attribute "proprietary"' ]
+
+"let g:ycm_add_preview_to_completeopt=0
+"let g:ycm_confirm_extra_conf=0
+"set completeopt-=preview
+
+" Fix for persistent bd
+"nnoremap <silent> <C-d> :lclose<CR>:bdelete<CR>
+"cabbrev <silent> bd <C-r>=(getcmdtype()==#':' && getcmdpos()==1 ? 'lclose\|bdelete' : 'bd')<CR>
+
 let g:autoformat_autoindent = 1
-let g:autoformat_retab = 1
+let g:autoformat_retab = 0
 let g:autoformat_remove_trailing_spaces = 1
+
 let g:formatdef_astyle_c='"astyle --mode=c -A2ps4CSKNwpUjCk3fH"'
 let g:formatters_c=['astyle_c']
 "let g:formatdef_tidy_html='"tidy -config ~/.tidy.conf 2> /dev/null"'
 let g:formatdef_tidy_html='"tidy -config ~/.tidy.conf"'
-let g:formatters_html=['tidy_html']
-let g:autoformat_verbosemode=1
+"let g:formatters_html=['tidy_html', 'default']
+let g:formatdef_python_pylint_args='--disable=C0111'
+let g:formatdef_pylint_args='--disable=C0111'
+
+let g:formatdef_jsb='"js-beautify --editorconfig --type js -j -a -k -n -s 2 -b collapse-preserve-inline"'
+let g:formatters_javascript=['jsb']
+let g:formatters_javascript_jsx=['jsb']
+let g:formatters_jsx=['jsb']
+let g:formatters_json=['jsb']
+
+" let g:formatdef_eslint='"eslint --stdin --fix"'
+" let g:formatters_javascript=['eslint']
+" let g:formatters_javascript_jsx=['eslint']
+" let g:formatters_jsx=['eslint']
+" let g:formatters_json=['eslint']
+
+let g:formatdef_jsbcss='"js-beautify --editorconfig --type css -L -N -n -s 2"'
+let g:formatters_css=['jsbcss']
+let g:formatters_less=['jsbcss']
+
 
 " Git
 let g:gitgutter_max_signs=999
@@ -203,25 +475,13 @@ nnoremap cog :GitGutterToggle<CR>
 autocmd VimEnter * silent! GitGutterDisable
 
 " RainbowParentheses
-autocmd VimEnter * silent! RainbowParenthesesToggle
-autocmd Syntax   * silent! RainbowParenthesesLoadRound
-autocmd Syntax   * silent! RainbowParenthesesLoadSquare
-autocmd Syntax   * silent! RainbowParenthesesLoadBraces
-
-" Syntax languages
-autocmd BufRead,BufNewFile *.inc  silent! setlocal filetype=php
-autocmd BufRead,BufNewFile *.tex  silent! setlocal filetype=tex
-autocmd BufRead,BufNewFile *.md   silent! setlocal filetype=markdown
-
-"au BufReadPost *.doc,*.docx,*.rtf,*.odp,*.odt,*.pdf silent set ro
-"au BufReadPost *.doc,*.docx,*.rtf,*.odp,*.odt silent %!pandoc "%" -tplain -o /dev/stdout
-"au BufReadPost *.pdf silent %!pdftotext -nopgbrk -layout -q -eol unix "%" - | fmt -w78
-
-autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-autocmd WinLeave    * setlocal  nocursorline
-autocmd VimEnter    * highlight CursorLine   ctermbg=235
-autocmd InsertEnter * highlight CursorLine   ctermbg=234
-autocmd InsertLeave * highlight CursorLine   ctermbg=235
+augroup RainbowParentheses
+    autocmd!
+    autocmd VimEnter * silent! RainbowParenthesesToggle
+    autocmd Syntax   * silent! RainbowParenthesesLoadRound
+    autocmd Syntax   * silent! RainbowParenthesesLoadSquare
+    autocmd Syntax   * silent! RainbowParenthesesLoadBraces
+augroup END
 
 " Leader Commands
 let mapleader="\<SPACE>"
@@ -239,15 +499,16 @@ nnoremap \tm  :e ~/.tmux.conf<CR>
 nnoremap \s   :UltiSnipsEdit<CR>
 
 nnoremap <silent> <F1> :call TmuxSplitCmd('', 12)<CR>
-nnoremap <silent> <F3> :silent! call TmuxSplitCmd('')<CR>
+nnoremap <silent> <F3> :SyntasticCheck<CR>
 nnoremap <silent> <F4> :Autoformat<CR>
 vnoremap <silent> <F6> :!python<CR>
 nnoremap <silent> <F6> :.!python<CR>
 nnoremap <silent> <F7> Y:@"<CR>
 vnoremap <silent> <F7> Y:@"<CR>
-"nnoremap <F8>
+nnoremap <silent> <F8> :UndotreeToggle<CR>
 nnoremap <silent> <F9>  :call GetColors()<CR>
 nnoremap <silent> <F10> :call SyntaxStack()<CR>
+nnoremap <silent> <F11> :so $MYVIMRC<CR>
 
 " Center the cursor
 nnoremap n nzzzv
@@ -267,62 +528,73 @@ vmap <UP> xkkpgV
 
 nnoremap <UP> {
 nnoremap <DOWN> }
+"nnoremap <UP> <C-]>
+"nnoremap <DOWN> <C-t>
 nnoremap <LEFT> :bp<CR>
 nnoremap <RIGHT> :bn<CR>
+" C-] gotodef C-T jump back
 
-" Use vim-sneak for f
-let g:sneak#use_ic_scs=1
-"map? vmode?
-"replace 'f' with 1-char Sneak
-nmap f <Plug>Sneak_f
-nmap F <Plug>Sneak_F
-xmap f <Plug>Sneak_f
-xmap F <Plug>Sneak_F
-omap f <Plug>Sneak_f
-omap F <Plug>Sneak_F
-"replace 't' with 1-char Sneak
-nmap t <Plug>Sneak_t
-nmap T <Plug>Sneak_T
-xmap t <Plug>Sneak_t
-xmap T <Plug>Sneak_T
-omap t <Plug>Sneak_t
-omap T <Plug>Sneak_T
+" " Use vim-sneak for f
+" "let g:sneak#use_ic_scs=1
+" "map? vmode?
+" "replace 'f' with 1-char Sneak
+" nmap f <plug>sneak_f
+" nmap f <plug>sneak_f
+" xmap f <plug>sneak_f
+" xmap f <plug>sneak_f
+" omap f <plug>sneak_f
+" omap f <plug>sneak_f
+" "replace 't' with 1-char sneak
+" nmap t <plug>sneak_t
+" nmap t <plug>sneak_t
+" xmap t <plug>sneak_t
+" xmap t <plug>sneak_t
+" omap t <Plug>Sneak_t
+" omap T <Plug>Sneak_T
 
-inoremap <C-F> <C-X><C-F>
+"inoremap <C-F> <C-X><C-F>
 
 " Navigation
 augroup Navigation
     autocmd!
+
     autocmd VimEnter * silent! nnoremap <C-H> <C-W>h
     autocmd VimEnter * silent! nnoremap <C-K> <C-W>k
     autocmd VimEnter * silent! nnoremap <C-L> <C-W>l
     autocmd VimEnter * silent! nnoremap <silent> <C-J> :call MoveWindowOrTmux()<CR>
-    autocmd VimEnter * silent! inoremap <C-H> <ESC><C-W>h
-    autocmd VimEnter * silent! inoremap <C-K> <ESC><C-W>k
-    autocmd VimEnter * silent! inoremap <C-L> <ESC><C-W>l
-    autocmd VimEnter * silent! inoremap <silent> <C-J> <ESC>:call MoveWindowOrTmux()<CR>
+
+    "autocmd VimEnter * silent! inoremap <C-H> <ESC><C-W>h
+    "autocmd VimEnter * silent! inoremap <C-K> <ESC><C-W>k
+    "autocmd VimEnter * silent! inoremap <C-L> <ESC><C-W>l
+    "autocmd VimEnter * silent! inoremap <silent> <C-J> <ESC>:call MoveWindowOrTmux()<CR>
 augroup END
 
-command! -bang -nargs=? -complete=file E e<bang> <args>
-command! -bang -nargs=? -complete=file W w<bang> <args>
-command! -bang -nargs=? -complete=file Q q<bang> <args>
-command! -bang -nargs=? -complete=file Wq wq<bang> <args>
-command! -bang -nargs=? -complete=file WQ wq<bang> <args>
-
-" TODO try to send output to bottom first?
 augroup Evaluate
     autocmd!
-    autocmd FileType c      silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('gcc -Wall % && ./a.out')<CR>
-    autocmd FileType html   silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('python -m SimpleHTTPServer 8000',4)<CR>
-    autocmd FileType matlab silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('matlab -nosplash -nodesktop -r "run('%')"')<CR>
-    autocmd FileType python silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('python %')<CR>
-    autocmd FileType sh     silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('bash %')<CR>
-    autocmd FileType vim    silent! nnoremap <silent> <buffer> <F5> :so %<CR>
+    autocmd FileType c        silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('gcc -Wall %p -o %r && ./%r')<CR>
+    autocmd FileType html     silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('http',4)<CR>
+    autocmd FileType matlab   silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('matlab -nosplash -nodesktop -r "run('%p')"')<CR>
+    autocmd FileType python   silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('python %p')<CR>
+    autocmd FileType sh       silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('bash %p')<CR>
+    autocmd FileType less     silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('lessc %p')<CR>
+    autocmd FileType vim      silent! nnoremap <silent> <buffer> <F5> :so %<CR>
+    autocmd FileType markdown silent! nnoremap <silent> <buffer> <F5> :silent! call Markdown()<CR>
 augroup END
+
+function! Markdown()
+    let cmd = '(echo "# '.expand('%:r').'" && echo "## Table of contents" && markdown-toc '.expand('%').' && echo && cat '.expand('%').')  | marked  | bootstrapify '.expand('%:r').' | (tidy -config ~/.tidy.conf 2> /dev/null) > '.expand('%:r').'.html'
+    "silent! call system("marked ".expand('%')." -o ".expand('%:r').".html")
+    silent! call system(cmd)
+    "sleep 1000m
+    redraw!
+    silent! call TmuxSplitCmd('http',4)
+endfunction
 
 " Functions
 " TODO WARNING only use with 1 bottom split
 function! TmuxSplitCmd(cmd, ...)
+
+    let cmd = a:cmd
 
     if a:0 == 1
         let l:lines=a:1
@@ -330,21 +602,27 @@ function! TmuxSplitCmd(cmd, ...)
         let l:lines='12'
     endif
 
-    if a:cmd != ''
-        let cmd=substitute(''.a:cmd.'', '%', shellescape(expand('%:p')), 'g')
+    if cmd != ''
+        let cmd=substitute(cmd, '%r', shellescape(expand('%:r')), 'g')
+        let cmd=substitute(cmd, '%p', shellescape(expand('%:p')), 'g')
         let cmd=substitute(cmd, ' ', '\\ ', 'g')
+        let cmd=substitute(cmd, '&', '\\&', 'g')
+        let cmd=''.cmd.''
     else
         let cmd=""
     endif
 
     let npanes=len(split(system('tmux list-panes'), "\n"))
     if npanes == 1
-        silent! execute 'Tmux new-window -dn vimshell -c '.shellescape(getcwd())
-        silent! execute 'Tmux join-pane -dvl'.l:lines.' -s vimshell'
-        execute 'sleep 200m'
+        silent! call system('tmux new-window -dn vimshell -c '.shellescape(getcwd()))
+        silent! call system('tmux join-pane -dvl'.l:lines.' -s vimshell')
+        "silent! execute 'Tmux new-window -dn vimshell -c '.shellescape(getcwd())
+        "silent! execute 'Tmux join-pane -dvl'.l:lines.' -s vimshell'
+        execute 'sleep 500m'
     end
 
-    silent! execute 'Tmux send-keys -t bottom '.cmd
+    "silent! execute 'Tmux send-keys -t bottom '.cmd
+    silent! call system('tmux send-keys -t bottom '.cmd)
     "silent! execute 'Tmux select-pane -D'
     " silent! execute 'Tmux break-pane -t bottom \; rename-window vimout \; select-window -l'
     " silent! execute 'Tmux new-window -dn vimshell -c '.shellescape(getcwd())
@@ -352,14 +630,13 @@ function! TmuxSplitCmd(cmd, ...)
     " silent! execute 'Tmux send-keys -t vimshell '.l:s
     " silent! execute 'Tmux join-pane -dvl'.l:lines.' -s vimshell'
     " silent! execute 'Tmux select-pane -D'
-
 endfunction
 
 function! MoveWindowOrTmux()
     let n = winnr()
     wincmd j
     if winnr() == n
-        silent! execute 'Tmux select-pane -D'
+        silent! call system('tmux select-pane -D')
         return
     endif
 endfunction
@@ -394,6 +671,8 @@ function! SyntaxStack()
     echo join(s, ' -> ')
 endfunction
 
+" TODO all mappings inside VimEnter AuGroup
+
 " Fix common programmer typos
 iabbrev prinft    printf
 iabbrev pritn     print
@@ -401,6 +680,14 @@ iabbrev retunr    return
 iabbrev retrun    return
 iabbrev reutrn    return
 iabbrev improt    import
+
+" Forgive capital normal commands
+command! -bang -nargs=? -complete=file E e<bang> <args>
+command! -bang -nargs=? -complete=file W w<bang> <args>
+command! -bang -nargs=? -complete=file Q q<bang> <args>
+command! -bang -nargs=? -complete=file Wq wq<bang> <args>
+command! -bang -nargs=? -complete=file WQ wq<bang> <args>
+
 
 " ===================================================================== EXPERIMENTAL
 
@@ -412,18 +699,233 @@ iabbrev improt    import
 nnoremap !! :e $MYVIMRC<CR>Go<C-r>:<ESC>
 
 " TODO tabularize-vim?
-vnoremap <leader>a :!column -t -s $' '<CR>:'<,'>s/\v( *)  /\1 /g<CR>
+"vnoremap <leader>a :!column -t -s $' '<CR>:'<,'>s/\v( *)  /\1 /g<CR>
+
+"vnoremap <leader>= :Tabularize/=<CR>gv
+"vnoremap <leader>: :Tabularize/:\zs<CR>gv
+vnoremap <leader>= :Tab/=<CR>gv
+vnoremap <leader>: :Tab/:\zs<CR>gv
 
 " NOTE <C-_> == <C-/>
 " TODO close all open parens in other languages
-inoremap <C-_> </<C-X><C-O><ESC>a
+"inoremap <C-_> </<C-X><C-O><ESC>a
+"inoremap <C-_> <ESC>o</<C-X><C-O><ESC><<
+"inoremap <C-_> <ESC>A</<C-X><C-O><ESC>>>>>%
+
+"imap <C-_> <ESC>A</<C-X><C-O><ESC>hmt%0"sy^`t0d^"sPo
+
+"imap <C-_> <ESC>A</<C-X><C-O><ESC>hmt%0"sy^`t0d^"sPo
+"imap <C-]> <ESC>A</<C-X><C-O><ESC>F/l"cywmt%0"sy^"cyi"`t0d^"sPA<C-R>c<ESC>
+"<!-- /<C-R>c --><ESC>o
+
+"imap <C-_> <ESC>:silent! call EndHTMLTag()<CR>A
+imap <C-_> <ESC>:call EndHTMLTag()<CR>A
+
+" TODO don't use marks/registers
+function! EndHTMLTag()
+    " TODO More efficient, Avoid moving around
+
+    " mark t with the current tag
+    " mark p with the current pos
+    execute "normal mpA</\<C-X>\<C-O>\<ESC>%ll\"tyw"
+
+    let lineNow = line(".")
+    let posNow = col(".")
+    " mark m with the match location
+    execute "normal $h%mm"
+    let lineMatch = line(".")
+    let posMatch = col(".")
+
+    if (lineNow == lineMatch) && (posNow == posMatch+2)
+        execute "normal $%D"
+    elseif lineNow == lineMatch
+        execute "normal `p"
+    else
+
+        " yank the whitespace to s
+        execute "normal 0\"sy^"
+
+        " yank the tag into m
+        execute "normal `p$%\"md$"
+
+        " should we add an end comment?
+        if index(['div', 'template'], @t)>=0
+
+            let line=getline(lineMatch)
+            let attrs = {'id':'#', 'class':'.', 'name':''}
+
+            for attr in keys(attrs)
+                let an = match(line, ' '.attr.'=')
+                if an >= 0
+                    let q1 = match(line, '"', an, 1)+1
+                    let q2 = match(line, '"', an, 2)-1
+                    " TODO replace spaces with 'space'+attr also
+                    "echom an.' '.q1.' '.q2.' '.line[q1:q2]
+                    let @m .= ' <!-- '.attrs[attr].line[q1:q2].' -->'
+                    echom @m
+                    break
+                end
+            endfor
+        end
+
+        "execute "normal `p$%\"md$o\<C-R>m\<ESC>0d^\"sP"
+        execute "normal o\<C-R>m\<ESC>0d^\"sP"
+
+
+    endif
+
+endfunction
+
+
+"TODO test
+"map <C-c> <ESC>
+"noremap <C-c> <ESC>
+"vnoremap <C-c> <ESC>
+
+" augroup Escape
+"     autocmd!
+"     autocmd VimEnter * inoremap <C-c> <C-[>
+"     autocmd VimEnter * vnoremap <C-c> <C-[>
+" augroup END
+
+inoremap <C-c> <C-[>
+vnoremap <C-c> <C-[>
+
+nnoremap sa cxIa
+
+"TODO mapping { to autopair if at end of line only
+" Can also add zfaB
+
+" Auto-pairs
+"let g:AutoPairsFlyMode = 0
+"let g:AutoPairsShortcutBackInsert = '<C-g>'
+"let g:AutoPairsShortcutBackInsert = '<C-z>'
+"let g:AutoPairsShortcutFastWrap = '<C-s>'
+"inoremap {<CR>  {<CR>}<ESC>O
+
+" let g:AutoPairsMapBS=1
+" let g:AutoPairsMapCh=1
+" let g:AutoPairsMapCR=1
+" let g:AutoPairsCenterLine = 1
+" let g:AutoPairsMapSpace=1
+" let g:AutoPairsFlyMode=0
+
+"let g:AutoPairsNeverSkip=0
+"let g:AutoPairsSkipQuotes=0
+"let g:AutoPairsOnlyAtEOL=1
+let g:AutoPairsOnlyBeforeClose=1
+let g:AutoPairsBalanceImmidietely=1
+let g:AutoPairsNeverJumpLines=1
+
+let g:AutoPairsMultilineClose=0
+let g:AutoPairsDebug=0
+" let AutoPairsMultilineCloseg:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '`':'`'}
+"inoremap <buffer> <silent> <CR> <C-R>=AutoPairsReturn()<CR>
+
+" Buffer level autopairs? b:AutoPairs
+
+
+
+
+" TODO close everything at indent level F( etc
+"inoremap ;; <C-R>=SemicolonMagic()<CR><CR>
+inoremap ;; <ESC>:call SemicolonMagic()<CR>o
+"nnoremap ;; :call SemicolonMagic()<CR>
+
+function! SemicolonMagic()
+
+    " save env
+    "let ape = b:autopairs_enabled
+    "let b:autopairs_enabled = 0
+
+    " If at begining of line close the block at indent level
+    " TODO use trash register
+    " TODO use regex and avoid moving
+    " TODO use search()
+
+    " Get rid of any semicolon and whitespace at the end
+    call setline('.', substitute(getline('.'), ';*\s*$', '', ''))
+
+    " TODO make this global allow buffer overrides
+    let lineautoclose = ['[','(','{']
+    let lineautomatch = [']',')','}']
+
+    execute "normal $"
+    let lineNow = line(".")
+    let colNow = col(".")
+
+    while len(lineautoclose) > 0
+        let colNow += 1
+        echom lineNow." ".colNow
+        echom 'candidates: '.join(lineautoclose,'')
+
+        let lineautoclosenew = []
+        let lineautomatchnew = []
+        let m = -1
+
+        let i = 0
+        while i < len(lineautoclose)
+
+            execute "normal A".lineautomatch[i]
+
+            Fold description 1
+
+            "TODO % does not behave as expected
+            execute "normal $%"
+            let lineMatch = line(".")
+            let colMatch = col(".")
+
+            call cursor(lineNow,colNow)
+
+            if lineMatch == lineNow
+                echom lineautoclose[i].' '.lineMatch.' '.colMatch
+                if colMatch < colNow
+                    echom 'valid match found '.lineautomatch[i]
+                    if colMatch > m
+                        echom 'better match found '.lineautomatch[i]
+                        let m = i
+                    end
+                    let lineautoclosenew += [lineautoclose[i]]
+                    let lineautomatchnew += [lineautomatch[i]]
+                endif
+            end
+
+            execute "normal $x"
+
+            let i += 1
+
+        endwhile
+
+        if m >= 0
+            " TODO copy the whitespace after open char
+            echom "inserting ".lineautomatch[m]
+            execute "normal A".lineautomatch[m]
+        endif
+
+        let lineautoclose = lineautoclosenew
+        let lineautomatch = lineautomatchnew
+
+    endwhile
+
+    " Add a semicolon
+    "if !match() " doesn't end with }
+    if (match(getline('.'), '\}\s*$') == -1)
+        call setline('.', substitute(getline('.'), ';*\s*$', ';', ''))
+    endif
+
+
+    " restore env
+    "let b:autopairs_enabled = ape
+
+    "return "A;\<CR>"
+    "return "\<End>"
+endfunction
+
 "autocmd FileType html,xml inoremap <C-t> </<C-X><C-O><ESC>a
 "autocmd FileType html,xml inoremap <buffer> </ </<C-X><C-O><ESC>a
 
 "set mouse=a
 "set selectmode=mouse,key
 
-" Temp meteor helper
-autocmd FileType javascript,html silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('meteor npm run lint --silent')<CR>
-
+set nowrap
 
