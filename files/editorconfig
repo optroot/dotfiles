@@ -14,7 +14,10 @@ max_line_length = off
 #spaces_around_brackets = true
 #quote_type = single
 
-[*.{js,css,less,json,html}]
+[*.{js,css,less,json,html,vim}]
+indent_size = 2
+
+[.vimrc]
 indent_size = 2
 
 [*.md]

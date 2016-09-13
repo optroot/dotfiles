@@ -93,15 +93,50 @@ if ! shopt -oq posix; then
   fi
 fi
 
+REDFG="\[\e[38;5;124m\]"
+REDBG="\[\e[48;5;124m\]"
+BLUEFG="\[\e[38;5;24m\]"
+BLUEBG="\[\e[48;5;24m\]"
+DEEPBLUEFG="\[\e[38;5;18m\]"
+DEEPBLUEBG="\[\e[48;5;18m\]"
+GREENFG="\[\e[38;5;64m\]"
+GREENBG="\[\e[48;5;64m\]"
+WHITEFG="\[\e[38;5;7m\]"
+WHITEBG="\[\e[48;5;7m\]"
+BLACKFG="\[\e[38;5;16m\]"
+BLACKBG="\[\e[48;5;16m\]"
+BOLD="\[\e[1m\]"
+CLEAR="\[\e[0m\]"
+
 export PROMPT_COMMAND=__prompt_command
 __prompt_command() {
   local EXIT="$?"
-  if [ $EXIT != 0 ]; then
-    PS1='\[\e[0;31m\]'
-  else
-    PS1='\[\e[0;32m\]'
+  PS1=""
+
+  #git
+  if branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null); then
+      if [[ "$branch" == "master" ]]; then
+          PS1+="${DEEPBLUEBG}${WHITEFG}${BOLD}${BLUEBG}${DEEPBLUEFG} "
+      else
+          PS1+="${DEEPBLUEBG}${WHITEFG}${BOLD} ${branch} ${BLUEBG}${DEEPBLUEFG} "
+      fi
+      #PS1+="${BLUEBG}${WHITEFG}${BOLD} ${branch} "
+      #PS1+="${BLUEBG}${WHITEFG}${BOLD} ${branch} ${DEEPBLUEFG}${WHITEFG} "
   fi
-  PS1+='\$\[\e[0m\] '
+
+  if [ $EXIT != 0 ]; then
+      PS1+="${BLUEBG}${WHITEFG}${BOLD}\$${BLUEFG}${REDBG}${CLEAR}${REDFG}${CLEAR} "
+      #PS1="${REDBG}${WHITEFG}${BOLD}\$${CLEAR}${REDFG}${CLEAR} "
+      #PS1="${BLACKFG}${REDBG}${WHITEFG}${BOLD} \$ ${CLEAR}${REDFG}${CLEAR} "
+      #PS1="${WHITEBG} ${WHITEFG}${REDBG}${WHITEFG}${BOLD} \$ ${CLEAR}${REDFG}${CLEAR} "
+      #PS1="${BLACKBG} ${BLACKFG}${REDBG}${WHITEFG}${BOLD} \$ ${CLEAR}${REDFG}${CLEAR} "
+  else
+      PS1+="${BLUEBG}${WHITEFG}${BOLD}\$${BLUEFG}${GREENBG}${CLEAR}${GREENFG}${CLEAR} "
+      #PS1="${GREENBG}${WHITEFG}${BOLD}\$${CLEAR}${GREENFG}${CLEAR} "
+      #PS1="${BLACKFG}${GREENBG}${WHITEFG}${BOLD} \$ ${CLEAR}${GREENFG}${CLEAR} "
+      #PS1="${WHITEBG} ${WHITEFG}${GREENBG}${WHITEFG}${BOLD} \$ ${CLEAR}${GREENFG}${CLEAR} "
+      #PS1="${BLACKBG} ${BLACKFG}${GREENBG}${WHITEFG}${BOLD} \$ ${CLEAR}${GREENFG}${CLEAR} "
+  fi
 
   local tmuxtitle=`tmux display-message -p '#W' 2> /dev/null`
   if [[ $? -eq 0 ]]; then
@@ -109,7 +144,7 @@ __prompt_command() {
       true # Don't touch the title
     elif [[ -z "$tmuxtitle" ]]; then
       true # tmux probably not running
-    else      
+    else
       V=${PWD##*projects/}
       V=${V%%/*}
       V=${V:-"bash"}
@@ -120,13 +155,12 @@ __prompt_command() {
   case "$TERM" in
     xterm*|rxvt*|screen*)
       PS1="\[\e]0;\u@\h: ${PWD}\a\]$PS1"
+      #PS1="${CLEAR}\u@\h: ${PWD}\a\]$PS1"
       ;;
     *)
       ;;
   esac
 }
-
-
 
 # Allow quickly switch to project directories
 _p() {
@@ -155,3 +189,5 @@ export MANPAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu
 
 export NVM_DIR="/home/optroot/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+

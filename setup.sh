@@ -11,7 +11,7 @@ ln -s `readlink -e UltiSnips` ~/.vim/UltiSnips
 
 link() {
   echo $1
-  rm -f ~/.$1
+  rm -fi ~/.$1
   ln $1 ~/.$1
 }
 
