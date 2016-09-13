@@ -1,0 +1,12 @@
+{
+    "extends": "/home/optroot/.npm/stylelint-config-standard",
+    "rules": {
+
+        "indentation": 2,
+        "max-empty-lines": 2,
+        "block-no-empty": null,
+        "color-hex-case": "lower",
+        "declaration-colon-space-after": "always",
+
+    }
+}

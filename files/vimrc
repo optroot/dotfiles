@@ -53,7 +53,7 @@ call plug#end()
 
 " Debug
 "let g:SemicolonMagicDebug=0
-"let g:AutoPairsDebug=1
+" let g:AutoPairsDebug=1
 "let g:syntastic_debug = 33
 "let g:autoformat_verbosemode=1
 "let g:EditorConfig_verbose=1
@@ -542,13 +542,14 @@ let mapleader="\<SPACE>"
 " Open file shortcut
 noremap  \\   :NERDTreeToggle<CR>
 nnoremap \vi  :e $MYVIMRC<CR>
+nnoremap \tm  :e ~/.tmux.conf<CR>
+nnoremap \s   :UltiSnipsEdit<CR>
+nnoremap \to  :e ~/todo/TODO.md<CR>
 nnoremap \sh  :e ~/todo/bashtodo.md<CR>
-nnoremap \to  :e ~/todo/vimtodo.md<CR>
+nnoremap \vd  :e ~/todo/vimtodo.md<CR>
 nnoremap \id  :e ~/todo/ideas.md<CR>
 nnoremap \wo  :e ~/todo/words.md<CR>
 nnoremap \pa  :e ~/todo/pass.md<CR>
-nnoremap \tm  :e ~/.tmux.conf<CR>
-nnoremap \s   :UltiSnipsEdit<CR>
 
 nnoremap <silent> <F1> :call TmuxSplitCmd('', 12)<CR>
 nnoremap <silent> <F3> :SyntasticCheck<CR>
@@ -735,12 +736,24 @@ endfunction
 " TODO all mappings inside VimEnter AuGroup
 
 " Fix common programmer typos
+
+" Keywords and typos
 iabbrev prinft    printf
 iabbrev pritn     print
 iabbrev retunr    return
 iabbrev retrun    return
 iabbrev reutrn    return
 iabbrev improt    import
+iabbrev ciel ceil
+
+" Words
+iabbrev teh the
+iabbrev immidiately immediately
+iabbrev immedietely immediately
+iabbrev seperate separate
+
+
+
 
 " Forgive capital normal commands
 command! -bang -nargs=? -complete=file E e<bang> <args>
@@ -929,6 +942,8 @@ let g:AutoPairsMultilineClose=0
 let g:AutoPairsOnlyBeforeClose=1
 let g:AutoPairsBalanceImmidietely=1
 let g:AutoPairsNeverJumpLines=1
+"let g:AutoPairsAutoNewlineAfter=['{']
+
 
 " let AutoPairsMultilineCloseg:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '`':'`'}
 "inoremap <buffer> <silent> <CR> <C-R>=AutoPairsReturn()<CR>
@@ -939,6 +954,12 @@ inoremap <C-e>" <ESC>ys$"$
 
 " TODO close everything at indent level F( etc
 let g:SemicolonMagicNormalMap=';;'
+let g:SemicolonMagicInsertModeNewline=0
+let g:SemicolonMagicAddSemicolon = 0
+augroup SemicolonMagic
+    autocmd!
+    autocmd FileType javascript,c let b:SemicolonMagicAddSemicolon = 1
+augroup END
 
 
 "inoremap ;; <ESC>:silent! call SemicolonMagic()<CR>o
@@ -1043,11 +1064,5 @@ inoremap <C-V> <ESC>
 inoremap <C-V><C-V> <C-V>
 
 set nowrap
-
-let g:SemicolonMagicAddSemicolon = 0
-augroup SemicolonMagic
-    autocmd!
-    autocmd FileType javascript,c let b:SemicolonMagicAddSemicolon = 1
-augroup END
 
 
