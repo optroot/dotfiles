@@ -1,0 +1,31 @@
+
+# Visual Helpers
+set bell-style visible
+set blink-matching-paren on
+
+# Completion
+set completion-ignore-case on
+set show-all-if-ambiguous on
+set match-hidden-files off
+set page-completions off
+set completion-query-items 100
+set skip-completed-text on
+
+# Colors and Marking
+set colored-stats on
+set visible-stats off
+set mark-symlinked-directories on
+
+# UTF-8
+set input-meta on
+set meta-flag on
+set convert-meta off
+set output-meta on
+
+# Use Alt/Meta + Delete to delete the preceding word
+#"\e[3;3~": kill-word
+# Use the text that has already been typed as the prefix for searching through
+# commands (i.e. more intelligent Up/Down behavior)
+#"\e[B": history-search-forward
+#"\e[A": history-search-backward
+

@@ -1,11 +1,28 @@
 #! header
 
 snippet #! "Shebang header for python scripts" b
-#!/usr/bin/env python
+#!/usr/bin/python
+$0
+endsnippet
+
+snippet #utf8 "UTF8 support" b
+# -*- encoding: utf-8 -*-
 $0
 endsnippet
 
 snippet ifn "if name" b
+if __name__ == '__main__':
+
+	${1:${VISUAL:main()}}
+endsnippet
+
+snippet name "if name" b
+if __name__ == '__main__':
+
+	${1:${VISUAL:main()}}
+endsnippet
+
+snippet ifname "if name" b
 if __name__ == '__main__':
 
 	${1:${VISUAL:main()}}

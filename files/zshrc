@@ -1,0 +1,151 @@
+
+
+# TODO consistent quoting
+
+export ARCHFLAGS="-arch x86_64"
+export EDITOR='vim'
+export GOPATH=$HOME
+export LANG=en_US.UTF-8
+export MANPATH="/usr/local/man:$MANPATH"
+export PATH=$HOME/bin:/usr/local/bin:$PATH
+export SSH_KEY_PATH="~/.ssh/rsa_id"
+export ZSH=/home/optroot/.oh-my-zsh
+export LD_LIBRARY_PATH=/usr/local/lib
+export PYTHONPATH="${PYTHONPATH}:~/lib/python"
+
+# Use vim for man pages
+export MANPAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
+
+# Load NVM
+export NVM_DIR="/home/optroot/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+
+HISTFILE=~/.zsh_history
+HISTSIZE=1024
+SAVEHIST=1024
+ZSH_THEME="custom"
+COMPLETION_WAITING_DOTS="true"
+DISABLE_AUTO_TITLE="true"
+HISTORY_IGNORE="(#*|ls*|cd*|history*|pwd|exit|clear)"
+
+plugins=(
+dirhistory
+zsh-256color
+zsh-completions
+)
+
+source $ZSH/oh-my-zsh.sh
+eval "$(dircolors ~/.dircolors)"
+autoload -U compinit && compinit
+
+setopt bang_hist
+setopt cdable_vars
+setopt complete_in_word
+setopt extended_glob
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
+setopt hist_reduce_blanks
+setopt hist_verify
+setopt inc_append_history
+setopt prompt_subst
+setopt share_history
+# TODO bindkey set-local-history
+# OR use fc -RI with this off
+
+# TODO (C-s/C-q)
+# stty stop ''
+# stty start ''
+# stty -ixon
+# stty -ixoff
+unsetopt flowcontrol
+
+# Window Title
+#print -Pn "\e]0;%n@%M:%/\a"
+
+zstyle ':completion:*' menu select=2
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+
+# TODO ^Xa expands abbrevs already
+# http://zshwiki.org/home/examples/zleiab
+typeset -Ag abbreviations
+abbreviations=(
+"..." 	 "../.."
+"...." 	 "../../.."
+"w"      "watch "
+"lw"     "| wc"
+"lx"     "| xargs"
+"ll"     "| less"
+"lg"     "| grep"
+"tx"     "tar zxvf"
+"tc"     "tar zcvf"
+"gc"     "git commit -m"
+"gl"     "git ls-tree --name-only -r HEAD"
+)
+
+TRAPINT() {
+    return $(( 128 + $1 ))
+}
+
+
+magic-abbrev-expand() {
+    local MATCH
+    LBUFFER=${LBUFFER%%(#m)[_a-zA-Z0-9]#}
+    LBUFFER+=${abbreviations[$MATCH]:-$MATCH}
+    zle self-insert
+}
+
+no-magic-abbrev-expand() {
+    LBUFFER+=' '
+}
+
+zle -N magic-abbrev-expand
+zle -N no-magic-abbrev-expand
+
+bindkey -e
+bindkey ' ' magic-abbrev-expand
+bindkey '^x ' no-magic-abbrev-expand
+bindkey -M isearch ' ' self-insert
+
+# TODO force C-u instead of C-c
+
+# up arrow to history-search-backward
+bindkey '^R'      history-incremental-pattern-search-backward
+#bindkey 'OD' dirhistory_zle_dirhistory_back
+#bindkey 'OC' dirhistory_zle_dirhistory_future
+#bindkey '^ ' autosuggest-accept
+#bindkey '\t' autosuggest-accept
+#bindkey '[Z' autosuggest-clear
+# bindkey '\e[5~'   history-search-backward # PgUp
+# bindkey '\e[6~'   history-search-forward  # PgDn
+bindkey '\e[A'   history-search-backward # PgUp
+bindkey '\e[B'   history-search-forward  # PgDn
+
+# Completions
+compdef _gnu_generic gcc
+compdef _gnu_generic gdb
+#compdef _project p
+
+# Aliases
+alias v='f -e vim'
+alias m='f -e mplayer'
+alias o='a -e xdg-open'
+alias p=' . project -z'
+#alias clear=' clear'
+alias ack='ack-grep'
+alias tmux='tmux -u2'
+
+# typos
+alias :e='vim'
+alias :wq=''
+alias :q=''
+alias thon='python'
+
+# ls
+#alias sl='ls -C'
+alias sl='ls'
+
+#TODO minimum size
+alias t='tree --dirsfirst -tACaq --noreport --filelimit 20'
+
+

@@ -57,7 +57,7 @@ DOOR                  38;5;127
 EXEC                  38;5;46;1
 FIFO                  38;5;126
 FILE                  0
-LINK                  target
+LINK                  38;5;205;1
 MULTIHARDLINK         38;5;222;1
 NORMAL                0
 ORPHAN                48;5;196;38;5;232;1

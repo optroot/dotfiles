@@ -1,6 +1,7 @@
 
 export LD_LIBRARY_PATH=/usr/local/lib # fixes TA-Lib
 export EDITOR=vim
+export GOHOME=$HOME
 
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
@@ -9,12 +10,15 @@ export EDITOR=vim
 # If not running interactively, don't do anything
 case $- in
   *i*) ;;
-*) return;;
+  *) return;;
 esac
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth:erasedups
+
+# The space thing is default?
+export HISTIGNORE=$HISTIGNORE:"history*:exit:clear:ls*"
 
 # append to the history file, don't overwrite it
 shopt -s histappend
@@ -61,12 +65,62 @@ esac
 #   fi
 # fi
 
+# # Project Helpers
+# _has_project() {
+#   dir=$1
+#   if [ -e $dir/README.md ]; then return 0; fi
+#   if [ -e $dir/.git ]; then return 0; fi
+#   return 1;
+# }
+
+# _get_projects() {
+#   for dir in `find ~/projects -mindepth 1 -maxdepth 1 -type d`; do
+#     if _has_project $dir; then
+#       echo $dir
+#     else
+#       for subdir in `find $dir -mindepth 1 -maxdepth 1 -type d`; do
+#         if _has_project $subdir; then
+#           echo $subdir
+#         fi
+#       done
+#     fi
+#   done
+# }
+
+# Allow quickly switch to project directories
+_p_complete() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  #COMPREPLY=( $(compgen -W "$(_get_projects | sed -re 's:/home/optroot/projects/::gi')" -- $cur) )
+  COMPREPLY=( $(compgen -W "$(project -l)" -- $cur) )
+}
+
+# _goto_project() {
+#   # if [ "$#" -ne 1 ]; then
+#   #   #echo "$0"
+#   #   #>&2 echo "Usage: ${0##*/} [project]"
+#   #   >&2 echo "Usage: p [project]"
+#   #   # TODO no reliable way to get script name
+#   #   #exit 1
+#   #   return 1
+#   # fi
+#   cd ~/projects/$1
+# }
+
+#alias p='_goto_project'
+alias p=' . project -z'
+complete -F _p_complete p
+
+# Remove these from history
+alias clear=' clear'
+alias ls=' ls'
+#alias cd=' cd'
+
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
   test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-  alias ls='ls --color=auto'
-  #alias dir='dir --color=auto'
-  #alias vdir='vdir --color=auto'
+  alias ls='ls -h --color=auto'
+  alias dir='dir --color=auto'
+  alias vdir='vdir --color=auto'
   alias grep='grep --color=auto'
   alias fgrep='fgrep --color=auto'
   alias egrep='egrep --color=auto'
@@ -77,10 +131,28 @@ fi
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
-if [ -f ~/.bash_aliases ]; then
-  . ~/.bash_aliases
-fi
+# if [ -f ~/.bash_aliases ]; then
+#   . ~/.bash_aliases
+# fi
 
+# typos
+alias :e='vim'
+alias :wq=''
+alias :q=''
+
+# ls
+alias sl='ls -CF'
+
+# other
+alias project='. project'
+#alias p='. p'
+alias ack='ack-grep'
+
+# fixes
+alias tmux='tmux -u2'
+
+# convenience fix when is scan mode
+alias thon='python'
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -115,27 +187,27 @@ __prompt_command() {
 
   #git
   if branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null); then
-      if [[ "$branch" == "master" ]]; then
-          PS1+="${DEEPBLUEBG}${WHITEFG}${BOLD}${BLUEBG}${DEEPBLUEFG} "
-      else
-          PS1+="${DEEPBLUEBG}${WHITEFG}${BOLD} ${branch} ${BLUEBG}${DEEPBLUEFG} "
-      fi
-      #PS1+="${BLUEBG}${WHITEFG}${BOLD} ${branch} "
-      #PS1+="${BLUEBG}${WHITEFG}${BOLD} ${branch} ${DEEPBLUEFG}${WHITEFG} "
+    if [[ "$branch" == "master" ]]; then
+      PS1+="${DEEPBLUEBG}${WHITEFG}${BOLD}${BLUEBG}${DEEPBLUEFG} "
+    else
+      PS1+="${DEEPBLUEBG}${WHITEFG}${BOLD} ${branch} ${BLUEBG}${DEEPBLUEFG} "
+    fi
+    #PS1+="${BLUEBG}${WHITEFG}${BOLD} ${branch} "
+    #PS1+="${BLUEBG}${WHITEFG}${BOLD} ${branch} ${DEEPBLUEFG}${WHITEFG} "
   fi
 
   if [ $EXIT != 0 ]; then
-      PS1+="${BLUEBG}${WHITEFG}${BOLD}\$${BLUEFG}${REDBG}${CLEAR}${REDFG}${CLEAR} "
-      #PS1="${REDBG}${WHITEFG}${BOLD}\$${CLEAR}${REDFG}${CLEAR} "
-      #PS1="${BLACKFG}${REDBG}${WHITEFG}${BOLD} \$ ${CLEAR}${REDFG}${CLEAR} "
-      #PS1="${WHITEBG} ${WHITEFG}${REDBG}${WHITEFG}${BOLD} \$ ${CLEAR}${REDFG}${CLEAR} "
-      #PS1="${BLACKBG} ${BLACKFG}${REDBG}${WHITEFG}${BOLD} \$ ${CLEAR}${REDFG}${CLEAR} "
+    PS1+="${BLUEBG}${WHITEFG}${BOLD}\$${BLUEFG}${REDBG}${CLEAR}${REDFG}${CLEAR} "
+    #PS1="${REDBG}${WHITEFG}${BOLD}\$${CLEAR}${REDFG}${CLEAR} "
+    #PS1="${BLACKFG}${REDBG}${WHITEFG}${BOLD} \$ ${CLEAR}${REDFG}${CLEAR} "
+    #PS1="${WHITEBG} ${WHITEFG}${REDBG}${WHITEFG}${BOLD} \$ ${CLEAR}${REDFG}${CLEAR} "
+    #PS1="${BLACKBG} ${BLACKFG}${REDBG}${WHITEFG}${BOLD} \$ ${CLEAR}${REDFG}${CLEAR} "
   else
-      PS1+="${BLUEBG}${WHITEFG}${BOLD}\$${BLUEFG}${GREENBG}${CLEAR}${GREENFG}${CLEAR} "
-      #PS1="${GREENBG}${WHITEFG}${BOLD}\$${CLEAR}${GREENFG}${CLEAR} "
-      #PS1="${BLACKFG}${GREENBG}${WHITEFG}${BOLD} \$ ${CLEAR}${GREENFG}${CLEAR} "
-      #PS1="${WHITEBG} ${WHITEFG}${GREENBG}${WHITEFG}${BOLD} \$ ${CLEAR}${GREENFG}${CLEAR} "
-      #PS1="${BLACKBG} ${BLACKFG}${GREENBG}${WHITEFG}${BOLD} \$ ${CLEAR}${GREENFG}${CLEAR} "
+    PS1+="${BLUEBG}${WHITEFG}${BOLD}\$${BLUEFG}${GREENBG}${CLEAR}${GREENFG}${CLEAR} "
+    #PS1="${GREENBG}${WHITEFG}${BOLD}\$${CLEAR}${GREENFG}${CLEAR} "
+    #PS1="${BLACKFG}${GREENBG}${WHITEFG}${BOLD} \$ ${CLEAR}${GREENFG}${CLEAR} "
+    #PS1="${WHITEBG} ${WHITEFG}${GREENBG}${WHITEFG}${BOLD} \$ ${CLEAR}${GREENFG}${CLEAR} "
+    #PS1="${BLACKBG} ${BLACKFG}${GREENBG}${WHITEFG}${BOLD} \$ ${CLEAR}${GREENFG}${CLEAR} "
   fi
 
   local tmuxtitle=`tmux display-message -p '#W' 2> /dev/null`
@@ -160,22 +232,16 @@ __prompt_command() {
     *)
       ;;
   esac
-}
 
-# Allow quickly switch to project directories
-_p() {
-  local cur=${COMP_WORDS[COMP_CWORD]}
-  COMPREPLY=( $(compgen -W "$(find ~/projects/ -mindepth 1 -maxdepth 1 -type d -printf "%f ")" -- $cur) )
+  history -a
+  history -n
 }
-complete -F _p p
 
 # Turn of C-s/C-Q unlock
 stty stop ''
 stty start ''
 stty -ixon
 stty -ixoff
-
-alias ack='ack-grep'
 
 # start tmux at login
 #tmux attach &> /dev/null
@@ -186,8 +252,8 @@ alias ack='ack-grep'
 # Use vim for man pages
 export MANPAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 
-
+# Load NVM
 export NVM_DIR="/home/optroot/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
 
