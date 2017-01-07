@@ -54,7 +54,9 @@ if has('python')
 endif
 
 " TODO load by filetype { 'for': ['c', 'python', 'vim', 'php'] }
-Plug 'ludovicchabant/vim-gutentags' 
+if executable('ctags')
+  Plug 'ludovicchabant/vim-gutentags' 
+endif
 Plug 'majutsushi/tagbar'
 
 Plug 'panozzaj/vim-autocorrect', { 'for': ['text', 'markdown'] }
