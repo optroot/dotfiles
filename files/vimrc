@@ -49,7 +49,7 @@ if has('python')
     Plug 'SirVer/ultisnips'
     if v:version >= 800
         Plug 'w0rp/ale'
-        Plug 'maralla/completor.vim'
+        "Plug 'maralla/completor.vim'
     endif
 endif
 
@@ -173,7 +173,13 @@ set t_Co=256
 let g:gruvbox_contrast_dark='hard'
 let g:gruvbox_sign_column='bg0'
 let g:gruvbox_invert_selection=0
-colorscheme gruvbox
+
+try
+  colorscheme gruvbox
+catch /^Vim\%((\a\+)\)\=:E185/
+  colorscheme default
+  echoerr 'Run PlugInstall'
+endtry
 set background=dark
 
 highlight ALEErrorSign   ctermbg=234 ctermfg=124
@@ -319,10 +325,21 @@ augroup LanguageOptions
     autocmd!
     autocmd FileType javascript,json,css,less,html,vim setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
     autocmd FileType Makefile                          setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
-    autocmd FileType markdown,text execute ":CompletorDisable"
-    autocmd Filetype text,markdown call AutoCorrect()
     autocmd FileType python   silent! nnoremap <silent> <buffer> K :<C-u>execute "!pydoc " . expand("<cword>")<CR>
 augroup END
+
+if exists(':CompletorDisable')
+  augroup PluginCompletor
+    autocmd FileType markdown,text execute ':CompletorDisable'
+  augroup END
+endif
+
+if exists('AutoCorrect')
+  augroup PluginAutoCorrect
+    autocmd Filetype text,markdown call AutoCorrect()
+  augroup END
+endif
+
 
 " TODO if project has makefile use it
 augroup Evaluate
