@@ -19,114 +19,57 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'christoomey/vim-tmux-navigator'
 Plug 'tommcdo/vim-exchange'
 Plug 'tomtom/tcomment_vim'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
 Plug 'wellle/targets.vim'
+Plug 'godlygeek/tabular'
+Plug 'MattesGroeger/vim-bookmarks'
+Plug 'mbbill/undotree'
+Plug 'Chiel92/vim-autoformat'
+Plug 'sheerun/vim-polyglot'
 
-Plug 'w0rp/ale'
+" TODO Only if tmux running
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'tmux-plugins/vim-tmux-focus-events'
 
-Plug 'ryanoasis/vim-devicons'
-Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+" On NerdTreeToggle
+Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTree'] }
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on': ['NERDTreeToggle', 'NERDTree'] }
+Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': ['NERDTreeToggle', 'NERDTree'] }
 
+" TODO Only in gitdir
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
-" Plug 'scrooloose/syntastic'
-Plug 'sheerun/vim-polyglot'
-Plug 'SirVer/ultisnips'
-Plug 'tpope/vim-abolish'
-" Plug 'tpope/vim-repeat'
-" Plug 'tpope/vim-rsi'
-" Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-unimpaired'
+if has('python')
+    Plug 'ervandew/supertab'
+    Plug 'SirVer/ultisnips'
+    if v:version >= 800
+        Plug 'w0rp/ale'
+        Plug 'maralla/completor.vim'
+    endif
+endif
 
-"Plug 'Valloric/YouCompleteMe'
-
-Plug 'godlygeek/tabular'
-Plug 'chrisbra/Colorizer'
-Plug 'kien/rainbow_parentheses.vim'
-Plug 'mattn/emmet-vim'
-Plug 'ludovicchabant/vim-gutentags'
-Plug 'Yggdroot/indentLine'
-
-Plug 'maralla/completor.vim'
-Plug 'ervandew/supertab'
-
-" TODO see set autoread and tmux fix
-" https://github.com/tmux-plugins/vim-tmux-focus-events
-" Plug 'beloglazov/vim-textobj-quotes'
-Plug 'Chiel92/vim-autoformat'
-" Plug 'coot/CRDispatcher'
-" Plug 'coot/EnchantedVim'
-" Plug 'djoshea/vim-autoread'
-" Plug 'editorconfig/editorconfig-vim'
-" Plug 'jacoborus/tender'
-" Plug 'kana/vim-textobj-user'
-" Plug 'michaeljsmith/vim-indent-object'
-" Plug 'moll/vim-bbye'
-" Plug 'nathanaelkane/vim-indent-guides'
-" Plug 'optroot/auto-pairs'
-" Plug 'optroot/semicolon-magic'
-" Plug 'Raimondi/delimitMate'
-" Plug 'rhysd/clever-f.vim'
-" Plug 'ruanyl/vim-fixmyjs'
-" Plug 'Shougo/neocomplete'
-" Plug 'ternjs/tern_for_vim'
-
-" Plugin Test
-"Plug 'metakirby5/codi.vim'
-" Plug 'itchyny/vim-cursorword'
-Plug 'MattesGroeger/vim-bookmarks'
-"Plug 'Shougo/echodoc.vim'
-Plug 'tmux-plugins/vim-tmux-focus-events'
-Plug 'panozzaj/vim-autocorrect'
-
-Plug 'kana/vim-textobj-user'
-Plug 'beloglazov/vim-textobj-quotes'
-
+" TODO load by filetype { 'for': ['c', 'python', 'vim', 'php'] }
+Plug 'ludovicchabant/vim-gutentags' 
 Plug 'majutsushi/tagbar'
-Plug 'mbbill/undotree'
 
+Plug 'panozzaj/vim-autocorrect', { 'for': ['text', 'markdown'] }
+Plug 'mattn/emmet-vim', { 'for': ['html', 'xml', 'php'] }
+Plug 'chrisbra/Colorizer', { 'for': ['vim', 'html', 'css', 'scss', 'sass']}
+
+" Theme Plugins
+Plug 'Yggdroot/indentLine'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'ryanoasis/vim-devicons'
 Plug 'morhetz/gruvbox'
 
 call plug#end()
-
-"let g:targets_quotes = '"q ''s `'
-" Never seek backwards
-"let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr lb ar ab lB Ar aB Ab AB rb rB bb bB BB'
-" Only current line
-"let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll'
-
-
-" 
-" let g:ale_sign_error = ''
-" let g:ale_sign_warning = ''
-let g:ale_sign_error = "\u00a0x"
-let g:ale_sign_warning = "\u00a0!"
-
-"let g:ale_sign_error = ''
-"let g:ale_sign_warning = ''
-"let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
-" Write this in your vimrc file
-"let g:ale_lint_on_save = 1
-"let g:ale_lint_on_text_changed = 0
-" You can disable this option too
-" if you don't want linters to run on opening a file
-"let g:ale_lint_on_enter = 0
-"nmap <silent> <C-K> <Plug>(ale_previous_wrap)
-"nmap <silent> <C-J> <Plug>(ale_next_wrap)
-let g:ale_linters = {
-            \  'text': ['proselint'],
-            \}
-
-" TODO have this only work on paragraphs
-" \  'markdown': ['proselint','mdl'],
 
 " ===================================================================== Options
 
@@ -155,6 +98,10 @@ let g:ale_linters = {
 " "reg unnamed (cdyx)
 " 0 yank/delete
 " foldmethods?
+" TODO left/right map
+" TODO More ! maps
+" TODO more simple mappings
+" TODO surround object mapping (quotes)
 
 filetype plugin indent on
 syntax enable
@@ -170,16 +117,13 @@ set complete-=i
 set completeopt-=preview
 set cpoptions+=$
 set display+=lastline
-"set fileencodings=utf-8
 setglobal tags-=./tags tags-=./tags; tags^=./tags;
 set hidden
 set history=1000
 set ignorecase
 set incsearch
 set laststatus=2
-"set listchars=tab:▸\ ,eol:\ ,precedes:\ ,extends:\ ,trail:.
-set listchars=tab:>\ ,eol:\ ,precedes:\ ,extends:\ ,trail:.
-"set nocompatible
+set listchars=tab:▸\ ,eol:\ ,precedes:\ ,extends:\ ,trail:.
 set noerrorbells
 set noshowmatch
 set nostartofline
@@ -215,165 +159,99 @@ set wildmenu
 set wildmode=full
 set clipboard=exclude:cons\|linux
 
-
-" clipboard options
-"    unnamed         -> use '*' for unnamed td
-"    unnamedplus     -> use '+' for unnamed td (X11)
-"    autoselect      -> automatically set visual selection (*)
-"    autoselectplus  -> automatically set visual selection (+)
-
 " Title
 set title
 let &titlestring="%(%{system(\"hostname -f\")}%):%(%{expand(\"%:p\")}%)"
 let &t_ts="\e]2;"
+
+" ===================================================================== Style
+
+let g:indentLine_color_term=237
+let g:indentLine_char='┊'
+
+set t_Co=256
+let g:gruvbox_contrast_dark='hard'
+let g:gruvbox_sign_column='bg0'
+let g:gruvbox_invert_selection=0
+colorscheme gruvbox
+set background=dark
+
+highlight ALEErrorSign   ctermbg=234 ctermfg=124
+highlight ALEWarningSign ctermbg=234 ctermfg=227
+highlight CursorLine     ctermbg=235
+
+"highlight BookmarkSign ctermbg=whatever ctermfg=whatever
+"highlight BookmarkAnnotationSign ctermbg=whatever ctermfg=whatever
+"highlight BookmarkLine ctermbg=whatever ctermfg=whatever
+"highlight BookmarkAnnotationLine ctermbg=whatever ctermfg=whatever
+
+" TODO rainbow paren colors
+
+" ===================================================================== Configuration
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
     runtime! macros/matchit.vim
 endif
 
-" ===================================================================== Configuration
+let g:targets_quotes='"q ''s `'
 
-"autocmd VimEnter * :AirlineTheme base16
-"let g:airline_bas16_improved_contrast=1
-"let g:airline_theme='base16'
+let g:ale_sign_error="\u00a0x"
+let g:ale_sign_warning="\u00a0!"
+
+let g:WebDevIconsUnicodeDecorateFolderNodes=1
+let g:DevIconsEnableFoldersOpenClose=1
+let g:DevIconsEnableFolderExtensionPatternMatching=0
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols={}
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['html']=''
+
 let g:airline_theme='base16_bright'
-"let g:airline_theme='bubblegum'
-
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled=1
-" let g:airline#extensions#fugitive#enabled=1
 let g:airline#extensions#whitespace#enabled=0
-" let g:airline#extensions#gutentags#enabled=1
-" let g:airline#extension#ale#enabled=1
-" let g:airline#extension#branch#enabled=1
-" let g:airline#extension#capslock#enabled=1
+let g:airline_section_z='%{g:airline_symbols.linenr}% %l:%v'
 
+let g:webdevicons_enable_airline_tabline=0
+let g:airline#extensions#tabline#buffer_nr_show=0
+let g:airline#extensions#tabline#fnamemod=':t'
+let g:airline#extensions#tabline#fnamecollapse=1
+let g:airline#extensions#tabline#fnametruncate=10
+let g:airline#extensions#tabline#show_close_button=0
 
-"let g:airline#extensions#unite#enabled=1
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
-let g:airline_symbols.notexists='∄'
-"let g:airline_symbols.notexists='!ⴺ'
-"let g:airline_symbols.notexists='*'
+let g:tcommentMaps=1
+let g:tcommentMapLeader1=''
+let g:tcommentMapLeader2=''
+let g:tcommentMapLeaderOp1='gc'
+let g:tcommentMapLeaderUncommentAnyway='g<'
+let g:tcommentMapLeaderCommentAnyway='g>'
+let g:tcommentTextObjectInlineComment='ic'
 
-"let g:airline_section_a='%#__accent_bold#%{airline#util#wrap(airline#parts#mode(),0)}%#__restore__#%{airline#util#append(airline#parts#crypt(),0)}%{airline#util#append(airline#parts#paste(),0)}%{airline#util#append(airline#parts#spell(),0)}%{airline#util#append("",0)}%{airline#util#append(airline#parts#iminsert(),0)}'
-"let g:airline_section_b='%{airline#util#wrap(airline#extensions#hunks#get_hunks(),0)}%{airline#util#wrap(airline#extensions#branch#get_head(),0)}'
-"let g:airline_section_c='%<%f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
-"let g:airline_section_x='%{airline#util#wrap(airline#parts#filetype(),0)}'
-"let g:airline_section_y='%{airline#util#wrap(airline#parts#ffenc(),0)}'
-"let g:airline_section_z='%3p%% %#__accent_bold#%{g:airline_symbols.linenr}%#__accent_bold#%4l%#__restore__#%#__restore__#%#__accent_bold#%#__accent_bold#/%L%{g:airline_symbols.maxlinenr}%#__restore__#%#__restore__# :%3v'
-"let g:airline_section_errors='%{airline#util#wrap(airline#extensions#whitespace#check(),0)}'
-
-" TODO don't show if empty
-" let g:airline_section_a=''
-" let g:airline_section_b=''
-" let g:airline_section_c=''
-" let g:airline_section_x=''
-" let g:airline_section_y=''
-" let g:airline_section_z=''
-" let g:airline_section_error=''
-"let g:airline_section_warning+='%{ALEGetStatusLine()}'
-"let g:airline_section_error+='%{ALEGetStatusLine()}'
-"let g:ale_statusline_format = ['x %d', '! %d', 'o ok']
-
-"let g:ale_statusline_format = ['%#ale_error# ⨉ %d %*', ' %#ale_warning# ⚠ %d %*', '%#ale_info ⬥ ok %*']
-" highlight ale_info    cterm= ctermbg= ctermfg= gui= guibg= guifg=
-" highlight ale_error   cterm= ctermbg= ctermfg= gui= guibg= guifg=
-" highlight ale_warning cterm= ctermbg= ctermfg= gui= guibg= guifg=
-
-let g:webdevicons_enable_airline_tabline = 0
-let g:airline#extensions#tabline#buffer_nr_show = 0
-let g:airline#extensions#tabline#fnamemod = ':t'
-let g:airline#extensions#tabline#fnamecollapse = 1
-let g:airline#extensions#tabline#fnametruncate = 10
-let g:airline#extensions#tabline#show_close_button = 0
-"let g:airline#extensions#tabline#close_symbol = 'X'
-
-let g:tcommentMaps = 1
-let g:tcommentMapLeader1 = ''
-let g:tcommentMapLeader2 = ''
-let g:tcommentMapLeaderOp1 = 'gc'
-let g:tcommentMapLeaderUncommentAnyway = 'g<'
-let g:tcommentMapLeaderCommentAnyway = 'g>'
-let g:tcommentTextObjectInlineComment = 'ic'
-
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-let g:DevIconsEnableFoldersOpenClose = 1
-let g:DevIconsEnableFolderExtensionPatternMatching = 0
-let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {} " needed
-let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['html'] = ''
-
-" Snippets
 let g:UltiSnipsEditSplit='horizontal'
 let g:UltiSnipsExpandTrigger='<TAB>'
 let g:UltiSnipsJumpForwardTrigger='<TAB>'
 let g:UltiSnipsJumpBackwardTrigger='<C-Z>'
 
-"let g:ycm_min_num_of_chars_for_completion=3
-"let g:ycm_autoclose_preview_window_after_completion=0
-"let g:ycm_autoclose_preview_window_after_insertion=0
-"let g:ycm_add_preview_to_completeopt=0
-
-" vim-bookmarks
-let g:bookmark_sign = ''
+"let g:bookmark_sign=''
 
 let g:user_emmet_mode='iv'
 imap <silent> <expr> <C-@> emmet#expandAbbrIntelligent("\<C-@>")
 vmap <silent> <C-@> :call emmet#expandAbbr(0,'')
 
-" Git
 let g:gitgutter_max_signs=999
 nnoremap cog :GitGutterToggle<CR>
-
-" ===================================================================== NerdTree
-
-augroup NERDTree
-    autocmd!
-    autocmd StdinReadPre * let s:std_in=1
-    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | wincmd l | endif
-    autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-augroup END
 
 let g:NERDTreeShowHidden=1
 let g:NERDTreeIgnore=['\.pyc$','^.git$']
 
-" NERDTress File highlighting
-function! NERDTreeHighlightFile(extension, fg)
-    exec 'autocmd FileType nerdtree highlight ' . a:extension .'  ctermfg='. a:fg
-    exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
-endfunction
+let g:SuperTabDefaultCompletionType='<C-n>'
 
-" TODO open dircolors ..?
-call NERDTreeHighlightFile('jpg', 97)
-call NERDTreeHighlightFile('ico', 97)
-call NERDTreeHighlightFile('png', 97)
-call NERDTreeHighlightFile('md', 229)
-call NERDTreeHighlightFile('json',222)
-call NERDTreeHighlightFile('html',97)
-call NERDTreeHighlightFile('css', 125)
-call NERDTreeHighlightFile('less',125)
-call NERDTreeHighlightFile('js',42)
-call NERDTreeHighlightFile('py', 42)
-call NERDTreeHighlightFile('php', 42)
-call NERDTreeHighlightFile('gitignore',240)
+let g:completor_python_binary='/usr/bin/python'
+let g:completor_node_binary='/home/optroot/.nvm/versions/node/v6.3.1/bin/node'
+let g:completor_clang_binary='/usr/bin/clang'
 
-" ===================================================================== Formatting
-
-" SuperTab
-let g:SuperTabDefaultCompletionType = '<C-n>'
-
-let g:completor_python_binary = '/usr/bin/python'
-let g:completor_node_binary = '/home/optroot/.nvm/versions/node/v6.3.1/bin/node'
-let g:completor_clang_binary = '/usr/bin/clang'
-
-" let g:completor_auto_trigger = 0
-" inoremap <expr> <Tab> pumvisible() ? "\<C-N>" : "\<C-X>\<C-U>\<C-P>"
-
-let g:autoformat_autoindent = 1
-let g:autoformat_remove_trailing_spaces = 1
-let g:autoformat_retab = 1
+let g:autoformat_autoindent=1
+let g:autoformat_remove_trailing_spaces=1
+let g:autoformat_retab=1
 
 let g:formatdef_astyle_c='"astyle --mode=c -A2ps4CSKNwpUjCk3fH"'
 let g:formatdef_jsbcss='"js-beautify --editorconfig --type css -L -N -n -s 2"'
@@ -389,30 +267,18 @@ let g:formatters_json=['jsb']
 let g:formatters_jsx=['jsb']
 let g:formatters_less=['jsbcss']
 
-" Gutentags
-" TODO for specific filetypes
 let g:gutentags_enabled=1
 let g:gutentags_tagfile='.tags'
 let g:gutentags_project_root=['.git']
 
-" ===================================================================== Style
-
-let g:indentLine_color_term = 237
-"let g:indentLine_char = '┊'
-let g:indentLine_char = '¦' "│ⵂ
-
-set t_Co=256
-let g:gruvbox_contrast_dark='hard'
-let g:gruvbox_sign_column='bg0'
-let g:gruvbox_invert_selection=0
-colorscheme gruvbox
-set background=dark
-
-" highlight SyntasticErrorLine   ctermbg=52
-" highlight SyntasticWarningLine ctermbg=3
-" highlight CleverFDefaultLabel  ctermbg=160 ctermfg=16 cterm=bold
-
 " ===================================================================== Autocmds
+
+augroup NERDTree
+    autocmd!
+    autocmd StdinReadPre * let s:std_in=1
+    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | wincmd l | endif
+    autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+augroup END
 
 augroup PluginOverride
     autocmd!
@@ -424,12 +290,6 @@ augroup VimOptions
     autocmd!
     autocmd FileType * silent! setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 augroup END
-
-
-" TODO??
-highlight ALEErrorSign   ctermbg=234 ctermfg=124
-highlight ALEWarningSign ctermbg=234 ctermfg=227
-highlight CursorLine     ctermbg=235
 
 augroup Theme
     autocmd!
@@ -460,8 +320,7 @@ augroup LanguageOptions
     autocmd FileType javascript,json,css,less,html,vim setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
     autocmd FileType Makefile                          setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
     autocmd FileType markdown,text execute ":CompletorDisable"
-    autocmd Filetype text call AutoCorrect()
-    autocmd Filetype markdown call AutoCorrect()
+    autocmd Filetype text,markdown call AutoCorrect()
     autocmd FileType python   silent! nnoremap <silent> <buffer> K :<C-u>execute "!pydoc " . expand("<cword>")<CR>
 augroup END
 
@@ -481,16 +340,6 @@ augroup Evaluate
 augroup END
 
 
-" ===================================================================== Syntax
-
-" let g:fixmyjs_use_local=1
-"nnoremap <silent> <buffer> <F4> :Autoformat<CR>
-" augroup Cleanup
-"   autocmd!
-"   "autocmd FileType javascript silent! nnoremap <silent> <buffer> <F4> :Autoformat | Fixmyjs<CR>
-"   autocmd FileType javascript silent! nnoremap <silent> <buffer> <F4> :Fixmyjs<CR>
-" augroup END
-
 " ===================================================================== Abbreviations
 
 " Fix common programmer typos
@@ -502,20 +351,7 @@ iabbrev reutrn    return
 iabbrev improt    import
 iabbrev ciel      ceil
 
-" Words
-"iabbrev teh the
-"iabbrev immidiately immediately
-"iabbrev immedietely immediately
-"iabbrev seperate separate
-
 " ===================================================================== Mappings
-
-" TODO left/right map
-" TODO More ! maps
-" TODO more simple mappings
-" TODO surround object mapping (quotes)
-" use q as quote object
-"omap q "
 
 " RSI commands
 cnoremap <C-A> <HOME>
@@ -528,10 +364,6 @@ nnoremap \sh  :e ~/.bashrc<CR>
 nnoremap \tm  :e ~/.tmux.conf<CR>
 nnoremap \s   :UltiSnipsEdit<CR>
 nnoremap \t   :e ~/projects/util/todo/todo.md<CR>
-"nnoremap \bt  :e ~/projects/util/todo/bash.md<CR>
-"nnoremap \zt  :e ~/projects/util/todo/zsh.md<CR>
-"nnoremap \vt  :e ~/projects/util/todo/vim.md<CR>
-"nnoremap \tt  :e ~/projects/util/todo/tmux.md<CR>
 
 " Fkey mappings (F2 paste, F5 eval)
 nnoremap <silent> <F1> :call TmuxSplitCmd()<CR>
@@ -541,9 +373,9 @@ noremap <silent> <F6> :call EvalCmd('python')<CR>
 noremap <silent> <F7> Y:@"<CR>
 nnoremap <silent> <F8> :TagbarToggle<CR>
 nnoremap <silent> <F9> :UndotreeToggle<CR>
-" nnoremap <silent> <F9>  :call GetColors()<CR>
-" nnoremap <silent> <F10> :call SyntaxStack()<CR>
-nnoremap <silent> <F11> :so $MYVIMRC<CR>
+nnoremap <silent> <F10>  :call GetColors()<CR>
+nnoremap <silent> <F11> :call SyntaxStack()<CR>
+nnoremap <silent> <F12> :so $MYVIMRC<CR>
 
 " Fix behavior
 inoremap <C-U> <C-G>u<C-U>
@@ -579,19 +411,10 @@ nnoremap <C-W>j 5<C-W><C-+>
 nnoremap <C-W>k 5<C-W><C-->
 nnoremap <C-W>l 5<C-W><C->>
 
-" nnoremap <C-W>h :vertical resize +5<CR>
-" nnoremap <C-W>j :resize -5<CR>
-" nnoremap <C-W>k :resize +5<CR>
-" nnoremap <C-W>l :vertical resize -5<CR>
-
-"nnoremap <UP> <C-]>
-"nnoremap <DOWN> <C-T>
-"nnoremap <LEFT> :bp<CR>
-"nnoremap <RIGHT> :bn<CR>
 nnoremap <UP> {
 nnoremap <DOWN> }
-"nnoremap <LEFT> :bp<CR>
-"nnoremap <RIGHT> :bn<CR>
+nnoremap <LEFT> :bp<CR>
+nnoremap <RIGHT> :bn<CR>
 nnoremap <TAB> :bn<CR>
 nnoremap <S-TAB> :bp<CR>
 
@@ -615,38 +438,36 @@ nnoremap <silent> <leader>q :silent! call DeleteHiddenBuffers()<CR>
 
 nnoremap !! :e $MYVIMRC<CR>Go<C-R>:<ESC>
 
-" ]q[q errors
-"unmap [e
-"unmap ]e
-"xunmap [e
-"nunmap [e
-"xunmap ]e
-"nunmap ]e
-" Unimpared tries to overwrite these but cannot be unmapped
-
 " Paste from clipboard (requires unimpaired)
 " TODO paste at correct indent level
 nmap yop yo<C-R><C-O>+<ESC>
 
-
-"nnoremap sa cxIa
 " s for swap a for argument
 nmap sa cxIa
 nmap csqs cs"'
 nmap cssq cs'"
 
-"nmap ba ysIab
-"nmap bw ysiwb
-"nmap bW ysiWb
-"nmap b$ ys$b
+" ===================================================================== Plugin - NerdTree dircolors
 
-" TODO more advanced, escape chars, lang specific change
-"      silent, and accept range (it sort of does)
+" NERDTress File highlighting
+function! NERDTreeHighlightFile(extension, fg)
+    exec 'autocmd FileType nerdtree highlight ' . a:extension .'  ctermfg='. a:fg
+    exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+endfunction
 
-"noremap csq :s/'/"/g<CR>
-"noremap cqs :s/"/'/g<CR>
-
-
+" TODO open dircolors 
+call NERDTreeHighlightFile('jpg', 97)
+call NERDTreeHighlightFile('ico', 97)
+call NERDTreeHighlightFile('png', 97)
+call NERDTreeHighlightFile('md', 229)
+call NERDTreeHighlightFile('json',222)
+call NERDTreeHighlightFile('html',97)
+call NERDTreeHighlightFile('css', 125)
+call NERDTreeHighlightFile('less',125)
+call NERDTreeHighlightFile('js',42)
+call NERDTreeHighlightFile('py', 42)
+call NERDTreeHighlightFile('php', 42)
+call NERDTreeHighlightFile('gitignore',240)
 
 " ===================================================================== Plugin - Evaluate
 
@@ -657,7 +478,7 @@ function! EvalCmd(cmd) range
 endfunction
 
 function! Markdown()
-    let l:cmd = '(echo "# '.expand('%:r').'" && echo "## Table of contents" && markdown-toc '.expand('%:p').' && echo && cat '.expand('%:p').')  | marked  | bootstrapify '.expand('%:r').' | (tidy -config ~/.tidy.conf 2> /dev/null) > '.expand('%:r').'.html'
+    let l:cmd='(echo "# '.expand('%:r').'" && echo "## Table of contents" && markdown-toc '.expand('%:p').' && echo && cat '.expand('%:p').')  | marked  | bootstrapify '.expand('%:r').' | (tidy -config ~/.tidy.conf 2> /dev/null) > '.expand('%:r').'.html'
     silent! call system(l:cmd)
     execute 'sleep 1000m'
     silent! call TmuxSplitCmd('http')
@@ -693,36 +514,39 @@ function! TmuxSplitCmd(...)
         execute 'sleep 500m'
     endif
     if a:0 >= 0
-        execute 'sleep 500m'
+        "silent! call system('tmux send-keys -t bottom ')
         silent! call system('tmux send-keys -t bottom ')
         execute 'sleep 500m'
-        silent! call system('tmux send-keys -t bottom '.join(map(copy(a:000), 'expand(v:val)'),'\ ').'')
+        let l:cmd=join(map(copy(a:000), 'expand(v:val)'),'\ ')
+        if len(l:cmd) > 0
+          silent! call system('tmux send-keys -t bottom '.l:cmd.'')
+        endif
     endif
 endfunction
 
 " ===================================================================== Plugin - Syntax Helper
 
 function! GetColors()
-    let l:fg = '-1'
-    let l:bg = '-1'
+    let l:fg='-1'
+    let l:bg='-1'
     for l:id in synstack(line('.'), col('.'))
-        let l:bold = synIDattr(synIDtrans(l:id), 'l:bold')
-        let l:italic = synIDattr(synIDtrans(l:id), 'l:italic')
-        let l:fg = l:fg==#'-1'? synIDattr(synIDtrans(l:id), 'l:fg') : l:fg
-        let l:bg = l:bg==#'-1'? synIDattr(synIDtrans(l:id), 'l:bg') : l:bg
+        let l:bold=synIDattr(synIDtrans(l:id), 'l:bold')
+        let l:italic=synIDattr(synIDtrans(l:id), 'l:italic')
+        let l:fg=l:fg==#'-1'? synIDattr(synIDtrans(l:id), 'l:fg') : l:fg
+        let l:bg=l:bg==#'-1'? synIDattr(synIDtrans(l:id), 'l:bg') : l:bg
     endfor
-    let l:fg = l:fg==#'-1'? synIDattr(hlID('Normal'),'l:fg') : l:fg
-    let l:bg = l:bg==#'-1'? synIDattr(hlID('Normal'),'l:bg') : l:bg
-    let l:fg = l:fg==#'-1'? 'Terminal' : l:fg
-    let l:bg = l:bg==#'-1'? 'Terminal' : l:bg
+    let l:fg=l:fg==#'-1'? synIDattr(hlID('Normal'),'l:fg') : l:fg
+    let l:bg=l:bg==#'-1'? synIDattr(hlID('Normal'),'l:bg') : l:bg
+    let l:fg=l:fg==#'-1'? 'Terminal' : l:fg
+    let l:bg=l:bg==#'-1'? 'Terminal' : l:bg
     echo 'fg: ['.l:fg.'] bg: ['.l:bg.']'
 endfunction
 
 function! SyntaxStack()
-    let l:s = []
+    let l:s=[]
     for l:id in synstack(line('.'), col('.'))
-        let l:real_name = synIDattr(l:id, 'name')
-        let l:syntax_name = synIDattr(synIDtrans(l:id), 'name')
+        let l:real_name=synIDattr(l:id, 'name')
+        let l:syntax_name=synIDattr(synIDtrans(l:id), 'name')
         if l:real_name == l:syntax_name
             call add(l:s,'['.l:real_name.']')
         else
@@ -738,8 +562,8 @@ endfunction
 command! -nargs=1 Ext call ChangeExt(<q-args>)
 
 function! ChangeExt(ext)
-    let l:fn = expand('%:p')
-    let l:base = expand('%:p:r')
+    let l:fn=expand('%:p')
+    let l:base=expand('%:p:r')
     if filereadable(l:fn)
         execute 'file '.l:base.'.'.a:ext
         call delete(l:fn)
@@ -767,11 +591,11 @@ imap <C-_> <ESC>:call EndHTMLTag()<CR>A
 " TODO More efficient, Avoid moving around
 function! EndHTMLTag()
     execute "normal mpA</\<C-X>\<C-O>\<ESC>%ll\"tyw"
-    let l:lineNow = line('.')
-    let l:posNow = col('.')
+    let l:lineNow=line('.')
+    let l:posNow=col('.')
     execute 'normal $h%mm'
-    let l:lineMatch = line('.')
-    let l:posMatch = col('.')
+    let l:lineMatch=line('.')
+    let l:posMatch=col('.')
     if (l:lineNow == l:lineMatch) && (l:posNow == l:posMatch+2)
         execute 'normal $%D'
     elseif l:lineNow == l:lineMatch
@@ -781,13 +605,13 @@ function! EndHTMLTag()
         execute 'normal `p$%''md$'
         if index(['div'], @t)>=0
             let l:line=getline(l:lineMatch)
-            let l:attrs = {'id':'#', 'class':'.'}
+            let l:attrs={'id':'#', 'class':'.'}
             for l:attr in keys(l:attrs)
-                let l:an = match(l:line, ' '.l:attr.'=')
+                let l:an=match(l:line, ' '.l:attr.'=')
                 if l:an >= 0
-                    let l:q1 = match(l:line, '"', l:an, 1)+1
-                    let l:q2 = match(l:line, '"', l:an, 2)-1
-                    let l:name = split(l:line[(l:q1):(l:q2)], ' ')[0]
+                    let l:q1=match(l:line, '"', l:an, 1)+1
+                    let l:q2=match(l:line, '"', l:an, 2)-1
+                    let l:name=split(l:line[(l:q1):(l:q2)], ' ')[0]
                     let @m .= ' <!-- '.l:attrs[l:attr].l:name.' -->'
                     break
                 end
@@ -826,36 +650,5 @@ augroup END
 
 " ===================================================================== EXPERIMENTAL
 
-" ===================================================================== Garbage
-
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_jump = 1
-" let g:syntastic_auto_loc_list = 0
-" let g:syntastic_check_on_open = 0
-" let g:syntastic_check_on_wq = 0
-" let g:syntastic_css_checkers = ['stylelint']
-" let g:syntastic_css_stylelint_args = ''
-" let g:syntastic_error_symbol = "\u00A0X"
-" let g:syntastic_html_checkers = ['tidy']
-" let g:syntastic_html_tidy_blocklevel_tags = ['template']
-" let g:syntastic_html_tidy_empty_tags = []
-" let g:syntastic_html_tidy_ignore_errors = []
-" let g:syntastic_html_tidy_ignore_errors = []
-" let g:syntastic_html_tidy_ignore_errors += [ '<link> proprietary attribute "crossorigin"' ]
-" let g:syntastic_html_tidy_ignore_errors += [ '<link> proprietary attribute "proprietary"' ]
-" let g:syntastic_html_tidy_ignore_errors += [ '<script> proprietary attribute "crossorigin"' ]
-" let g:syntastic_html_tidy_ignore_errors += [ '<script> proprietary attribute "proprietary"' ]
-" let g:syntastic_html_tidy_ignore_errors += [ '<template> proprietary attribute "name"' ]
-" let g:syntastic_html_tidy_inline_tags = []
-" let g:syntastic_javascript_checkers = ['eslint']
-" let g:syntastic_less_checkers = ['stylelint']
-" let g:syntastic_less_stylelint_args = '-s less'
-" let g:syntastic_python_checkers = ['pylint']
-" let g:syntastic_quiet_messages = { "type": "style" }
-" let g:syntastic_warning_symbol = "\u00A0!"
-" " Syntastic (off by default)
-" augroup Syntastic
-"   autocmd!
-"   autocmd VimEnter * silent! SyntasticToggleMode
-" augroup END
+" Nothing
 

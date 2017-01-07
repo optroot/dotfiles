@@ -110,11 +110,6 @@ _p_complete() {
 alias p=' . project -z'
 complete -F _p_complete p
 
-# Remove these from history
-alias clear=' clear'
-alias ls=' ls'
-#alias cd=' cd'
-
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
   test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -145,11 +140,12 @@ alias sl='ls -CF'
 
 # other
 alias project='. project'
-#alias p='. p'
+alias p='. p'
 alias ack='ack-grep'
 
 # fixes
 alias tmux='tmux -u2'
+alias vi='vim'
 
 # convenience fix when is scan mode
 alias thon='python'

@@ -1,8 +1,8 @@
--ioHk
---nobreak
---output=:
+-ikH
 --color
+--nobreak
 --flush
+--sort-files
 --ignore-ack-defaults
 --ignore-directory=is:.bzr
 --ignore-directory=is:.cdv
@@ -37,12 +37,14 @@
 --ignore-file=match:/[.]js[.]min$/
 --ignore-file=match:/[.]min[.]css$/
 --ignore-file=match:/[.]css[.]min$/
+--ignore-file=match:/\^.tags$/
 --ignore-file=ext:pdf
 --ignore-file=ext:gif,jpg,jpeg,png
 --type-add=perl:ext:pl,pm,pod,t,psgi
 --type-add=perl:firstlinematch:/^#!.*\bperl/
 --type-add=perltest:ext:t
 --type-add=make:ext:mk
+--type-add=make:ext:md
 --type-add=make:ext:mak
 --type-add=make:is:makefile
 --type-add=make:is:Makefile
