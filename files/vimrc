@@ -28,7 +28,6 @@ Plug 'wellle/targets.vim'
 Plug 'godlygeek/tabular'
 Plug 'MattesGroeger/vim-bookmarks'
 Plug 'mbbill/undotree'
-Plug 'Chiel92/vim-autoformat'
 Plug 'sheerun/vim-polyglot'
 
 " TODO Only if tmux running
@@ -45,12 +44,13 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
 if has('python')
-    Plug 'ervandew/supertab'
-    Plug 'SirVer/ultisnips'
-    if v:version >= 800
-        Plug 'w0rp/ale'
-        "Plug 'maralla/completor.vim'
-    endif
+  Plug 'ervandew/supertab'
+  Plug 'SirVer/ultisnips'
+  Plug 'Chiel92/vim-autoformat'
+  if v:version >= 800
+    Plug 'w0rp/ale'
+    Plug 'maralla/completor.vim'
+  endif
 endif
 
 " TODO load by filetype { 'for': ['c', 'python', 'vim', 'php'] }
@@ -163,7 +163,7 @@ set clipboard=exclude:cons\|linux
 
 " Title
 set title
-let &titlestring="%(%{system(\"hostname -f\")}%):%(%{expand(\"%:p\")}%)"
+let &titlestring="%(%{system(\"whoami\").'@'.system(\"hostname -f\")}%):%(%{expand(\"%:p\")}%)"
 let &t_ts="\e]2;"
 
 " ===================================================================== Style
@@ -386,9 +386,9 @@ nnoremap \s   :UltiSnipsEdit<CR>
 nnoremap \t   :e ~/projects/util/todo/todo.md<CR>
 
 " Fkey mappings (F2 paste, F5 eval)
+" TODO if exists
 nnoremap <silent> <F1> :call TmuxSplitCmd()<CR>
-nnoremap <silent> <F3> :SyntasticCheck<CR>
-nnoremap <silent> <buffer> <F4> :Autoformat<CR>
+"nnoremap <silent> <F3> :SyntasticCheck<CR>
 noremap <silent> <F6> :call EvalCmd('python')<CR>
 noremap <silent> <F7> Y:@"<CR>
 nnoremap <silent> <F8> :TagbarToggle<CR>
@@ -396,6 +396,10 @@ nnoremap <silent> <F9> :UndotreeToggle<CR>
 nnoremap <silent> <F10>  :call GetColors()<CR>
 nnoremap <silent> <F11> :call SyntaxStack()<CR>
 nnoremap <silent> <F12> :so $MYVIMRC<CR>
+
+if exists(':Autoformat')
+  nnoremap <silent> <buffer> <F4> :Autoformat<CR>
+endif
 
 " Fix behavior
 inoremap <C-U> <C-G>u<C-U>
@@ -528,6 +532,7 @@ endfunction
 " WARNING only use with 1 bottom split
 "function! TmuxSplitCmd(cmd, ...)
 function! TmuxSplitCmd(...)
+  "TODO try tmux !exists return
     if len(split(system('tmux list-panes'), "\n")) == 1
         silent! call system('tmux new-window -dn vimshell -c '.shellescape(getcwd()))
         silent! call system('tmux join-pane -dvl 12 -s vimshell')

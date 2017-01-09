@@ -9,6 +9,8 @@ mkdir -p ~/.vim/undo
 # TODO check if exists
 # leave to vim
 #curl -sfLo ~/.vim/autoload/plug.vim --create-dirs 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+# TODO
+# git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 rm -f ~/.vim/UltiSnips
 ln -s "$(readlink -e UltiSnips)" ~/.vim/UltiSnips
