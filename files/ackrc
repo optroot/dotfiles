@@ -1,4 +1,5 @@
--ikH
+-kH
+--smart-case
 --color
 --nobreak
 --flush
@@ -28,6 +29,7 @@
 --ignore-directory=is:CMakeFiles
 --ignore-directory=is:.metadata
 --ignore-directory=is:.meteor
+--ignore-directory=is:plugin-chache
 --ignore-file=ext:bak
 --ignore-file=match:/~$/
 --ignore-file=match:/^#.+#$/
@@ -103,6 +105,7 @@
 --type-add=scala:ext:scala
 --type-add=scheme:ext:scm,ss
 --type-add=shell:ext:sh,bash,csh,tcsh,ksh,zsh,fish
+--type-add=shell:ext:zsh-theme
 --type-add=shell:firstlinematch:/^#!.*\b(?:ba|t?c|k|z|fi)?sh\b/
 --type-add=smalltalk:ext:st
 --type-add=sql:ext:sql,ctl

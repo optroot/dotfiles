@@ -2,7 +2,8 @@
 # TODO consistent quoting
 
 export ARCHFLAGS="-arch x86_64"
-export EDITOR='vim'
+export EDITOR=vim
+export VISUAL=vim
 export GOPATH=$HOME
 export LANG=en_US.UTF-8
 export MANPATH="/usr/local/man:$MANPATH"
@@ -26,7 +27,7 @@ SAVEHIST=1024
 ZSH_THEME="custom"
 COMPLETION_WAITING_DOTS="true"
 DISABLE_AUTO_TITLE="true"
-HISTORY_IGNORE="(#*|ls*|cd*|history*|pwd|exit|clear)"
+HISTORY_IGNORE="( *|#*|ls*|cd*|history*|pwd|exit|clear)"
 
 plugins=(
 dirhistory
@@ -39,7 +40,7 @@ eval "$(dircolors ~/.dircolors)"
 autoload -U compinit && compinit
 
 setopt bang_hist
-setopt cdable_vars
+# setopt cdable_vars
 setopt complete_in_word
 setopt extended_glob
 setopt hist_ignore_all_dups
@@ -64,6 +65,15 @@ unsetopt flowcontrol
 
 zstyle ':completion:*' menu select=2
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# 0 -- vanilla completion (abc => abc)
+# 1 -- smart case completion (abc => Abc)
+# 2 -- word flex completion (abc => A-big-Car)
+# 3 -- full flex completion (abc => ABraCadabra)
+# zstyle ':completion:*' matcher-list '' \
+# 'm:{a-z\-}={A-Z\_}' \
+# 'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-}={A-Z\_}' \
+# 'r:|?=** m:{a-z\-}={A-Z\_}'
+
 
 # TODO ^Xa expands abbrevs already
 # http://zshwiki.org/home/examples/zleiab
@@ -78,6 +88,7 @@ abbreviations=(
 "lg"     "| grep"
 "tx"     "tar zxvf"
 "tc"     "tar zcvf"
+"gco"    "git checkout"
 "gc"     "git commit -m"
 "gl"     "git ls-tree --name-only -r HEAD"
 )
@@ -129,10 +140,12 @@ compdef _gnu_generic gdb
 alias v='f -e vim'
 alias m='f -e mplayer'
 alias o='a -e xdg-open'
-alias p=' . project -z'
-#alias clear=' clear'
+alias p=' . project -za'
+alias project='. project'
+# alias project='. project'
 alias ack='ack-grep'
 alias tmux='tmux -u2'
+alias todo='project -t'
 
 # typos
 alias :e='vim'
@@ -141,7 +154,6 @@ alias :q=''
 alias thon='python'
 
 # ls
-#alias sl='ls -C'
 alias sl='ls'
 
 #TODO minimum size

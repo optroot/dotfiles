@@ -7,12 +7,12 @@ silent! execute '!mkdir -p ~/.vim/undo'
 silent! execute '!mkdir -p ~/.vim/view'
 
 if empty(glob('~/.vim/autoload/plug.vim'))
-    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    augroup install
-        autocmd!
-        autocmd VimEnter * PlugInstall | source $MYVIMRC
-    augroup END
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  augroup install
+    autocmd!
+    autocmd VimEnter * PlugInstall | source $MYVIMRC
+  augroup END
 endif
 
 " ===================================================================== Plugins
@@ -24,10 +24,11 @@ Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-repeat'
 Plug 'wellle/targets.vim'
 Plug 'godlygeek/tabular'
 Plug 'MattesGroeger/vim-bookmarks'
-Plug 'mbbill/undotree'
+" Plug 'mbbill/undotree'
 Plug 'sheerun/vim-polyglot'
 
 " TODO Only if tmux running
@@ -35,37 +36,36 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 
 " On NerdTreeToggle
-Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTree'] }
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on': ['NERDTreeToggle', 'NERDTree'] }
-Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': ['NERDTreeToggle', 'NERDTree'] }
+Plug 'scrooloose/nerdtree',                     {'on': ['NERDTreeToggle', 'NERDTree'] }
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight', {'on': ['NERDTreeToggle', 'NERDTree'] }
+Plug 'Xuyuanp/nerdtree-git-plugin',             {'on': ['NERDTreeToggle', 'NERDTree'] }
 
 " TODO Only in gitdir
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
 if has('python')
-  Plug 'ervandew/supertab'
+  " Plug 'ervandew/supertab'
   Plug 'SirVer/ultisnips'
-  Plug 'Chiel92/vim-autoformat'
-  if v:version >= 800
-    Plug 'w0rp/ale'
-    Plug 'maralla/completor.vim'
-  endif
+  " Plug 'Chiel92/vim-autoformat'
+  " if v:version >= 800
+    " Plug 'w0rp/ale'
+    " Plug 'maralla/completor.vim'
+  " endif
 endif
 
-" TODO load by filetype { 'for': ['c', 'python', 'vim', 'php'] }
-if executable('ctags')
-  Plug 'ludovicchabant/vim-gutentags' 
-endif
-Plug 'majutsushi/tagbar'
+" if executable('ctags')
+"   Plug 'ludovicchabant/vim-gutentags', {'for': ['c', 'python', 'vim', 'php']}
+"   Plug 'majutsushi/tagbar',            {'for': ['c', 'python', 'vim', 'php']}
+" endif
 
-Plug 'panozzaj/vim-autocorrect', { 'for': ['text', 'markdown'] }
-Plug 'mattn/emmet-vim', { 'for': ['html', 'xml', 'php'] }
-Plug 'chrisbra/Colorizer', { 'for': ['vim', 'html', 'css', 'scss', 'sass']}
+" Plug 'panozzaj/vim-autocorrect', {'for': ['text', 'markdown'] }
+Plug 'mattn/emmet-vim',          {'for': ['html', 'xml', 'php'] }
+" Plug 'chrisbra/Colorizer',       {'for': ['vim', 'html', 'css', 'scss', 'sass']}
 
 " Theme Plugins
 Plug 'Yggdroot/indentLine'
-Plug 'kien/rainbow_parentheses.vim'
+" Plug 'kien/rainbow_parentheses.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'ryanoasis/vim-devicons'
@@ -75,31 +75,13 @@ call plug#end()
 
 " ===================================================================== Options
 
-" TODO use \uXXXX for characters
-"TODO groups?
-"TODO if plugin loaded
-"TODO no rainbow in text(ish) files
-"TODO tab only at start of line (togglable)
-"TODO don't use enchanted?
-"TODO namespace function to script
-"TODO if we haven't really changed a file (except whitespace, don't actually save)
-"TODO vmode select up/down to whitespace
-" TODO
-" TODO scope functions to s:
-" cw word ends with _
-" cW does not pass ,
-" better cia caa cxaa etc
-" better newlines
-" fix ;;
-" fix auto-pairs glitches
-" fix f/F and t/T
-" no wW wrapping? or go to $ first
-" look of folds
+" TODO no rainbow in text(ish) files
+" TODO tab only at start of line (togglable)
+" TODO namespace function to script (s:function)
+" TODO if we haven't really changed a file (except whitespace, don't actually save)
+" TODO vmode select up/down to whitespace
+" TODO no wW wrapping? or go to $ first
 " TODO ghost completion
-" TODO add to TODO
-" "reg unnamed (cdyx)
-" 0 yank/delete
-" foldmethods?
 " TODO left/right map
 " TODO More ! maps
 " TODO more simple mappings
@@ -145,9 +127,6 @@ set smartcase
 set smartindent
 set smarttab
 set tabpagemax=50
-set timeoutlen=1000
-set ttimeout
-set ttimeoutlen=100
 set textwidth=0 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 set undodir=~/.vim/undo
 set undofile
@@ -159,17 +138,52 @@ set wildignorecase
 set wildignore+=*/.git/*,*/.svn/*,*.o,*.pyc,*~,*.so,*.swp,*.zip,*.tar,*.tar.gz,
 set wildmenu
 set wildmode=full
+
+set timeoutlen=1000
+set updatetime=4000
+set ttimeout
+set ttimeoutlen=100
+
+" ===================================================================== Clipboard
+
 set clipboard=exclude:cons\|linux
 
-" Title
+" TODO Note that "a"*y has the expected behavior (luckily)
+nnoremap y "*y
+vnoremap y "*y
+
+" Paste from clipboard (requires unimpaired)
+nmap yop yo<C-R><C-O>*<ESC>
+nmap yp i<C-R><C-O>*<ESC>
+
+" ===================================================================== Folds
+
+" TODO
+set foldenable
+set foldmethod=manual
+
+" ===================================================================== Title
+
 set title
 let &titlestring="%(%{system(\"whoami\").'@'.system(\"hostname -f\")}%):%(%{expand(\"%:p\")}%)"
 let &t_ts="\e]2;"
 
+" ===================================================================== Conceal
+
+set conceallevel=2
+set concealcursor=vc
+let g:text_conceal='adgms'
+
+augroup Override
+    autocmd!
+    autocmd VimEnter * set concealcursor=vc
+augroup END
+
 " ===================================================================== Style
 
 let g:indentLine_color_term=237
-let g:indentLine_char='┊'
+" let g:indentLine_char='┊'
+let g:indentLine_char=''
 
 set t_Co=256
 let g:gruvbox_contrast_dark='hard'
@@ -180,7 +194,7 @@ try
   colorscheme gruvbox
 catch /^Vim\%((\a\+)\)\=:E185/
   colorscheme default
-  echoerr 'Run PlugInstall'
+  " echoerr 'Run PlugInstall'
 endtry
 set background=dark
 
@@ -193,19 +207,28 @@ highlight CursorLine     ctermbg=235
 "highlight BookmarkLine ctermbg=whatever ctermfg=whatever
 "highlight BookmarkAnnotationLine ctermbg=whatever ctermfg=whatever
 
-" TODO rainbow paren colors
 
 " ===================================================================== Configuration
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
-    runtime! macros/matchit.vim
+  runtime! macros/matchit.vim
 endif
 
 let g:targets_quotes='"q ''s `'
 
 let g:ale_sign_error="\u00a0x"
 let g:ale_sign_warning="\u00a0!"
+
+" let g:ale_lint_delay=2000
+let g:ale_lint_on_enter=1
+let g:ale_lint_on_save=1
+let g:ale_lint_on_text_changed=0
+
+let g:ale_set_open_list=0
+let g:ale_set_loclist=1
+let g:ale_set_quickfix=1
+let g:ale_keep_list_window_open=0
 
 let g:WebDevIconsUnicodeDecorateFolderNodes=1
 let g:DevIconsEnableFoldersOpenClose=1
@@ -238,6 +261,16 @@ let g:UltiSnipsEditSplit='horizontal'
 let g:UltiSnipsExpandTrigger='<TAB>'
 let g:UltiSnipsJumpForwardTrigger='<TAB>'
 let g:UltiSnipsJumpBackwardTrigger='<C-Z>'
+
+
+let g:rbpt_colorpairs = [
+      \ ['DarkRed',     'DarkRed'],
+      \ ['DarkCyan',    'DarkCyan'],
+      \ ['DarkMagenta', 'DarkMagenta'],
+      \ ['DarkGreen',   'DarkGreen'],
+      \ ['DarkBlue',    'DarkBlue'],
+      \ ]
+let g:rbpt_max=16
 
 "let g:bookmark_sign=''
 
@@ -283,82 +316,91 @@ let g:gutentags_project_root=['.git']
 " ===================================================================== Autocmds
 
 augroup NERDTree
-    autocmd!
-    autocmd StdinReadPre * let s:std_in=1
-    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | wincmd l | endif
-    autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-augroup END
-
-augroup PluginOverride
-    autocmd!
-    autocmd VimEnter * nmap <silent> [e <Plug>(ale_previous_wrap)
-    autocmd VimEnter * nmap <silent> ]e <Plug>(ale_next_wrap)
+  autocmd!
+  " autocmd StdinReadPre * let s:std_in=1
+  " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | wincmd l | endif
+  " autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 augroup END
 
 augroup VimOptions
-    autocmd!
-    autocmd FileType * silent! setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+  autocmd!
+  autocmd FileType * silent! setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 augroup END
 
 augroup Theme
-    autocmd!
-    "autocmd VimEnter                      * highlight ALEErrorSign   ctermbg=234 ctermfg=124
-    "autocmd VimEnter                      * highlight ALEWarningSign ctermbg=234 ctermfg=227
-    autocmd InsertEnter                   * highlight CursorLine     ctermbg=234
-    autocmd VimEnter,InsertLeave          * highlight CursorLine     ctermbg=235
-    autocmd WinLeave                      * setlocal nocursorline
-    autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  autocmd!
+  "autocmd VimEnter                      * highlight ALEErrorSign   ctermbg=234 ctermfg=124
+  "autocmd VimEnter                      * highlight ALEWarningSign ctermbg=234 ctermfg=227
+  autocmd InsertEnter                   * highlight CursorLine     ctermbg=234
+  autocmd VimEnter,InsertLeave          * highlight CursorLine     ctermbg=235
+  autocmd WinLeave                      * setlocal nocursorline
+  autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
 augroup END
 
 augroup Startup
-    autocmd!
-    autocmd VimEnter    * silent! RainbowParenthesesToggle
-    autocmd Syntax      * silent! RainbowParenthesesLoadRound
-    autocmd Syntax      * silent! RainbowParenthesesLoadSquare
-    autocmd Syntax      * silent! RainbowParenthesesLoadBraces
-    autocmd VimEnter    * silent! GitGutterDisable
-    autocmd BufEnter    * silent! call SetTmuxTitle()
-    autocmd VimEnter    * silent! call SetTmuxTitle()
-    autocmd VimLeave    * silent! call SetTmuxTitle(system("basename $SHELL"))
-    autocmd BufWinLeave *.* mkview!
-    autocmd BufWinEnter *.* silent! loadview
+  autocmd!
+  " autocmd VimEnter      * silent! RainbowParenthesesToggle
+  " autocmd Syntax        * silent! RainbowParenthesesLoadRound
+  " autocmd Syntax        * silent! RainbowParenthesesLoadSquare
+  " autocmd Syntax        * silent! RainbowParenthesesLoadBraces
+  autocmd VimEnter      * silent! GitGutterDisable
+  autocmd BufEnter      * silent! call SetTmuxTitle()
+  autocmd VimEnter      * silent! call SetTmuxTitle()
+  autocmd VimLeave      * silent! call SetTmuxTitle(system("basename $SHELL"))
+  autocmd BufWinLeave *.* mkview!
+  autocmd BufWinEnter *.* silent! loadview
 augroup END
 
 augroup LanguageOptions
-    autocmd!
-    autocmd FileType javascript,json,css,less,html,vim setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-    autocmd FileType Makefile                          setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
-    autocmd FileType python   silent! nnoremap <silent> <buffer> K :<C-u>execute "!pydoc " . expand("<cword>")<CR>
+  autocmd!
+
+  autocmd FileType javascript,json,css,less,html,vim setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+  autocmd FileType Makefile                          setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
+  autocmd FileType python   silent! nnoremap <silent> <buffer> K :<C-u>execute "!pydoc " . expand("<cword>")<CR>
+
+  autocmd FileType html,markdown,css,text setlocal textwidth=78
+  autocmd FileType html,markdown,css,text setlocal wrap
+
+  " TODO finish set iskeyword=@,48-57,_,192-255
+  autocmd FileType c,cpp,php,css,less,markdown,javascript setlocal iskeyword+=-
+  autocmd FileType php,css,less,javascript                setlocal iskeyword+=$
+  autocmd FileType c,cpp,php                              setlocal iskeyword+=>
+  autocmd FileType css,less                               setlocal iskeyword+=.,#,\@
+
 augroup END
 
-if exists(':CompletorDisable')
-  augroup PluginCompletor
-    autocmd FileType markdown,text execute ':CompletorDisable'
-  augroup END
-endif
-
-if exists('AutoCorrect')
-  augroup PluginAutoCorrect
-    autocmd Filetype text,markdown call AutoCorrect()
-  augroup END
-endif
+" if exists(':CompletorDisable')
+"   augroup PluginCompletor
+"     autocmd FileType markdown,text execute ':CompletorDisable'
+"   augroup END
+" endif
+"
+" if exists('AutoCorrect')
+"   augroup PluginAutoCorrect
+"     autocmd Filetype text,markdown call AutoCorrect()
+"   augroup END
+" endif
+"
+" augroup AutoSpellCheck
+"   autocmd FileType markdown,text setlocal spell
+" augroup END
 
 
 " TODO if project has makefile use it
+" TODO move to LanguageOptions
 augroup Evaluate
-    autocmd!
-    autocmd BufWritePost *.tex call TmuxSplitCmd('pdflatex -synctex=-1 -halt-on-error','%p')
-    autocmd FileType html     silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('http')<CR>
-    autocmd FileType python   silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('python','%:p')<CR>
-    autocmd FileType sh       silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('source','%:p')<CR>
-    autocmd FileType less     silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('lessc','%:p')<CR>
-    autocmd FileType vim      silent! nnoremap <silent> <buffer> <F5> :so %<CR>
-    autocmd FileType markdown silent! nnoremap <silent> <buffer> <F5> :silent! call Markdown()<CR>
-    " TODO Fix
-    "autocmd FileType c        silent! nnoremap <silent> <buffer> <F5> :call TmuxSplitCmd('gcc -Wall ','%:p',' -o ','%:r',' \&\& ./','%:r')<CR>
-    "autocmd FileType matlab   silent! nnoremap <silent> <buffer> <F5> :call TmuxSplitCmd('matlab -nosplash -nodesktop -r "run(''','%p',''')"')<CR>
+  autocmd!
+  autocmd BufWritePost *.tex call TmuxSplitCmd('pdflatex -synctex=-1 -halt-on-error','%p')
+  autocmd FileType html     silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('http')<CR>
+  autocmd FileType python   silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('python','%:p')<CR>
+  autocmd FileType sh       silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('source','%:p')<CR>
+  autocmd FileType less     silent! nnoremap <silent> <buffer> <F5> :silent! call TmuxSplitCmd('lessc','%:p')<CR>
+  autocmd FileType vim      silent! nnoremap <silent> <buffer> <F5> :so %<CR>
+  autocmd FileType markdown silent! nnoremap <silent> <buffer> <F5> :silent! call Markdown()<CR>
+  " TODO Fix
+  "autocmd FileType c        silent! nnoremap <silent> <buffer> <F5> :call TmuxSplitCmd('gcc -Wall ','%:p',' -o ','%:r',' \&\& ./','%:r')<CR>
+  "autocmd FileType matlab   silent! nnoremap <silent> <buffer> <F5> :call TmuxSplitCmd('matlab -nosplash -nodesktop -r "run(''','%p',''')"')<CR>
 augroup END
-
 
 " ===================================================================== Abbreviations
 
@@ -391,10 +433,10 @@ nnoremap <silent> <F1> :call TmuxSplitCmd()<CR>
 "nnoremap <silent> <F3> :SyntasticCheck<CR>
 noremap <silent> <F6> :call EvalCmd('python')<CR>
 noremap <silent> <F7> Y:@"<CR>
-nnoremap <silent> <F8> :TagbarToggle<CR>
-nnoremap <silent> <F9> :UndotreeToggle<CR>
-nnoremap <silent> <F10>  :call GetColors()<CR>
-nnoremap <silent> <F11> :call SyntaxStack()<CR>
+" nnoremap <silent> <F8> :TagbarToggle<CR>
+" nnoremap <silent> <F9> :UndotreeToggle<CR>
+" nnoremap <silent> <F10>  :call GetColors()<CR>
+" nnoremap <silent> <F11> :call SyntaxStack()<CR>
 nnoremap <silent> <F12> :so $MYVIMRC<CR>
 
 if exists(':Autoformat')
@@ -413,27 +455,31 @@ inoremap <C-C> <C-[>
 nnoremap n nzzzv
 nnoremap N Nzzzv
 
+" Allow inc/dec columns
+vnoremap <C-A> g<C-A>
+vnoremap <C-X> g<C-X>
+
+" vnoremap y "*y
+" nnoremap x "Xx
+inoremap <C-E> <END>
+
+nnoremap <C-W>h 10<C-W><
+nnoremap <C-W>j 10<C-W>+
+nnoremap <C-W>k 10<C-W>-
+nnoremap <C-W>l 10<C-W>>
+
 " Moving Visuals
-" TODO FIX
 nnoremap gV `[V`]
 vmap <DOWN> xpgV
 vmap <UP> xkkpgV
 vnoremap <LEFT> <gv
 vnoremap <RIGHT> >gv
+" nmap <LEFT> V<LEFT>
+" nmap <RIGHT> V<RIGHT>
+" nnoremap <LEFT> <<<CR>
+" nnoremap <RIGHT> >><CR>
 vnoremap <TAB> >gv
 vnoremap <S-TAB> <gv
-
-" Allow inc/dec columns
-vnoremap <C-A> g<C-A>
-vnoremap <C-X> g<C-X>
-
-vnoremap y "*y
-inoremap <C-E> <END>
-
-nnoremap <C-W>h 5<C-W><C-<>
-nnoremap <C-W>j 5<C-W><C-+>
-nnoremap <C-W>k 5<C-W><C-->
-nnoremap <C-W>l 5<C-W><C->>
 
 nnoremap <UP> {
 nnoremap <DOWN> }
@@ -454,132 +500,139 @@ let g:mapleader=' '
 nnoremap <leader>2     :setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab<CR>
 nnoremap <leader>4     :setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab<CR>
 nnoremap <leader><TAB> :setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab<CR>
+vnoremap <leader>r  :redraw!<CR>
 vnoremap <leader>=  :Tab/=<CR>gv
 vnoremap <leader>:  :Tab/:\zs<CR>gv
 vnoremap <leader>,  :Tab/,\zs<CR>gv
 nnoremap <silent> <leader>d :silent! call DeleteHiddenBuffers()<CR>
 nnoremap <silent> <leader>q :silent! call DeleteHiddenBuffers()<CR>
+nnoremap <leader><leader> ga
 
 nnoremap !! :e $MYVIMRC<CR>Go<C-R>:<ESC>
 
-" Paste from clipboard (requires unimpaired)
-" TODO paste at correct indent level
-nmap yop yo<C-R><C-O>+<ESC>
-
 " s for swap a for argument
 nmap sa cxIa
-nmap csqs cs"'
-nmap cssq cs'"
+nmap sqs cs"'
+nmap ssq cs'"
+
+nmap dsq ds"
+nmap dss ds'
 
 " ===================================================================== Plugin - NerdTree dircolors
 
 " NERDTress File highlighting
 function! NERDTreeHighlightFile(extension, fg)
-    exec 'autocmd FileType nerdtree highlight ' . a:extension .'  ctermfg='. a:fg
-    exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+  exec 'autocmd FileType nerdtree highlight ' . a:extension .'  ctermfg='. a:fg
+  exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
 endfunction
 
-" TODO open dircolors 
-call NERDTreeHighlightFile('jpg', 97)
-call NERDTreeHighlightFile('ico', 97)
-call NERDTreeHighlightFile('png', 97)
-call NERDTreeHighlightFile('md', 229)
-call NERDTreeHighlightFile('json',222)
-call NERDTreeHighlightFile('html',97)
-call NERDTreeHighlightFile('css', 125)
-call NERDTreeHighlightFile('less',125)
-call NERDTreeHighlightFile('js',42)
-call NERDTreeHighlightFile('py', 42)
-call NERDTreeHighlightFile('php', 42)
-call NERDTreeHighlightFile('gitignore',240)
+" " TODO open dircolors
+" call NERDTreeHighlightFile('jpg', 97)
+" call NERDTreeHighlightFile('ico', 97)
+" call NERDTreeHighlightFile('png', 97)
+" call NERDTreeHighlightFile('md', 229)
+" call NERDTreeHighlightFile('json',222)
+" call NERDTreeHighlightFile('html',97)
+" call NERDTreeHighlightFile('css', 125)
+" call NERDTreeHighlightFile('less',125)
+" call NERDTreeHighlightFile('js',42)
+" call NERDTreeHighlightFile('py', 42)
+" call NERDTreeHighlightFile('php', 42)
+" call NERDTreeHighlightFile('gitignore',240)
 
 " ===================================================================== Plugin - Evaluate
 
 command! -range PassRange call EvalCmd()
 function! EvalCmd(cmd) range
-    exec a:firstline.','.a:lastline.'!'.a:cmd
-    redraw!
+  exec a:firstline.','.a:lastline.'!'.a:cmd
+  redraw!
 endfunction
 
+" TODO
 function! Markdown()
-    let l:cmd='(echo "# '.expand('%:r').'" && echo "## Table of contents" && markdown-toc '.expand('%:p').' && echo && cat '.expand('%:p').')  | marked  | bootstrapify '.expand('%:r').' | (tidy -config ~/.tidy.conf 2> /dev/null) > '.expand('%:r').'.html'
-    silent! call system(l:cmd)
-    execute 'sleep 1000m'
-    silent! call TmuxSplitCmd('http')
-    redraw!
+  silent! call system('markdown-pdf '.expand('%:p'))
+  silent! call system('markdown-html '.expand('%:p'))
+  " let l:cmd='(echo "# '.expand('%:r').'" && echo "## Table of contents" && markdown-toc '.expand('%:p').' && echo && cat '.expand('%:p').')  | marked  | bootstrapify '.expand('%:r').' | (tidy -config ~/.tidy.conf 2> /dev/null) > '.expand('%:r').'.html'
+  " silent! call system(l:cmd)
+  " execute 'sleep 1000m'
+  " silent! call TmuxSplitCmd('http')
+  " let l:cmd='(echo "# '.expand('%:r').'" && echo "## Table of contents" && markdown-toc '.expand('%:p').' && echo && cat '.expand('%:p').')  | marked | '
+  " echo l:cmd
+  " silent! call system(l:cmd)
+  redraw!
 endfunction
 
 " ===================================================================== Plugin - Tmux Split
 
 function! SetTmuxTitle(...)
-    let l:t=system("tmux display-message -p '#W'")
-    if l:t[0] =~# '[A-Z]'
-        return
-    endif
-    let l:project=system('~/bin/project -f')
-    let l:curfile=tolower(expand('%:p:t:r'))
-    if a:0 > 0
-        silent! call system('tmux rename-window '.a:1)
-    elseif l:project !=# ''
-        silent! call system('tmux rename-window '.l:project)
-    elseif l:curfile !=# ''
-        silent! call system('tmux rename-window '.l:curfile)
-    else
-        silent! call system('tmux rename-window '.'vim')
-    endif
+  let l:t=system("tmux display-message -p '#W'")
+  if l:t[0] =~# '[A-Z]'
+    return
+  endif
+  let l:project=system('~/bin/project -fa')
+  let l:curfile=tolower(expand('%:p:t:r'))
+  if a:0 > 0
+    silent! call system('tmux rename-window '.a:1)
+  elseif l:project !=# ''
+    silent! call system('tmux rename-window '.l:project)
+  elseif l:curfile !=# ''
+    silent! call system('tmux rename-window '.l:curfile)
+  else
+    silent! call system('tmux rename-window '.'vim')
+  endif
 endfunction
 
 " WARNING only use with 1 bottom split
 "function! TmuxSplitCmd(cmd, ...)
 function! TmuxSplitCmd(...)
   "TODO try tmux !exists return
-    if len(split(system('tmux list-panes'), "\n")) == 1
-        silent! call system('tmux new-window -dn vimshell -c '.shellescape(getcwd()))
-        silent! call system('tmux join-pane -dvl 12 -s vimshell')
-        execute 'sleep 500m'
+  if len(split(system('tmux list-panes'), "\n")) == 1
+    silent! call system('tmux new-window -dn vimshell -c '.shellescape(getcwd()))
+    silent! call system('tmux join-pane -dvl 12 -s vimshell')
+    execute 'sleep 500m'
+  endif
+  if a:0 >= 0
+    "silent! call system('tmux send-keys -t bottom ')
+    silent! call system('tmux send-keys -t bottom ')
+    execute 'sleep 500m'
+    let l:cmd=join(map(copy(a:000), 'expand(v:val)'),'\ ')
+    if len(l:cmd) > 0
+      silent! call system('tmux send-keys -t bottom '.l:cmd.'')
     endif
-    if a:0 >= 0
-        "silent! call system('tmux send-keys -t bottom ')
-        silent! call system('tmux send-keys -t bottom ')
-        execute 'sleep 500m'
-        let l:cmd=join(map(copy(a:000), 'expand(v:val)'),'\ ')
-        if len(l:cmd) > 0
-          silent! call system('tmux send-keys -t bottom '.l:cmd.'')
-        endif
-    endif
+  endif
 endfunction
 
 " ===================================================================== Plugin - Syntax Helper
 
-function! GetColors()
-    let l:fg='-1'
-    let l:bg='-1'
-    for l:id in synstack(line('.'), col('.'))
-        let l:bold=synIDattr(synIDtrans(l:id), 'l:bold')
-        let l:italic=synIDattr(synIDtrans(l:id), 'l:italic')
-        let l:fg=l:fg==#'-1'? synIDattr(synIDtrans(l:id), 'l:fg') : l:fg
-        let l:bg=l:bg==#'-1'? synIDattr(synIDtrans(l:id), 'l:bg') : l:bg
-    endfor
-    let l:fg=l:fg==#'-1'? synIDattr(hlID('Normal'),'l:fg') : l:fg
-    let l:bg=l:bg==#'-1'? synIDattr(hlID('Normal'),'l:bg') : l:bg
-    let l:fg=l:fg==#'-1'? 'Terminal' : l:fg
-    let l:bg=l:bg==#'-1'? 'Terminal' : l:bg
-    echo 'fg: ['.l:fg.'] bg: ['.l:bg.']'
-endfunction
+" function! GetColors()
+"   let l:fg='-1'
+"   let l:bg='-1'
+"   for l:id in synstack(line('.'), col('.'))
+"     let l:bold=synIDattr(synIDtrans(l:id), 'l:bold')
+"     let l:italic=synIDattr(synIDtrans(l:id), 'l:italic')
+"     let l:fg=l:fg==#'-1'? synIDattr(synIDtrans(l:id), 'l:fg') : l:fg
+"     let l:bg=l:bg==#'-1'? synIDattr(synIDtrans(l:id), 'l:bg') : l:bg
+"   endfor
+"   let l:fg=l:fg==#'-1'? synIDattr(hlID('Normal'),'l:fg') : l:fg
+"   let l:bg=l:bg==#'-1'? synIDattr(hlID('Normal'),'l:bg') : l:bg
+"   let l:fg=l:fg==#'-1'? 'Terminal' : l:fg
+"   let l:bg=l:bg==#'-1'? 'Terminal' : l:bg
+"   echo 'fg: ['.l:fg.'] bg: ['.l:bg.']'
+" endfunction
 
-function! SyntaxStack()
-    let l:s=[]
-    for l:id in synstack(line('.'), col('.'))
-        let l:real_name=synIDattr(l:id, 'name')
-        let l:syntax_name=synIDattr(synIDtrans(l:id), 'name')
-        if l:real_name == l:syntax_name
-            call add(l:s,'['.l:real_name.']')
-        else
-            call add(l:s,'['.l:real_name.' as '.l:syntax_name.']')
-        end
-    endfor
-    echo join(l:s, ' -> ')
-endfunction
+" function! SyntaxStack()
+"   let l:s=[]
+"   for l:id in synstack(line('.'), col('.'))
+"     let l:real_name=synIDattr(l:id, 'name')
+"     let l:syntax_name=synIDattr(synIDtrans(l:id), 'name')
+"     if l:real_name == l:syntax_name
+"       call add(l:s,'['.l:real_name.']')
+"     else
+"       call add(l:s,'['.l:real_name.' as '.l:syntax_name.']')
+"     end
+"   endfor
+"   echo join(l:s, ' -> ')
+" endfunction
 
 " ===================================================================== Plugin - Change Extension (dext)
 
@@ -587,26 +640,26 @@ endfunction
 command! -nargs=1 Ext call ChangeExt(<q-args>)
 
 function! ChangeExt(ext)
-    let l:fn=expand('%:p')
-    let l:base=expand('%:p:r')
-    if filereadable(l:fn)
-        execute 'file '.l:base.'.'.a:ext
-        call delete(l:fn)
-        execute 'write | edit'
-    else
-        execute 'file '.l:base.'.'.a:ext
-    endif
+  let l:fn=expand('%:p')
+  let l:base=expand('%:p:r')
+  if filereadable(l:fn)
+    execute 'file '.l:base.'.'.a:ext
+    call delete(l:fn)
+    execute 'write | edit'
+  else
+    execute 'file '.l:base.'.'.a:ext
+  endif
 endfunction
 
 
 " ===================================================================== Plugin - Hidden Buffer
 
 function! DeleteHiddenBuffers()
-    let l:tpbl=[]
-    call map(range(1, tabpagenr('$')), 'extend(l:tpbl, tabpagebuflist(v:val))')
-    for l:buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(l:tpbl, v:val)==-1')
-        silent execute 'bdelete' l:buf
-    endfor
+  let l:tpbl=[]
+  call map(range(1, tabpagenr('$')), 'extend(l:tpbl, tabpagebuflist(v:val))')
+  for l:buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(l:tpbl, v:val)==-1')
+    silent execute 'bdelete' l:buf
+  endfor
 endfunction
 
 " TODO MERGE WITH SEMICOLON MAGIC
@@ -614,41 +667,41 @@ imap <C-_> <ESC>:call EndHTMLTag()<CR>A
 
 " TODO don't use marks/registers
 " TODO More efficient, Avoid moving around
-function! EndHTMLTag()
-    execute "normal mpA</\<C-X>\<C-O>\<ESC>%ll\"tyw"
-    let l:lineNow=line('.')
-    let l:posNow=col('.')
-    execute 'normal $h%mm'
-    let l:lineMatch=line('.')
-    let l:posMatch=col('.')
-    if (l:lineNow == l:lineMatch) && (l:posNow == l:posMatch+2)
-        execute 'normal $%D'
-    elseif l:lineNow == l:lineMatch
-        execute 'normal `p'
-    else
-        execute 'normal 0''sy^'
-        execute 'normal `p$%''md$'
-        if index(['div'], @t)>=0
-            let l:line=getline(l:lineMatch)
-            let l:attrs={'id':'#', 'class':'.'}
-            for l:attr in keys(l:attrs)
-                let l:an=match(l:line, ' '.l:attr.'=')
-                if l:an >= 0
-                    let l:q1=match(l:line, '"', l:an, 1)+1
-                    let l:q2=match(l:line, '"', l:an, 2)-1
-                    let l:name=split(l:line[(l:q1):(l:q2)], ' ')[0]
-                    let @m .= ' <!-- '.l:attrs[l:attr].l:name.' -->'
-                    break
-                end
-            endfor
-        end
-        if match(getline('.'), '^\s*$') < 0
-            execute 'normal o\<C-R>m\<ESC>0d^''sPo'
-        else
-            execute 'normal 0i\<C-R>s\<C-R>m\<CR>'
-        endif
-    endif
-endfunction
+" function! EndHTMLTag()
+"   execute "normal mpA</\<C-X>\<C-O>\<ESC>%ll\"tyw"
+"   let l:lineNow=line('.')
+"   let l:posNow=col('.')
+"   execute 'normal $h%mm'
+"   let l:lineMatch=line('.')
+"   let l:posMatch=col('.')
+"   if (l:lineNow == l:lineMatch) && (l:posNow == l:posMatch+2)
+"     execute 'normal $%D'
+"   elseif l:lineNow == l:lineMatch
+"     execute 'normal `p'
+"   else
+"     execute 'normal 0''sy^'
+"     execute 'normal `p$%''md$'
+"     if index(['div'], @t)>=0
+"       let l:line=getline(l:lineMatch)
+"       let l:attrs={'id':'#', 'class':'.'}
+"       for l:attr in keys(l:attrs)
+"         let l:an=match(l:line, ' '.l:attr.'=')
+"         if l:an >= 0
+"           let l:q1=match(l:line, '"', l:an, 1)+1
+"           let l:q2=match(l:line, '"', l:an, 2)-1
+"           let l:name=split(l:line[(l:q1):(l:q2)], ' ')[0]
+"           let @m .= ' <!-- '.l:attrs[l:attr].l:name.' -->'
+"           break
+"         end
+"       endfor
+"     end
+"     if match(getline('.'), '^\s*$') < 0
+"       execute 'normal o\<C-R>m\<ESC>0d^''sPo'
+"     else
+"       execute 'normal 0i\<C-R>s\<C-R>m\<CR>'
+"     endif
+"   endif
+" endfunction
 
 
 " ===================================================================== Plugin - Stealth
@@ -656,24 +709,24 @@ endfunction
 " Call :X for encryption
 " TODO setlocal viminfo isn't working correctly?
 function! SetStealthMode()
-    augroup Encryption
-        " TODO syntax not correct here?
-        autocmd!
-        autocmd BufReadPost,FileReadPre <buffer> setlocal noswapfile
-        autocmd BufReadPost,FileReadPre <buffer> setlocal nobackup
-        autocmd BufReadPost,FileReadPre <buffer> setlocal nowritebackup
-        autocmd BufReadPost,FileReadPre <buffer> setlocal noundofile
-        autocmd BufReadPost,FileReadPre <buffer> autocmd! views
-        autocmd BufReadPost,FileReadPre <buffer> set viminfo=
-    augroup END
+  augroup Encryption
+    " TODO syntax not correct here?
+    autocmd!
+    autocmd BufReadPost,FileReadPre setlocal noswapfile
+    autocmd BufReadPost,FileReadPre setlocal nobackup
+    autocmd BufReadPost,FileReadPre setlocal nowritebackup
+    autocmd BufReadPost,FileReadPre setlocal noundofile
+    autocmd BufReadPost,FileReadPre autocmd! views
+    autocmd BufReadPost,FileReadPre set viminfo=
+  augroup END
 endfunction
 
 augroup DetectEncryption
-    autocmd!
-    autocmd BufReadPre,FileReadPre *.gpg.* call SetStealthMode()
+  autocmd!
+  autocmd BufReadPre,FileReadPre *.gpg.* call SetStealthMode()
 augroup END
 
 " ===================================================================== EXPERIMENTAL
 
-" Nothing
+" set cmdheight=2
 
