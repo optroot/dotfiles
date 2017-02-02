@@ -165,7 +165,9 @@ set foldmethod=manual
 " ===================================================================== Title
 
 set title
-let &titlestring="%(%{system(\"whoami\").'@'.system(\"hostname -f\")}%):%(%{expand(\"%:p\")}%)"
+let g:titlebase=substitute(system("whoami").'@'.system("hostname -f"),'\n','','g')
+" let &titlestring="%(%{system(\"whoami\").'@'.system(\"hostname -f\")}%):%(%{expand(\"%:p\")}%)"
+let &titlestring=g:titlebase."%(%{expand(\"%:p\")}%)"
 let &t_ts="\e]2;"
 
 " ===================================================================== Conceal
@@ -185,7 +187,19 @@ let g:indentLine_color_term=237
 " let g:indentLine_char='┊'
 let g:indentLine_char=''
 
+if has("termguicolors")
+    set termguicolors
+    " let &t_ut=''
+    set t_ut=
+" else
+"     set t_Co=256
+endif
+
 set t_Co=256
+set t_ZH=[3m
+set t_ZR=[23m
+
+let g:gruvbox_italic=1
 let g:gruvbox_contrast_dark='hard'
 let g:gruvbox_sign_column='bg0'
 let g:gruvbox_invert_selection=0
@@ -194,7 +208,6 @@ try
   colorscheme gruvbox
 catch /^Vim\%((\a\+)\)\=:E185/
   colorscheme default
-  " echoerr 'Run PlugInstall'
 endtry
 set background=dark
 
@@ -564,7 +577,14 @@ endfunction
 
 " ===================================================================== Plugin - Tmux Split
 
+function! TmuxRunning()
+    return ($TMUX != '')
+endfunction
+
 function! SetTmuxTitle(...)
+  if !TmuxRunning()
+      return
+  endif
   let l:t=system("tmux display-message -p '#W'")
   if l:t[0] =~# '[A-Z]'
     return
@@ -585,7 +605,9 @@ endfunction
 " WARNING only use with 1 bottom split
 "function! TmuxSplitCmd(cmd, ...)
 function! TmuxSplitCmd(...)
-  "TODO try tmux !exists return
+  if !TmuxRunning()
+      return
+  endif
   if len(split(system('tmux list-panes'), "\n")) == 1
     silent! call system('tmux new-window -dn vimshell -c '.shellescape(getcwd()))
     silent! call system('tmux join-pane -dvl 12 -s vimshell')

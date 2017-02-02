@@ -12,6 +12,7 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 export ZSH=/home/optroot/.oh-my-zsh
 export LD_LIBRARY_PATH=/usr/local/lib
 export PYTHONPATH="${PYTHONPATH}:~/lib/python"
+# export TERM="xterm-256color-italic"
 
 # Use vim for man pages
 export MANPAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
@@ -128,8 +129,8 @@ bindkey '^R'      history-incremental-pattern-search-backward
 #bindkey '[Z' autosuggest-clear
 # bindkey '\e[5~'   history-search-backward # PgUp
 # bindkey '\e[6~'   history-search-forward  # PgDn
-bindkey '\e[A'   history-search-backward # PgUp
-bindkey '\e[B'   history-search-forward  # PgDn
+# bindkey '\e[A'   history-search-backward # PgUp
+# bindkey '\e[B'   history-search-forward  # PgDn
 
 # Completions
 compdef _gnu_generic gcc
