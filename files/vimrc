@@ -45,27 +45,27 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
 if has('python')
-  " Plug 'ervandew/supertab'
+  Plug 'ervandew/supertab'
   Plug 'SirVer/ultisnips'
-  " Plug 'Chiel92/vim-autoformat'
+  Plug 'Chiel92/vim-autoformat'
   " if v:version >= 800
     " Plug 'w0rp/ale'
     " Plug 'maralla/completor.vim'
   " endif
 endif
 
-" if executable('ctags')
-"   Plug 'ludovicchabant/vim-gutentags', {'for': ['c', 'python', 'vim', 'php']}
-"   Plug 'majutsushi/tagbar',            {'for': ['c', 'python', 'vim', 'php']}
-" endif
+if executable('ctags')
+  Plug 'ludovicchabant/vim-gutentags', {'for': ['c', 'python', 'vim', 'php']}
+  Plug 'majutsushi/tagbar',            {'for': ['c', 'python', 'vim', 'php']}
+endif
 
-" Plug 'panozzaj/vim-autocorrect', {'for': ['text', 'markdown'] }
+Plug 'panozzaj/vim-autocorrect', {'for': ['text', 'markdown'] }
 Plug 'mattn/emmet-vim',          {'for': ['html', 'xml', 'php'] }
-" Plug 'chrisbra/Colorizer',       {'for': ['vim', 'html', 'css', 'scss', 'sass']}
+Plug 'chrisbra/Colorizer',       {'for': ['vim', 'html', 'css', 'scss', 'sass']}
 
 " Theme Plugins
 Plug 'Yggdroot/indentLine'
-" Plug 'kien/rainbow_parentheses.vim'
+Plug 'kien/rainbow_parentheses.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'ryanoasis/vim-devicons'
@@ -184,20 +184,19 @@ augroup END
 " ===================================================================== Style
 
 let g:indentLine_color_term=237
+let g:indentLine_color_gui='#3c3836'
 " let g:indentLine_char='┊'
 let g:indentLine_char=''
 
 if has("termguicolors")
     set termguicolors
-    " let &t_ut=''
-    set t_ut=
-" else
-"     set t_Co=256
 endif
 
+set t_ut=
 set t_Co=256
 set t_ZH=[3m
 set t_ZR=[23m
+
 
 let g:gruvbox_italic=1
 let g:gruvbox_contrast_dark='hard'
@@ -219,7 +218,6 @@ highlight CursorLine     ctermbg=235
 "highlight BookmarkAnnotationSign ctermbg=whatever ctermfg=whatever
 "highlight BookmarkLine ctermbg=whatever ctermfg=whatever
 "highlight BookmarkAnnotationLine ctermbg=whatever ctermfg=whatever
-
 
 " ===================================================================== Configuration
 
@@ -249,7 +247,7 @@ let g:DevIconsEnableFolderExtensionPatternMatching=0
 let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols={}
 let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['html']=''
 
-let g:airline_theme='base16_bright'
+" let g:airline_theme='base16_bright'
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled=1
 let g:airline#extensions#whitespace#enabled=0
@@ -277,12 +275,12 @@ let g:UltiSnipsJumpBackwardTrigger='<C-Z>'
 
 
 let g:rbpt_colorpairs = [
-      \ ['DarkRed',     'DarkRed'],
-      \ ['DarkCyan',    'DarkCyan'],
-      \ ['DarkMagenta', 'DarkMagenta'],
-      \ ['DarkGreen',   'DarkGreen'],
-      \ ['DarkBlue',    'DarkBlue'],
-      \ ]
+    \ ['DarkRed',     'DarkRed'],
+    \ ['DarkCyan',    'DarkCyan'],
+    \ ['DarkMagenta', 'DarkMagenta'],
+    \ ['DarkGreen',   'DarkGreen'],
+    \ ['DarkBlue',    'DarkBlue'],
+    \ ]
 let g:rbpt_max=16
 
 "let g:bookmark_sign=''
@@ -322,7 +320,7 @@ let g:formatters_json=['jsb']
 let g:formatters_jsx=['jsb']
 let g:formatters_less=['jsbcss']
 
-let g:gutentags_enabled=1
+let g:gutentags_enabled=0
 let g:gutentags_tagfile='.tags'
 let g:gutentags_project_root=['.git']
 
@@ -340,6 +338,7 @@ augroup VimOptions
   autocmd FileType * silent! setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 augroup END
 
+" TODO add guibg
 augroup Theme
   autocmd!
   "autocmd VimEnter                      * highlight ALEErrorSign   ctermbg=234 ctermfg=124
@@ -380,7 +379,16 @@ augroup LanguageOptions
   autocmd FileType c,cpp,php                              setlocal iskeyword+=>
   autocmd FileType css,less                               setlocal iskeyword+=.,#,\@
 
+  autocmd FileType c,cpp,php,javascript,python let g:gutentags_enabled=1
+  autocmd FileType c,cpp,php,javascript,python call GutenTagsDisableFileSize(1*1024*1024)
+
 augroup END
+
+function! GutenTagsFileSize(cap)
+  if getfsize(@%) > a:cap
+    let g:gutentags_enabled=0
+  endif
+endfunction
 
 " if exists(':CompletorDisable')
 "   augroup PluginCompletor
@@ -472,7 +480,10 @@ nnoremap N Nzzzv
 vnoremap <C-A> g<C-A>
 vnoremap <C-X> g<C-X>
 
-" vnoremap y "*y
+if has("clipboard")
+    vnoremap y "*y
+endif
+
 " nnoremap x "Xx
 inoremap <C-E> <END>
 
@@ -487,6 +498,7 @@ vmap <DOWN> xpgV
 vmap <UP> xkkpgV
 vnoremap <LEFT> <gv
 vnoremap <RIGHT> >gv
+
 " nmap <LEFT> V<LEFT>
 " nmap <RIGHT> V<RIGHT>
 " nnoremap <LEFT> <<<CR>
@@ -496,10 +508,6 @@ vnoremap <S-TAB> <gv
 
 nnoremap <UP> {
 nnoremap <DOWN> }
-nnoremap <LEFT> :bp<CR>
-nnoremap <RIGHT> :bn<CR>
-nnoremap <TAB> :bn<CR>
-nnoremap <S-TAB> :bp<CR>
 
 " Forgive capital normal commands
 command! -bang -nargs=? -complete=file E e<bang> <args>
@@ -527,6 +535,9 @@ nnoremap !! :e $MYVIMRC<CR>Go<C-R>:<ESC>
 nmap sa cxIa
 nmap sqs cs"'
 nmap ssq cs'"
+
+nmap sw cxiw
+nmap sW cxiW
 
 nmap dsq ds"
 nmap dss ds'
@@ -674,7 +685,7 @@ function! ChangeExt(ext)
 endfunction
 
 
-" ===================================================================== Plugin - Hidden Buffer
+" ===================================================================== Plugin - Buffer
 
 function! DeleteHiddenBuffers()
   let l:tpbl=[]
@@ -683,6 +694,39 @@ function! DeleteHiddenBuffers()
     silent execute 'bdelete' l:buf
   endfor
 endfunction
+
+" TODO cascade buffernumbers
+function! CascadeBufferNumbers()
+
+endfunction
+
+set switchbuf=usetab
+function! TabOrBuffer(direction)
+    " Not contiguous
+    let l:tabs = tabpagenr('$')
+    if     a:direction ==? 'prev' && l:tabs > 1
+        tabprevious
+    elseif a:direction ==? 'next' && l:tabs > 1
+        tabnext
+    elseif a:direction ==? 'prev'
+        bnext!
+    else
+        bprevious!
+    endif
+    " let l:tabno = tabpagenr()
+    " let l:bufs = bufnr('$')
+    " let l:bufno = bufnr('%')
+    " bufloaded()
+    " tabpagebuflist()
+endfunction
+"nnoremap <LEFT> :sbnext<CR>
+"nnoremap <RIGHT> :sbprev<CR>
+nnoremap <silent> <RIGHT> :silent! call TabOrBuffer('next')<CR>
+nnoremap <silent> <LEFT>  :silent! call TabOrBuffer('prev')<CR>
+nnoremap <silent> <TAB>   :bnext<CR>
+nnoremap <silent> <S-TAB> :bprevious<CR>
+
+" ===================================================================== Plugin - EndAll
 
 " TODO MERGE WITH SEMICOLON MAGIC
 imap <C-_> <ESC>:call EndHTMLTag()<CR>A
@@ -751,4 +795,5 @@ augroup END
 " ===================================================================== EXPERIMENTAL
 
 " set cmdheight=2
+
 
