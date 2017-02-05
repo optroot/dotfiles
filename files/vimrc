@@ -27,7 +27,6 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
 Plug 'wellle/targets.vim'
 Plug 'godlygeek/tabular'
-Plug 'MattesGroeger/vim-bookmarks'
 " Plug 'mbbill/undotree'
 Plug 'sheerun/vim-polyglot'
 
@@ -214,11 +213,6 @@ highlight ALEErrorSign   ctermbg=234 ctermfg=124
 highlight ALEWarningSign ctermbg=234 ctermfg=227
 highlight CursorLine     ctermbg=235
 
-"highlight BookmarkSign ctermbg=whatever ctermfg=whatever
-"highlight BookmarkAnnotationSign ctermbg=whatever ctermfg=whatever
-"highlight BookmarkLine ctermbg=whatever ctermfg=whatever
-"highlight BookmarkAnnotationLine ctermbg=whatever ctermfg=whatever
-
 " ===================================================================== Configuration
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
@@ -282,8 +276,6 @@ let g:rbpt_colorpairs = [
     \ ['DarkBlue',    'DarkBlue'],
     \ ]
 let g:rbpt_max=16
-
-"let g:bookmark_sign=''
 
 let g:user_emmet_mode='iv'
 imap <silent> <expr> <C-@> emmet#expandAbbrIntelligent("\<C-@>")
