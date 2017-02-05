@@ -384,7 +384,7 @@ augroup LanguageOptions
 
 augroup END
 
-function! GutenTagsFileSize(cap)
+function! GutenTagsDisableFileSize(cap)
   if getfsize(@%) > a:cap
     let g:gutentags_enabled=0
   endif

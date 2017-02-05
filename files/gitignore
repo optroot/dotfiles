@@ -21,7 +21,6 @@
 *.so
 
 # Lock files
-.~*
 
 # Archives
 *.tgz
@@ -40,6 +39,7 @@ lib/
 logs/
 node_modules/
 data/
+data_old/
 
 # Editor Related Files
 .tags
@@ -50,3 +50,4 @@ data/
 .npm
 
 # Project Specific Configuration
+

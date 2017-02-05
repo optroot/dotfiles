@@ -25,9 +25,26 @@ endglobal
 ###########################################################################
 #                            TextMate Snippets                            #
 ###########################################################################
+
 snippet #!
 `!p snip.rv = '#!/bin/' + getShell() + "\n\n" `
 endsnippet
+
+snippet cd. "Change to script directory" b
+cd "$(dirname "\$0")"
+$0
+endsnippet
+
+snippet >/ "Redirect stdout to void"
+> /dev/null $0
+endsnippet
+
+snippet &> "Redirect all to void"
+> /dev/null 2>&1 $0
+endsnippet
+
+
+
 
 snippet !env "#!/usr/bin/env (!env)"
 `!p snip.rv = '#!/usr/bin/env ' + getShell() + "\n\n" `

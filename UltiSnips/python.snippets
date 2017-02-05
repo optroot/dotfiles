@@ -1,5 +1,7 @@
 #! header
 
+# TODO import manager
+
 snippet #! "Shebang header for python scripts" b
 #!/usr/bin/python2.7
 $0
@@ -7,6 +9,11 @@ endsnippet
 
 snippet #utf8 "UTF8 support" b
 # -*- encoding: utf-8 -*-
+$0
+endsnippet
+
+snippet cd. "Change to script directory" b
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 $0
 endsnippet
 
