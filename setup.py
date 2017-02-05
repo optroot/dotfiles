@@ -1,11 +1,16 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python
+
+# TODO remove dependency on termcolor
 
 import glob
 import os
 import sys
 import difflib
 import filecmp
-from termcolor import colored
+try:
+    from termcolor import colored
+except:
+    colored = lambda x,y: x
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -111,7 +116,7 @@ for src_file in glob.glob("files/*"):
         print colored('[Unlinked]'.ljust(12), 'red'), '%-24s'%name, '|', colored('Similar files linked', 'yellow')
 
     elif len(difflines) < 10:
-        print '-'*40, 'Local Diff'
+        print '-'*40, 'Local Diff:', name
         print '\n'.join(difflines)
         print '-'*40
 
