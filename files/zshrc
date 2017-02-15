@@ -21,6 +21,21 @@ export MANPAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu
 export NVM_DIR="/home/optroot/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
+# TODO this only needs to happen once
+if [ -e "~/.xterm-256color-italic.terminfo" ]; then
+    tic "~/.xterm-256color-italic.terminfo" && \
+        rm "~/.xterm-256color-italic.terminfo"
+fi
+
+case "$TERM" in
+  xterm-256color) export TERM=xterm-256color-italic ;;
+esac
+
+# TODO check if exists and term supports?
+if [ "$TERM" == "xterm-256color" ]; then
+    export TERM=xterm-256color-italic
+fi
+
 
 HISTFILE=~/.zsh_history
 HISTSIZE=1024
@@ -31,9 +46,9 @@ DISABLE_AUTO_TITLE="true"
 HISTORY_IGNORE="( *|#*|ls*|cd*|history*|pwd|exit|clear)"
 
 plugins=(
-dirhistory
-zsh-256color
-zsh-completions
+    dirhistory
+    zsh-256color
+    zsh-completions
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -71,17 +86,17 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 # 2 -- word flex completion (abc => A-big-Car)
 # 3 -- full flex completion (abc => ABraCadabra)
 # zstyle ':completion:*' matcher-list '' \
-# 'm:{a-z\-}={A-Z\_}' \
-# 'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-}={A-Z\_}' \
-# 'r:|?=** m:{a-z\-}={A-Z\_}'
+    # 'm:{a-z\-}={A-Z\_}' \
+    # 'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-}={A-Z\_}' \
+    # 'r:|?=** m:{a-z\-}={A-Z\_}'
 
 
 # TODO ^Xa expands abbrevs already
 # http://zshwiki.org/home/examples/zleiab
 typeset -Ag abbreviations
 abbreviations=(
-"..." 	 "../.."
-"...." 	 "../../.."
+"..."    "../.."
+"...."   "../../.."
 "w"      "watch "
 "lw"     "| wc"
 "lx"     "| xargs"
@@ -94,10 +109,10 @@ abbreviations=(
 "gl"     "git ls-tree --name-only -r HEAD"
 )
 
+# Fix signal return codes (similar to bash)
 TRAPINT() {
     return $(( 128 + $1 ))
 }
-
 
 magic-abbrev-expand() {
     local MATCH
@@ -158,6 +173,6 @@ alias thon='python'
 alias sl='ls'
 
 #TODO minimum size
-alias t='tree --dirsfirst -tACaq --noreport --filelimit 20'
+alias t='tree -tACaqshL 3 --dirsfirst --noreport --filelimit 20'
 
 
