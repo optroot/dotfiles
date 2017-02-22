@@ -638,6 +638,10 @@ augroup VimOptions
   autocmd FileType * silent! setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 augroup END
 
+augroup Filetypes
+  autocmd BufRead,BufNewFile *.zsh-theme silent! setfiletype=zsh
+augroup END
+
 " TODO add guibg
 augroup Theme
   autocmd!
@@ -659,7 +663,7 @@ augroup Startup
   autocmd BufEnter    * silent! call SetTmuxTitle()
   autocmd VimEnter    * silent! call SetTmuxTitle()
   autocmd VimLeave    * silent! call SetTmuxTitle(system("basename $SHELL"))
-  autocmd BufWinLeave * mkview!
+  autocmd BufWinLeave * silent! mkview!
   autocmd BufWinEnter * silent! loadview
 augroup END
 
@@ -732,23 +736,23 @@ iabbrev pritn     print
 iabbrev retunr    return
 iabbrev retrun    return
 iabbrev reutrn    return
+iabbrev retyrn    return
 iabbrev improt    import
 iabbrev ciel      ceil
 
+
 " Fix comment typos
 " TODO use autocorrect, in relevant sections
-iabbrev necesarry necessary
-iabbrev neccesary necessary
-iabbrev necesarry necessary
-iabbrev nessesary necessary
-iabbrev nessisary necessary
-
-iabbrev garuntee  guarantee
-iabbrev garantee  guarantee
-iabbrev guaruntee guarantee
-
-iabbrev aparently apparently
-iabbrev apparantly apparently
+" iabbrev necesarry necessary
+" iabbrev neccesary necessary
+" iabbrev necesarry necessary
+" iabbrev nessesary necessary
+" iabbrev nessisary necessary
+" iabbrev garuntee  guarantee
+" iabbrev garantee  guarantee
+" iabbrev guaruntee guarantee
+" iabbrev aparently apparently
+" iabbrev apparantly apparently
 
 
 " ===================================================================== Mappings
@@ -801,6 +805,7 @@ vnoremap <C-X> g<C-X>
 inoremap <C-A> <HOME>
 inoremap <C-E> <END>
 
+" TODO fix: this glitches out sometimes
 if has("clipboard")
   vnoremap y "*y
 endif
@@ -817,7 +822,6 @@ vmap <DOWN> xpgV
 vmap <UP> xkkpgV
 vnoremap <LEFT> <gv
 vnoremap <RIGHT> >gv
-
 
 " nmap <LEFT> V<LEFT>
 " nmap <RIGHT> V<RIGHT>
@@ -872,7 +876,13 @@ nmap sW cxiW
 nmap dsq ds"
 nmap dss ds'
 
+" ===================================================================== Plugin - Hide Vim Meta
+" TODO
+" Allow use of {{{ and }}} for folding, without saving
+" Allow use of #vim:<settings>
+
 " ===================================================================== Plugin - NerdTree dircolors
+
 
 " NERDTress File highlighting
 " TODO guifg
