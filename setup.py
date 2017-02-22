@@ -176,4 +176,4 @@ if __name__ == '__main__':
                 system('ln "%s" "%s"' % (src_file, dst_file))
 
         else:
-            print colored('[Abort]'.ljust(12), 'red'), '%-32s' % name, '|', colored('No Action: Files diiffer %i>%i lines'(len(difflines), diff_line_cap), 'red')
+            print colored('[Abort]'.ljust(12), 'red'), '%-32s' % name, '|', colored('No Action: Files differ %i>%i lines'%(len(difflines), options['maxlines']), 'red')
