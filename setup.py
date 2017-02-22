@@ -154,7 +154,7 @@ if __name__ == '__main__':
             system('ln "%s" "%s"' % (src_file, dst_file))
 
         elif settings['maxlines'] == 0 or len(difflines) < settings['maxlines']:
-            print colored('[Error]'.ljust(12), 'red'), '%-32s' % name, '|', colored('%s' % options[choice], 'yellow')
+            print colored('[Error]'.ljust(12), 'red'), '%-32s' % name, '|', colored('ENTER ACTION', 'yellow')
 
             print '-' * 40, 'Local Diff:', name
             print '\n'.join(difflines)
@@ -171,9 +171,13 @@ if __name__ == '__main__':
             if choice == 'o':
                 system('rm -rf "%s"' % (src_file))
                 system('ln "%s" "%s"' % (dst_file, src_file))
+                print colored('[Resolved]'.ljust(12), 'yellow'), '%-32s' % name, '|', colored(options[choice], 'yellow')
             elif choice == 'x':
-                system('rm -rf "%s"' % (src_file))
+                system('rm -rf "%s"' % (dst_file))
                 system('ln "%s" "%s"' % (src_file, dst_file))
+                print colored('[Resolved]'.ljust(12), 'yellow'), '%-32s' % name, '|', colored(options[choice], 'yellow')
+            elif choice == 's':
+                print colored('[Skipped]'.ljust(12), 'yellow'), '%-32s' % name, '|', colored(options[choice], 'yellow')
 
         else:
-            print colored('[Abort]'.ljust(12), 'red'), '%-32s' % name, '|', colored('No Action: Files differ %i>%i lines'%(len(difflines), options['maxlines']), 'red')
+            print colored('[Abort]'.ljust(12), 'red'), '%-32s' % name, '|', colored('No Action: Files differ %i>%i lines' % (len(difflines), settings['maxlines']), 'red')
