@@ -20,6 +20,7 @@ settings = {
     'verbose': False,
     'maxlines': 10,
     'home': os.path.expanduser("~"),
+    'force': False,
 }
 
 
@@ -33,7 +34,7 @@ def file_diff(src, dst):
 
 def system(cmd):
     if settings['verbose']:
-        print cmd
+        print '>', cmd
     if not settings['dryrun']:
         os.system(cmd)
 
@@ -94,7 +95,7 @@ if __name__ == '__main__':
 
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-    optlist, args = getopt.getopt(sys.argv[1:], 'dvfh:c:', [
+    optlist, args = getopt.getopt(sys.argv[1:], 'dvfyh:n:', [
                                   'dryrun', 'verbose', 'home'])
     for opt, arg in optlist:
         if opt in ['-d', '--dryrun']:
@@ -104,10 +105,12 @@ if __name__ == '__main__':
             settings['verbose'] = True
         if opt in ['-h', '--home']:
             settings['home'] = arg
-        if opt in ['-c']:
+        if opt in ['-n']:
             settings['maxlines'] = int(arg)
         if opt in ['-f']:
             settings['maxlines'] = 0
+        if opt in ['-y']:
+            settings['force'] = True
 
     # TODO
     # git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
@@ -138,22 +141,29 @@ if __name__ == '__main__':
         dst_file = home('.' + name)
 
         if not os.path.exists(dst_file):
-            print colored('[Unused]'.ljust(12), 'yellow'), '%-32s' % name, '|', colored('Linked', 'green')
             system('ln "%s" "%s"' % (src_file, dst_file))
+            print colored('[Unused]'.ljust(12), 'yellow'), '%-32s' % name, '|', colored('Linked', 'green')
             continue
 
         if is_linked(src_file, dst_file):
             print colored('[Linked]'.ljust(12), 'green'), '%-32s' % name, '|', colored('No Action', 'green')
             continue
 
+        if settings['force']:
+            system('rm -f "%s"' % (dst_file))
+            system('ln "%s" "%s"' % (src_file, dst_file))
+            print colored('[Force]'.ljust(12), 'red'), '%-32s' % name, '|', colored('Forced', 'yellow')
+            continue
+
         difflines = diff_files(src_file, dst_file)
 
         if len(difflines) == 0:
-            print colored('[Unlinked]'.ljust(12), 'red'), '%-32s' % name, '|', colored('Similar files linked', 'yellow')
-            system('rm -rf "%s"' % (dst_file))
+            system('rm -f "%s"' % (dst_file))
             system('ln "%s" "%s"' % (src_file, dst_file))
+            print colored('[Unlinked]'.ljust(12), 'red'), '%-32s' % name, '|', colored('Similar files linked', 'green')
+            continue
 
-        elif settings['maxlines'] == 0 or len(difflines) < settings['maxlines']:
+        if settings['maxlines'] == 0 or len(difflines) < settings['maxlines']:
             print colored('[Error]'.ljust(12), 'red'), '%-32s' % name, '|', colored('ENTER ACTION', 'yellow')
 
             print '-' * 40, 'Local Diff:', name
@@ -169,11 +179,11 @@ if __name__ == '__main__':
             choice = get_user_choice(options)
 
             if choice == 'o':
-                system('rm -rf "%s"' % (src_file))
+                system('rm -f "%s"' % (src_file))
                 system('ln "%s" "%s"' % (dst_file, src_file))
                 print colored('[Resolved]'.ljust(12), 'yellow'), '%-32s' % name, '|', colored(options[choice], 'yellow')
             elif choice == 'x':
-                system('rm -rf "%s"' % (dst_file))
+                system('rm -f "%s"' % (dst_file))
                 system('ln "%s" "%s"' % (src_file, dst_file))
                 print colored('[Resolved]'.ljust(12), 'yellow'), '%-32s' % name, '|', colored(options[choice], 'yellow')
             elif choice == 's':
