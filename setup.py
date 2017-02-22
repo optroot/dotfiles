@@ -16,7 +16,7 @@ except:
 
 # default settings
 settings = {
-    'dryrun': True,
+    'dryrun': False,
     'verbose': False,
     'maxlines': 10,
     'home': os.path.expanduser("~"),
