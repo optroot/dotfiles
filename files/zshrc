@@ -43,7 +43,8 @@ SAVEHIST=1024
 ZSH_THEME="custom"
 COMPLETION_WAITING_DOTS="true"
 DISABLE_AUTO_TITLE="true"
-HISTORY_IGNORE="( *|#*|ls*|cd*|history*|pwd|exit|clear)"
+# HISTORY_IGNORE="( *|#*|ls*|cd*|history*|pwd|exit|clear)"
+HISTORY_IGNORE="( *|#*|history*|pwd|exit|clear)"
 
 plugins=(
     dirhistory

@@ -46,15 +46,15 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
-if has('python')
-  " Plug 'ervandew/supertab'
-  " Plug 'SirVer/ultisnips'
-  " Plug 'Chiel92/vim-autoformat'
-  " if v:version >= 800
-    " Plug 'w0rp/ale'
-    " Plug 'maralla/completor.vim'
-  " endif
-endif
+" if has('python')
+" Plug 'ervandew/supertab'
+" Plug 'SirVer/ultisnips'
+" Plug 'Chiel92/vim-autoformat'
+" if v:version >= 800
+" Plug 'w0rp/ale'
+" Plug 'maralla/completor.vim'
+" endif
+" endif
 
 if executable('ctags')
   Plug 'ludovicchabant/vim-gutentags', {'for': ['c', 'python', 'php']}
@@ -69,7 +69,7 @@ Plug 'chrisbra/Colorizer',       {'for': ['vim', 'html', 'css', 'scss', 'sass']}
 Plug 'Yggdroot/indentLine'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+" Plug 'vim-airline/vim-airline-themes'
 Plug 'ryanoasis/vim-devicons'
 Plug 'morhetz/gruvbox'
 
@@ -81,15 +81,14 @@ Plug 'morhetz/gruvbox'
 " Plug 'sbdchd/neoformat'
 " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
+" has python/lua?
 Plug 'davidhalter/jedi-vim'
 
-" TODO if lua
-
 if has("lua")
-    Plug 'Shougo/neocomplete'
-    Plug 'Shougo/neosnippet'
-    Plug 'Shougo/neosnippet-snippets'
-    Plug 'sbdchd/neoformat'
+  Plug 'Shougo/neocomplete'
+  Plug 'Shougo/neosnippet'
+  Plug 'Shougo/neosnippet-snippets'
+  Plug 'sbdchd/neoformat'
 endif
 
 
@@ -102,8 +101,8 @@ call plug#end()
 " let g:neocomplete#force_overwrite_completefunc = 1
 let g:acp_enableAtStartup = 0
 
-" let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_at_startup = 0
+let g:neocomplete#enable_at_startup = 1
+" let g:neocomplete#enable_at_startup = 0
 let g:neocomplete#max_list = 20
 let g:neocomplete#max_keyword_width = 40
 let g:neocomplete#auto_completion_start_length = 2
@@ -121,8 +120,7 @@ let g:neocomplete#enable_auto_select = 1
 " let g:neocomplete#enable_auto_clone_preview = 1
 
 if has("timers")
-    " let g:neocomplete#auto_complete_delay = 500
-    let g:neocomplete#auto_complete_delay = 200
+  let g:neocomplete#auto_complete_delay = 200
 endif
 
 " Enable heavy omni completion.
@@ -160,9 +158,9 @@ let g:neocomplete#keyword_patterns._ = '\h\w*'
 
 
 " inoremap <silent> <expr> <TAB> pumvisible() ?
-"                              \     "\<C-n>" : 
-"                              \     neosnippet#expandable_or_jumpable() ? 
-"                              \         "\<Plug>(neosnippet_expand_or_jump)" : 
+"                              \     "\<C-n>" :
+"                              \     neosnippet#expandable_or_jumpable() ?
+"                              \         "\<Plug>(neosnippet_expand_or_jump)" :
 "                              \         "\<TAB>"
 
 
@@ -174,11 +172,11 @@ inoremap <silent> <expr> <BS> neocomplete#smart_close_popup()."\<BS>"
 inoremap <silent> <expr> <TAB> TAB_Handler()
 " snoremap <silent> <expr> <TAB> TAB_Handler()
 smap <expr> <TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+      \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
 " TODO normal mode <TAB> jumps first
 
-set cmdheight=2
+" set cmdheight=2
 
 " function! S_CR_Handler()
 " endfunction
@@ -200,6 +198,7 @@ function! TAB_Handler()
   let l:out = ""
   if pumvisible()
     let l:out = l:out.neocomplete#close_popup()
+    return l:out
     "C-y"
   endif
   if neosnippet#expandable_or_jumpable()
@@ -207,19 +206,20 @@ function! TAB_Handler()
   elseif !pumvisible()
     " TODO remove, this is part of 'semicolon-magic'
     " And last word is keyword
-    echom getline('.') 
-    if col('.') == col('$') && col('.') > 1 &&
-     \ match(getline('.'), '\s\+$') == -1 && (
-     \ &filetype == 'css'  ||
-     \ &filetype == 'less' ||
-     \ &filetype == 'php ' ||
-     \ &filetype == 'c'    ||
-     \ &filetype == 'javascript'
-     \ )
-        let l:out = l:out." {\<CR>}\<ESC>O"
-    else
-      let l:out = l:out."\<TAB>"
-    endif
+    " echom getline('.')
+    " if col('.') == col('$') && col('.') > 1 &&
+    "  \ match(getline('.'), '\s\+$') == -1 && (
+    "  \ &filetype == 'css'  ||
+    "  \ &filetype == 'less' ||
+    "  \ &filetype == 'php ' ||
+    "  \ &filetype == 'c'    ||
+    "  \ &filetype == 'javascript'
+    "  \ )
+    "     let l:out = l:out." {\<CR>}\<ESC>O"
+    " else
+    "   let l:out = l:out."\<TAB>"
+    " endif
+    let l:out = l:out."\<TAB>"
   endif
   return l:out
 endfunction
@@ -245,8 +245,8 @@ nnoremap <silent> <buffer> <F4> :Neoformat<CR>
 
 
 
-" let g:jedi#completions_enabled = 0
-" let g:jedi#auto_vim_configuration = 0
+let g:jedi#completions_enabled = 0
+let g:jedi#auto_vim_configuration = 0
 
 
 " ===================================================================== Options
@@ -263,6 +263,22 @@ nnoremap <silent> <buffer> <F4> :Neoformat<CR>
 " TODO surround object mapping (quotes)
 " TODO enforce single quotes where possible
 " TODO change the fold color, it's confusing with splits
+"   - keep syntax highlight, but dim, standout background more
+" TODO folding auto syntax
+"   - Functions
+"   - Classes
+"     - Methods
+"   - Section comments
+"   - python: if name
+" markdown: Headings (top2)
+" dynamic foldcolumn showing
+" hotkey to enable/disable
+" TODO use autocorrect for comments and other text portions
+" Disable completion inside comments (or manual completion via C-<Space>?)
+
+" syntax sync fromstart on open tags?
+
+" TODO syntax for divider (any non-whitespace char repeated 20+ times, starting from starting of line)
 
 " TODO vmode select up/down to whitespace
 " Solution: { } and use A instead of I (^V{A instead of ^V{llllllI)
@@ -274,11 +290,13 @@ set autoindent
 set magic
 set autoread
 set backspace=indent,eol,start
-set cindent
-set cinoptions=(0,u0,U0
+
+" set cindent
+" set cinoptions=(0,u0,U0
+
 set cryptmethod=blowfish2
-set complete-=i
-set completeopt-=preview
+" set complete-=i
+" set completeopt-=preview
 set cpoptions+=$
 set display+=lastline
 set hidden
@@ -326,6 +344,46 @@ set ttimeoutlen=100
 " TODO move to gutentags
 setglobal tags-=./tags tags-=./tags; tags^=./tags;
 
+set cindent
+set cinoptions=(0,u0,U0
+" set cinoptions=
+" set cinoptions+=>s " Normal indent by shiftwidth
+" set cinoptions+=e0 " modify indent ±0 when /{$/
+" set cinoptions+=n0 " modify indent ±0 for braceless control block
+" set cinoptions+=f0 " first brace in column 0
+" set cinoptions+={0 " modify opening brace indent by ±0
+" set cinoptions+=}0 " modify closing brace indent by ±0
+" set cinoptions+=^0 " modify indent inside braces by ±0
+" set cinoptions+=:s " case labels are <sw> from switch()
+" set cinoptions+==0 " modify case statement indent by ±0
+" set cinoptions+=l1 " align statements relative to case label
+" set cinoptions+=b0 " align break with statements, not case label
+" set cinoptions+=g0 " scope declarations align with braces
+" set cinoptions+=hs " statements after scope statements are indented <sw>
+" set cinoptions+=ps " K&R parameters are indented <sw>
+" set cinoptions+=ts " return type declarations are indented <sw>
+" set cinoptions+=is " indent C++ base classes and cinits <sw>
+" set cinoptions+=+s " indent continuation lines <sw>
+" set cinoptions+=c3 " indent comment lines +3 after comment opener.
+" set cinoptions+=C0 " Comments behave correctly
+" set cinoptions+=/0 " Indent comments <sw> extra
+" set cinoptions+=(0 " Indent continuation in unclosed parens 2<sw>
+" set cinoptions+=u0 " Same as above, one level deeper, add <sw>
+" set cinoptions+=U0 " Ignore (/u if parens is first non-ws char.
+" set cinoptions+=w1 " Line up with first unclosed paren.
+" set cinoptions+=W0 " Unclosed paren change.
+" set cinoptions+=m0 " Parens line up properly
+" set cinoptions+=M0 " Parens line up properly
+" set cinoptions+=j1 " Anonymous classes are indented correctly.
+" set cinoptions+=)20 " Unclosed parens up to 20 lines away
+" set cinoptions+=*30 " Unclosed comments up to 30 lines away
+" set foldcolumn=2
+" set foldmethod=syntax
+
+" Divider syntax
+" Auto fold dividers (or cleverly hide {{{, }}}
+" In somecases add / to keyword chars
+
 " ===================================================================== Clipboard
 
 set clipboard=exclude:cons\|linux
@@ -347,13 +405,13 @@ set foldmethod=manual
 " ===================================================================== Conceal
 
 if has('conceal')
-    set conceallevel=2
-    set concealcursor=vc
-    let g:text_conceal='adgms'
-    augroup Override
-        autocmd!
-        autocmd VimEnter * set concealcursor=vc
-    augroup END
+  set conceallevel=2
+  set concealcursor=vc
+  let g:text_conceal='adgms'
+  augroup Override
+    autocmd!
+    autocmd VimEnter * set concealcursor=vc
+  augroup END
 endif
 
 
@@ -370,7 +428,7 @@ set t_ZH=[3m
 set t_ZR=[23m
 
 if has("termguicolors")
-    set termguicolors
+  set termguicolors
 endif
 
 let g:indentLine_color_term=237
@@ -378,9 +436,11 @@ let g:indentLine_color_gui='#3c3836'
 let g:indentLine_char=''
 
 let g:gruvbox_italic=1
+" let g:gruvbox_bold=1
 let g:gruvbox_contrast_dark='hard'
 let g:gruvbox_sign_column='bg0'
 let g:gruvbox_invert_selection=0
+
 
 try
   colorscheme gruvbox
@@ -405,18 +465,18 @@ endif
 
 let g:targets_quotes='"q ''s `'
 
-let g:ale_sign_error="\u00a0x"
-let g:ale_sign_warning="\u00a0!"
+" let g:ale_sign_error="\u00a0x"
+" let g:ale_sign_warning="\u00a0!"
 
 " let g:ale_lint_delay=2000
-let g:ale_lint_on_enter=1
-let g:ale_lint_on_save=1
-let g:ale_lint_on_text_changed=0
+" let g:ale_lint_on_enter=1
+" let g:ale_lint_on_save=1
+" let g:ale_lint_on_text_changed=0
 
-let g:ale_set_open_list=0
-let g:ale_set_loclist=1
-let g:ale_set_quickfix=1
-let g:ale_keep_list_window_open=0
+" let g:ale_set_open_list=0
+" let g:ale_set_loclist=1
+" let g:ale_set_quickfix=1
+" let g:ale_keep_list_window_open=0
 
 let g:WebDevIconsUnicodeDecorateFolderNodes=1
 let g:DevIconsEnableFoldersOpenClose=1
@@ -427,7 +487,7 @@ let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['html']=''
 " let g:airline_theme='base16_bright'
 let g:airline_theme='gruvbox'
 let g:airline_powerline_fonts=1
-" let g:airline#extensions#tabline#enabled=1
+let g:airline#extensions#tabline#enabled=1
 let g:airline#extensions#whitespace#enabled=0
 let g:airline_section_z='%{g:airline_symbols.linenr}% %l:%v'
 
@@ -466,7 +526,63 @@ let g:tcommentTextObjectInlineComment='ic'
 "     \ ['LightGreen',   'LightGreen'],
 "     \ ['LightBlue',    'LightBlue'],
 "     \ ]
-" let g:rbpt_max=16
+" " let g:rbpt_max=16
+
+" if !exists('g:rbpt_colorpairs')
+" let g:rbpt_colorpairs =
+"   \ [
+"     \ ['blue', '#458588'], ['magenta', '#b16286'],
+"     \ ['red',  '#cc241d'], ['166',     '#d65d0e']
+"   \ ]
+" \ ['108',   '#8ec07c'],
+" \ ['109',   '#83a598'],
+
+" \ ['167',   '#fabd2f'],
+" \ ['LightAqua',    '#8ec07c'],
+" endif
+
+" let g:rbpt_colorpairs = [
+"     \ ['Orange1',      '#fabd2f'],
+"     \ ['DarkSeaGreen', '#83a598'],
+"     \ ['IndianRed1',   '#fb4934'],
+"     \ ['LightPink3',   '#d3869b'],
+"     \ ['DarkOrange',   '#fe8019']
+"     \ ]
+
+" let g:rbpt_colorpairs = [
+"     \ ['167',   '#fb4934'],
+"     \ ['175',   '#d3869b'],
+"     \ ['142',   '#b8bb26'],
+"     \ ['214',   '#fabd2f'],
+"     \ ['208',   '#fe8019'],
+"     \ ]
+
+" let g:rbpt_colorpairs = [
+"     \ ['167',   '#fb4934'],
+"     \ ['175',   '#d3869b'],
+"     \ ['214',   '#fabd2f'],
+"     \ ['208',   '#fe8019'],
+"     \ ['142',   '#b8bb26'],
+"     \ ]
+
+let g:rbpt_colorpairs = [
+      \ ['142',   '#b8bb26'],
+      \ ['214',   '#fabd2f'],
+      \ ['208',   '#fe8019'],
+      \ ['167',   '#fb4934'],
+      \ ['175',   '#d3869b'],
+      \ ['66',    '#83a598'],
+      \ ]
+
+" syntax region Parens matchgroup=Function start=/\(\)/ contains=ALL keepend
+" syntax region CustomParenRegion matchgroup=CustomParenMatch start=+START+ end=+END+ contains=ALL
+" highlight CustomParenMatch gui=bold cterm=bold
+
+" highlight Menu
+" highlight Scollbar
+" highlight Tooltip
+
+
 
 let g:user_emmet_mode='iv'
 imap <silent> <expr> <C-@> emmet#expandAbbrIntelligent("\<C-@>")
@@ -535,16 +651,16 @@ augroup END
 
 augroup Startup
   autocmd!
-  autocmd VimEnter      * silent! RainbowParenthesesToggle
-  autocmd Syntax        * silent! RainbowParenthesesLoadRound
-  autocmd Syntax        * silent! RainbowParenthesesLoadSquare
-  autocmd Syntax        * silent! RainbowParenthesesLoadBraces
-  autocmd VimEnter      * silent! GitGutterDisable
-  autocmd BufEnter      * silent! call SetTmuxTitle()
-  autocmd VimEnter      * silent! call SetTmuxTitle()
-  autocmd VimLeave      * silent! call SetTmuxTitle(system("basename $SHELL"))
-  autocmd BufWinLeave *.* mkview!
-  autocmd BufWinEnter *.* silent! loadview
+  autocmd VimEnter    * silent! RainbowParenthesesToggle
+  autocmd Syntax      * silent! RainbowParenthesesLoadRound
+  autocmd Syntax      * silent! RainbowParenthesesLoadSquare
+  autocmd Syntax      * silent! RainbowParenthesesLoadBraces
+  autocmd VimEnter    * silent! GitGutterDisable
+  autocmd BufEnter    * silent! call SetTmuxTitle()
+  autocmd VimEnter    * silent! call SetTmuxTitle()
+  autocmd VimLeave    * silent! call SetTmuxTitle(system("basename $SHELL"))
+  autocmd BufWinLeave * mkview!
+  autocmd BufWinEnter * silent! loadview
 augroup END
 
 augroup LanguageOptions
@@ -552,13 +668,14 @@ augroup LanguageOptions
 
   autocmd FileType javascript,json,css,less,html,vim setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
   autocmd FileType Makefile                          setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
-  autocmd FileType python   silent! nnoremap <silent> <buffer> K :<C-u>execute "!pydoc " . expand("<cword>")<CR>
+  " autocmd FileType python   silent! nnoremap <silent> <buffer> K :<C-u>execute "!pydoc " . expand("<cword>")<CR>
 
   autocmd FileType html,markdown,css,text setlocal textwidth=78
   autocmd FileType html,markdown,css,text setlocal wrap
 
   " TODO finish set iskeyword=@,48-57,_,192-255
-  autocmd FileType c,cpp,php,css,less,markdown,javascript setlocal iskeyword+=-
+  " TODO _ not part of word for some operations?
+  autocmd FileType c,cpp,php,css,less,markdown,html,xml,javascript setlocal iskeyword+=-
   autocmd FileType php,css,less,javascript                setlocal iskeyword+=$
   autocmd FileType c,cpp,php                              setlocal iskeyword+=>
   autocmd FileType css,less                               setlocal iskeyword+=.,#,\@
@@ -618,6 +735,22 @@ iabbrev reutrn    return
 iabbrev improt    import
 iabbrev ciel      ceil
 
+" Fix comment typos
+" TODO use autocorrect, in relevant sections
+iabbrev necesarry necessary
+iabbrev neccesary necessary
+iabbrev necesarry necessary
+iabbrev nessesary necessary
+iabbrev nessisary necessary
+
+iabbrev garuntee  guarantee
+iabbrev garantee  guarantee
+iabbrev guaruntee guarantee
+
+iabbrev aparently apparently
+iabbrev apparantly apparently
+
+
 " ===================================================================== Mappings
 
 " RSI commands
@@ -669,7 +802,7 @@ inoremap <C-A> <HOME>
 inoremap <C-E> <END>
 
 if has("clipboard")
-    vnoremap y "*y
+  vnoremap y "*y
 endif
 
 nnoremap <C-W>h 10<C-W><
@@ -709,7 +842,8 @@ let g:mapleader=' '
 nnoremap <leader>2     :setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab<CR>
 nnoremap <leader>4     :setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab<CR>
 nnoremap <leader><TAB> :setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab<CR>
-vnoremap <leader>r  :redraw!<CR>
+" TODO syntax sync fromstart
+" vnoremap <leader>r  :redraw!<CR>
 vnoremap <leader>=  :Tab/=<CR>gv
 vnoremap <leader>:  :Tab/:\zs<CR>gv
 vnoremap <leader>,  :Tab/,\zs<CR>gv
@@ -719,7 +853,7 @@ nnoremap <leader><leader> ga
 
 nnoremap !! :e $MYVIMRC<CR>Go<C-R>:<ESC>
 
-" vnoremap { 
+" vnoremap {
 " vnoremap }
 
 " TODO if exchange
@@ -786,12 +920,12 @@ endfunction
 " ===================================================================== Plugin - Tmux Split
 
 function! TmuxRunning()
-    return ($TMUX != '')
+  return ($TMUX != '')
 endfunction
 
 function! SetTmuxTitle(...)
   if !TmuxRunning()
-      return
+    return
   endif
   let l:t=system("tmux display-message -p '#W'")
   if l:t[0] =~# '[A-Z]'
@@ -814,7 +948,7 @@ endfunction
 "function! TmuxSplitCmd(cmd, ...)
 function! TmuxSplitCmd(...)
   if !TmuxRunning()
-      return
+    return
   endif
   if len(split(system('tmux list-panes'), "\n")) == 1
     silent! call system('tmux new-window -dn vimshell -c '.shellescape(getcwd()))
@@ -894,27 +1028,28 @@ endfunction
 
 set switchbuf=usetab
 function! TabOrBuffer(direction)
-    " Not contiguous
-    let l:tabs = tabpagenr('$')
-    if     a:direction ==? 'prev' && l:tabs > 1
-        tabprevious
-    elseif a:direction ==? 'next' && l:tabs > 1
-        tabnext
-    elseif a:direction ==? 'prev'
-        bnext!
-    else
-        bprevious!
-    endif
-    " let l:tabno = tabpagenr()
-    " let l:bufs = bufnr('$')
-    " let l:bufno = bufnr('%')
-    " bufloaded()
-    " tabpagebuflist()
+  " Not contiguous
+  let l:tabs = tabpagenr('$')
+  if     a:direction ==? 'prev' && l:tabs > 1
+    tabprevious
+  elseif a:direction ==? 'next' && l:tabs > 1
+    tabnext
+  elseif a:direction ==? 'prev'
+    bnext!
+  else
+    bprevious!
+  endif
+  " let l:tabno = tabpagenr()
+  " let l:bufs = bufnr('$')
+  " let l:bufno = bufnr('%')
+  " bufloaded()
+  " tabpagebuflist()
 endfunction
 "nnoremap <LEFT> :sbnext<CR>
 "nnoremap <RIGHT> :sbprev<CR>
-nnoremap <silent> <RIGHT> :silent! call TabOrBuffer('next')<CR>
-nnoremap <silent> <LEFT>  :silent! call TabOrBuffer('prev')<CR>
+" TODO order?
+nnoremap <silent> <RIGHT> :silent! call TabOrBuffer('prev')<CR>
+nnoremap <silent> <LEFT>  :silent! call TabOrBuffer('next')<CR>
 nnoremap <silent> <TAB>   :bnext<CR>
 nnoremap <silent> <S-TAB> :bprevious<CR>
 " TODO tabmove

@@ -18,7 +18,8 @@ esac
 HISTCONTROL=ignoreboth:erasedups
 
 # The space thing is default?
-export HISTIGNORE=$HISTIGNORE:"history*:exit:clear:ls*"
+# export HISTIGNORE=$HISTIGNORE:"history*:exit:clear:ls*"
+export HISTIGNORE=$HISTIGNORE:"history*:exit:clear"
 
 # append to the history file, don't overwrite it
 shopt -s histappend
