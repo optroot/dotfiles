@@ -14,25 +14,17 @@ try:
 except:
     colored = lambda x, y: x
 
-HOME = os.path.expanduser("~")
+# default settings
 settings = {
     'dryrun': True,
     'verbose': False,
+    'maxlines': 10,
+    'home': os.path.expanduser("~"),
 }
-
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
-optlist, args = getopt.getopt(sys.argv[1:], 'dv', ['dryrun', 'verbose'])
-for opt, arg in optlist:
-    if opt in ['-d', '--dryrun']:
-        settings['dryrun'] = True
-        settings['verbose'] = True
-    if opt in ['-v', '--verbose']:
-        settings['verbose'] = True
 
 
 def home(p):
-    return os.path.join(HOME, p)
+    return os.path.join(settings['home'], p)
 
 
 def file_diff(src, dst):
@@ -98,73 +90,90 @@ def diff_files(src_file, dst_file):
     return difflines
 
 
-# TODO
-# git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+if __name__ == '__main__':
 
-# TODO leave to vim?
-# curl -sfLo ~/.vim/autoload/plug.vim --create-dirs
-# 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-# TODO check the terminal and do various setup
-# TERM=xterm-256color-italic? (if xterm-256-color)
-# <BS> = C-?
-# Home/End/PU/PD work
-# Fkeys work
+    optlist, args = getopt.getopt(sys.argv[1:], 'dvfh:c:', [
+                                  'dryrun', 'verbose', 'home'])
+    for opt, arg in optlist:
+        if opt in ['-d', '--dryrun']:
+            settings['dryrun'] = True
+            settings['verbose'] = True
+        if opt in ['-v', '--verbose']:
+            settings['verbose'] = True
+        if opt in ['-h', '--home']:
+            settings['home'] = arg
+        if opt in ['-c']:
+            settings['maxlines'] = int(arg)
+        if opt in ['-f']:
+            settings['maxlines'] = 0
 
-# install vim plug
-# TODO: fix snippets
+    # TODO
+    # git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
-system('mkdir -p "%s"' % home('.vim'))
-system('mkdir -p "%s"' % home('.vim/view'))
-system('mkdir -p "%s"' % home('.vim/undo'))
+    # TODO leave to vim?
+    # curl -sfLo ~/.vim/autoload/plug.vim --create-dirs
+    # 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
-# TODO check if exists
-# don't run, leave to bash/zsh?
-# system('tic "files/xterm-256color-italic.terminfo"')
+    # TODO check the terminal and do various setup
+    # TERM=xterm-256color-italic? (if xterm-256-color)
+    # <BS> = C-?
+    # Home/End/PU/PD work
+    # Fkeys work
 
+    # install vim plug
+    # TODO: fix snippets
 
-for src_file in glob.glob("files/*"):
-    name = os.path.basename(src_file)
-    dst_file = home('.' + name)
+    system('mkdir -p "%s"' % home('.vim'))
+    system('mkdir -p "%s"' % home('.vim/view'))
+    system('mkdir -p "%s"' % home('.vim/undo'))
 
-    if not os.path.exists(dst_file):
-        print colored('[Unused]'.ljust(12), 'yellow'), '%-32s' % name, '|', colored('Linked', 'green')
-        system('ln "%s" "%s"', src_file, dst_file)
-        continue
+    # TODO check if exists
+    # don't run, leave to bash/zsh?
+    # system('tic "files/xterm-256color-italic.terminfo"')
 
-    if is_linked(src_file, dst_file):
-        print colored('[Linked]'.ljust(12), 'green'), '%-32s' % name, '|', colored('No Action', 'green')
-        continue
+    for src_file in glob.glob("files/*"):
+        name = os.path.basename(src_file)
+        dst_file = home('.' + name)
 
-    difflines = diff_files(src_file, dst_file)
+        if not os.path.exists(dst_file):
+            print colored('[Unused]'.ljust(12), 'yellow'), '%-32s' % name, '|', colored('Linked', 'green')
+            system('ln "%s" "%s"' % (src_file, dst_file))
+            continue
 
-    if len(difflines) == 0:
-        print colored('[Unlinked]'.ljust(12), 'red'), '%-32s' % name, '|', colored('Similar files linked', 'yellow')
-        system('rm -rf "%s"', dst_file)
-        system('ln "%s" "%s"', src_file, dst_file)
+        if is_linked(src_file, dst_file):
+            print colored('[Linked]'.ljust(12), 'green'), '%-32s' % name, '|', colored('No Action', 'green')
+            continue
 
-    elif len(difflines) < 10:
-        print colored('[Error]'.ljust(12), 'red'), '%-32s' % name, '|', colored('%s' % options[choice], 'yellow')
+        difflines = diff_files(src_file, dst_file)
 
-        print '-' * 40, 'Local Diff:', name
-        print '\n'.join(difflines)
-        print '-' * 40
+        if len(difflines) == 0:
+            print colored('[Unlinked]'.ljust(12), 'red'), '%-32s' % name, '|', colored('Similar files linked', 'yellow')
+            system('rm -rf "%s"' % (dst_file))
+            system('ln "%s" "%s"' % (src_file, dst_file))
 
-        options = {
-            'o': 'Keep local modifications, overwrite source',
-            'x': 'Overwrite local modifications',
-            's': 'Skip',
-        }
+        elif settings['maxlines'] == 0 or len(difflines) < settings['maxlines']:
+            print colored('[Error]'.ljust(12), 'red'), '%-32s' % name, '|', colored('%s' % options[choice], 'yellow')
 
-        choice = get_user_choice(options)
+            print '-' * 40, 'Local Diff:', name
+            print '\n'.join(difflines)
+            print '-' * 40
 
-        if choice == 'o':
-            system('rm -rf "%s"', src_file)
-            system('ln "%s" "%s"', dst_file, src_file)
-        elif choice == 'x':
-            system('rm -rf "%s"', src_file)
-            system('ln "%s" "%s"', src_file, dst_file)
+            options = {
+                'o': 'Keep local modifications, overwrite source',
+                'x': 'Overwrite local modifications',
+                's': 'Skip',
+            }
 
-    else:
-        print colored('[Abort]'.ljust(12), 'red'), '%-32s' % name, '|', colored('No Action', 'red')
+            choice = get_user_choice(options)
 
+            if choice == 'o':
+                system('rm -rf "%s"' % (src_file))
+                system('ln "%s" "%s"' % (dst_file, src_file))
+            elif choice == 'x':
+                system('rm -rf "%s"' % (src_file))
+                system('ln "%s" "%s"' % (src_file, dst_file))
+
+        else:
+            print colored('[Abort]'.ljust(12), 'red'), '%-32s' % name, '|', colored('No Action: Files diiffer %i>%i lines'(len(difflines), diff_line_cap), 'red')
