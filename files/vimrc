@@ -1,5 +1,6 @@
 set encoding=utf-8
 scriptencoding utf-8
+" TODO don't use utf-8 here, make all special chars \"\uXXXX"
 
 " ===================================================================== Initialization
 
@@ -28,6 +29,7 @@ Plug 'wellle/targets.vim'
 Plug 'godlygeek/tabular'
 " Plug 'mbbill/undotree'
 Plug 'sheerun/vim-polyglot'
+
 
 " TODO Only if tmux running
 Plug 'christoomey/vim-tmux-navigator'
@@ -62,12 +64,13 @@ if executable('ctags')
 endif
 
 Plug 'panozzaj/vim-autocorrect', {'for': ['text', 'markdown'] }
-Plug 'mattn/emmet-vim',          {'for': ['html', 'xml', 'php', 'markdown'] }
+Plug 'mattn/emmet-vim',          {'for': ['html', 'xml', 'php', 'markdown', 'css', 'less']}
 Plug 'chrisbra/Colorizer',       {'for': ['vim', 'html', 'css', 'scss', 'sass']}
 
 " Theme Plugins
 Plug 'Yggdroot/indentLine'
-Plug 'kien/rainbow_parentheses.vim'
+" Plug 'kien/rainbow_parentheses.vim'
+Plug 'luochen1990/rainbow'
 Plug 'vim-airline/vim-airline'
 " Plug 'vim-airline/vim-airline-themes'
 Plug 'ryanoasis/vim-devicons'
@@ -237,13 +240,12 @@ autocmd FileType python        setlocal omnifunc=jedi#completions
 autocmd FileType ruby          setlocal omnifunc=rubycomplete#Complete
 autocmd FileType xml           setlocal omnifunc=xmlcomplete#CompleteTags
 
+" TODO respect local sw
 let g:neoformat_basic_format_align = 1
 let g:neoformat_basic_format_retab = 1
 let g:neoformat_basic_format_trim = 1
 nnoremap <silent> <buffer> <F4> :Neoformat<CR>
 "TODO vmode
-
-
 
 let g:jedi#completions_enabled = 0
 let g:jedi#auto_vim_configuration = 0
@@ -275,6 +277,8 @@ let g:jedi#auto_vim_configuration = 0
 " hotkey to enable/disable
 " TODO use autocorrect for comments and other text portions
 " Disable completion inside comments (or manual completion via C-<Space>?)
+" TODO fix amiguous width characters have black beside
+" TODO search hl off once edit action started
 
 " syntax sync fromstart on open tags?
 
@@ -386,15 +390,19 @@ set cinoptions=(0,u0,U0
 
 " ===================================================================== Clipboard
 
-set clipboard=exclude:cons\|linux
 
-" TODO Note that "a"*y has the expected behavior (luckily)
-nnoremap y "*y
-vnoremap y "*y
+" TODO fix: this glitches out sometimes
+if has("clipboard")
+  set clipboard=exclude:cons\|linux
 
-" Paste from clipboard (requires unimpaired)
-nmap yop yo<C-R><C-O>*<ESC>
-nmap yp i<C-R><C-O>*<ESC>
+  " TODO Note that "a"*y has the expected behavior (luckily)
+  nnoremap y "*y
+  vnoremap y "*y
+
+  " Paste from clipboard (requires unimpaired)
+  nmap yop yo<C-R><C-O>*<ESC>
+  " nmap yp i<C-R><C-O>*<ESC>
+endif
 
 " ===================================================================== Folds
 
@@ -441,6 +449,14 @@ let g:gruvbox_contrast_dark='hard'
 let g:gruvbox_sign_column='bg0'
 let g:gruvbox_invert_selection=0
 
+" TODO
+syntax match nonascii "[^\x00-\x7f]"
+highlight nonascii guibg='#000000' ctermbg=232
+" TODO group for escape sequences
+" TODO non-visible chars
+" syntax match unicode "[^\x100-\xffff]"
+" highlight nonascii guibg='#000000' ctermbg=232
+" TODO syntax for regular expressions in different languages
 
 try
   colorscheme gruvbox
@@ -464,6 +480,10 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) =
 endif
 
 let g:targets_quotes='"q ''s `'
+" Only seek if next/last targets touch current line
+let g:targets_seekRanges='cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
+
+" let g:targets_
 
 " let g:ale_sign_error="\u00a0x"
 " let g:ale_sign_warning="\u00a0!"
@@ -489,7 +509,12 @@ let g:airline_theme='gruvbox'
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled=1
 let g:airline#extensions#whitespace#enabled=0
+let g:airline#extensions#capslock#enabled=1
 let g:airline_section_z='%{g:airline_symbols.linenr}% %l:%v'
+" let g:airline_section_a='%#__accent_bold#%{airline#util#wrap(airline#parts#mode(),0)}%#__restore__#%{airline#util#append(airline#parts#crypt(),0)}%{airline#util#append(airline#parts#paste(),0)}%{airline#util#append(airline#parts#spell(),0)}%{airline#util#append("",0)}%{airline#util#append("",0)}%{airline#util#append(airline#parts#iminsert(),0)}'
+" let g:airline_section_a=
+let g:airline_crypt_symbol="\ue0a2"
+
 
 let g:webdevicons_enable_airline_tabline=0
 let g:airline#extensions#tabline#buffer_nr_show=0
@@ -565,14 +590,71 @@ let g:tcommentTextObjectInlineComment='ic'
 "     \ ['142',   '#b8bb26'],
 "     \ ]
 
-let g:rbpt_colorpairs = [
-      \ ['142',   '#b8bb26'],
-      \ ['214',   '#fabd2f'],
-      \ ['208',   '#fe8019'],
-      \ ['167',   '#fb4934'],
-      \ ['175',   '#d3869b'],
-      \ ['66',    '#83a598'],
-      \ ]
+" let g:rbpt_colorpairs = [
+"       \ ['142',   '#b8bb26'],
+"       \ ['214',   '#fabd2f'],
+"       \ ['208',   '#fe8019'],
+"       \ ['167',   '#fb4934'],
+"       \ ['175',   '#d3869b'],
+"       \ ['66',    '#83a598'],
+"       \ ]
+
+let g:rainbow_active = 1
+let g:rainbow_conf = {
+      \   'guifgs': ['#fb4934', '#fe8019', '#fabd2f', '#b8bb26', '#83a598', '#d3869b'],
+      \   'ctermfgs': ['167', '208', '214', '142', '66', '175'],
+      \   'operators': '_\~\|!\|@\|#\|\$\|%\|\^\|&\|\*\|+\|-\|=\|\\\|:\||\|,\|<\|>\|\/\|?_',
+      \ }
+"       \   'operators1': '_,\|:_',
+"       \   'operators2': '_,\|:\|+\|-\|*\|\/\|%_',
+"       \   'operators3': '_,\|:\|+\|-\|*\|\/\|%\|&\||\|!\|=\|<\|>_',
+"       \   'operators4': '_,\|:\|+\|-\|*\|\/\|%\|\^\|&\||\|!\|=\|<\|>_',
+"       \   'operators5': '_~\|!\|@\|#\|%\|\^\|&\|*\|+\|-\|=\|\\\|:\|,\|<\|>\|\/_',
+"       \   'operators6': '_\~\|!\|@\|#\|\$\|%\|\^\|&\|\*\|+\|-\|=\|\\\|:\||\|,\|<\|>\|\/\|?_',
+"       \   'operators': '_\~\|!\|@\|#\|%\|\^\|&\|\*\|+\|-\|=\|\\\|:\||\|,\|<\|>\|\/\|?_',
+"       \   'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
+"       \   'separately': {
+"       \       '*': {},
+"       \       'vim': {
+"       \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'],
+"       \       },
+"       \       'php': {
+"       \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=phpRegion', 'start=/\[/ end=/\]/ containedin=phpRegion', 'start=/{/ end=/}/ fold containedin=phpRegion'],
+"       \       },
+"       \       'html': {
+"       \           'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'],
+"       \       },
+"       \       'css': 0,
+"       \   }
+"       \}
+
+" let g:rainbow_conf = {
+"       \   'guifgs': ['#fb4934', '#fe8019', '#fabd2f', '#b8bb26', '#83a598', '#d3869b'],
+"       \   'ctermfgs': ['167', '208', '214', '142', '66', '175'],
+"       \   'operators1': '_,\|:_',
+"       \   'operators2': '_,\|:\|+\|-\|*\|\/\|%_',
+"       \   'operators3': '_,\|:\|+\|-\|*\|\/\|%\|&\||\|!\|=\|<\|>_',
+"       \   'operators4': '_,\|:\|+\|-\|*\|\/\|%\|\^\|&\||\|!\|=\|<\|>_',
+"       \   'operators5': '_~\|!\|@\|#\|%\|\^\|&\|*\|+\|-\|=\|\\\|:\|,\|<\|>\|\/_',
+"       \   'operators6': '_\~\|!\|@\|#\|\$\|%\|\^\|&\|\*\|+\|-\|=\|\\\|:\||\|,\|<\|>\|\/\|?_',
+"       \   'operators': '_\~\|!\|@\|#\|%\|\^\|&\|\*\|+\|-\|=\|\\\|:\||\|,\|<\|>\|\/\|?_',
+"       \   'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
+"       \   'separately': {
+"       \       '*': {},
+"       \       'vim': {
+"       \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'],
+"       \       },
+"       \       'php': {
+"       \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=phpRegion', 'start=/\[/ end=/\]/ containedin=phpRegion', 'start=/{/ end=/}/ fold containedin=phpRegion'],
+"       \       },
+"       \       'html': {
+"       \           'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'],
+"       \       },
+"       \       'css': 0,
+"       \   }
+"       \}
+
+
 
 " syntax region Parens matchgroup=Function start=/\(\)/ contains=ALL keepend
 " syntax region CustomParenRegion matchgroup=CustomParenMatch start=+START+ end=+END+ contains=ALL
@@ -655,10 +737,10 @@ augroup END
 
 augroup Startup
   autocmd!
-  autocmd VimEnter    * silent! RainbowParenthesesToggle
-  autocmd Syntax      * silent! RainbowParenthesesLoadRound
-  autocmd Syntax      * silent! RainbowParenthesesLoadSquare
-  autocmd Syntax      * silent! RainbowParenthesesLoadBraces
+  " autocmd VimEnter    * silent! RainbowParenthesesToggle
+  " autocmd Syntax      * silent! RainbowParenthesesLoadRound
+  " autocmd Syntax      * silent! RainbowParenthesesLoadSquare
+  " autocmd Syntax      * silent! RainbowParenthesesLoadBraces
   autocmd VimEnter    * silent! GitGutterDisable
   autocmd BufEnter    * silent! call SetTmuxTitle()
   autocmd VimEnter    * silent! call SetTmuxTitle()
@@ -710,6 +792,8 @@ endfunction
 " augroup AutoSpellCheck
 "   autocmd FileType markdown,text setlocal spell
 " augroup END
+"
+" Autocorrect and set spell in git commit
 
 
 " TODO if project has makefile use it
@@ -774,11 +858,17 @@ nnoremap \t   :e ~/projects/util/todo/todo.md<CR>
 nnoremap <silent> <F1> :call TmuxSplitCmd()<CR>
 "nnoremap <silent> <F3> :SyntasticCheck<CR>
 noremap <silent> <F6> :call EvalCmd('python')<CR>
-noremap <silent> <F7> Y:@"<CR>
+
+" TODO make the command show in history
+" noremap <silent> <F7> Y:@"<CR>
+noremap <F7> ^y$:<C-R>"<CR>
+
+" nnoremap yy ^y$
+
 " nnoremap <silent> <F8> :TagbarToggle<CR>
 " nnoremap <silent> <F9> :UndotreeToggle<CR>
-" nnoremap <silent> <F10>  :call GetColors()<CR>
-" nnoremap <silent> <F11> :call SyntaxStack()<CR>
+nnoremap <silent> <F10>  :call GetColors()<CR>
+nnoremap <silent> <F11> :call SyntaxStack()<CR>
 " nnoremap <silent> <F12> :so $MYVIMRC<CR>
 
 " if exists(':Autoformat')
@@ -804,11 +894,6 @@ vnoremap <C-X> g<C-X>
 
 inoremap <C-A> <HOME>
 inoremap <C-E> <END>
-
-" TODO fix: this glitches out sometimes
-if has("clipboard")
-  vnoremap y "*y
-endif
 
 nnoremap <C-W>h 10<C-W><
 nnoremap <C-W>j 10<C-W>+
@@ -868,6 +953,17 @@ nmap sqs cs"'
 nmap ssq cs'"
 nmap sw cxiw
 nmap sW cxiW
+
+"TODO swap what's in register "
+" nmap ss
+" nmap s"
+
+" TODO fix?
+nmap sna cxiacxina
+nmap snb cxibcxinb
+" nmap snt cxitcxint
+" nmap snt cxatcxant
+
 
 " TODO surround + welle quotes
 
@@ -978,35 +1074,35 @@ endfunction
 
 " ===================================================================== Plugin - Syntax Helper
 
-" function! GetColors()
-"   let l:fg='-1'
-"   let l:bg='-1'
-"   for l:id in synstack(line('.'), col('.'))
-"     let l:bold=synIDattr(synIDtrans(l:id), 'l:bold')
-"     let l:italic=synIDattr(synIDtrans(l:id), 'l:italic')
-"     let l:fg=l:fg==#'-1'? synIDattr(synIDtrans(l:id), 'l:fg') : l:fg
-"     let l:bg=l:bg==#'-1'? synIDattr(synIDtrans(l:id), 'l:bg') : l:bg
-"   endfor
-"   let l:fg=l:fg==#'-1'? synIDattr(hlID('Normal'),'l:fg') : l:fg
-"   let l:bg=l:bg==#'-1'? synIDattr(hlID('Normal'),'l:bg') : l:bg
-"   let l:fg=l:fg==#'-1'? 'Terminal' : l:fg
-"   let l:bg=l:bg==#'-1'? 'Terminal' : l:bg
-"   echo 'fg: ['.l:fg.'] bg: ['.l:bg.']'
-" endfunction
+function! GetColors()
+  let l:fg='-1'
+  let l:bg='-1'
+  for l:id in synstack(line('.'), col('.'))
+    let l:bold=synIDattr(synIDtrans(l:id), 'l:bold')
+    let l:italic=synIDattr(synIDtrans(l:id), 'l:italic')
+    let l:fg=l:fg==#'-1'? synIDattr(synIDtrans(l:id), 'l:fg') : l:fg
+    let l:bg=l:bg==#'-1'? synIDattr(synIDtrans(l:id), 'l:bg') : l:bg
+  endfor
+  let l:fg=l:fg==#'-1'? synIDattr(hlID('Normal'),'l:fg') : l:fg
+  let l:bg=l:bg==#'-1'? synIDattr(hlID('Normal'),'l:bg') : l:bg
+  let l:fg=l:fg==#'-1'? 'Terminal' : l:fg
+  let l:bg=l:bg==#'-1'? 'Terminal' : l:bg
+  echo 'fg: ['.l:fg.'] bg: ['.l:bg.']'
+endfunction
 
-" function! SyntaxStack()
-"   let l:s=[]
-"   for l:id in synstack(line('.'), col('.'))
-"     let l:real_name=synIDattr(l:id, 'name')
-"     let l:syntax_name=synIDattr(synIDtrans(l:id), 'name')
-"     if l:real_name == l:syntax_name
-"       call add(l:s,'['.l:real_name.']')
-"     else
-"       call add(l:s,'['.l:real_name.' as '.l:syntax_name.']')
-"     end
-"   endfor
-"   echo join(l:s, ' -> ')
-" endfunction
+function! SyntaxStack()
+  let l:s=[]
+  for l:id in synstack(line('.'), col('.'))
+    let l:real_name=synIDattr(l:id, 'name')
+    let l:syntax_name=synIDattr(synIDtrans(l:id), 'name')
+    if l:real_name == l:syntax_name
+      call add(l:s,'['.l:real_name.']')
+    else
+      call add(l:s,'['.l:real_name.' as '.l:syntax_name.']')
+    end
+  endfor
+  echo join(l:s, ' -> ')
+endfunction
 
 " ===================================================================== Plugin - Change Extension (dext)
 

@@ -114,6 +114,7 @@ abbreviations=(
 TRAPINT() {
     return $(( 128 + $1 ))
 }
+# TODO not trapping ^C anymore
 
 magic-abbrev-expand() {
     local MATCH
