@@ -9,10 +9,6 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   silent! execute '!mkdir -p ~/.vim/view'
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  " augroup install
-  "   autocmd!
-  "   autocmd VimEnter * PlugInstall | source $MYVIMRC
-  " augroup END
 endif
 
 " ===================================================================== Plugins
@@ -27,47 +23,19 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
 Plug 'wellle/targets.vim'
 Plug 'godlygeek/tabular'
-" Plug 'mbbill/undotree'
+Plug 'mbbill/undotree'
 Plug 'sheerun/vim-polyglot'
 
-
-" TODO Only if tmux running
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 
-" On NerdTreeToggle
-" TODO or if lauch with directory
-" Plug 'scrooloose/nerdtree',                     {'on': ['NERDTreeToggle', 'NERDTree'] }
-" Plug 'tiagofumo/vim-nerdtree-syntax-highlight', {'on': ['NERDTreeToggle', 'NERDTree'] }
-" Plug 'Xuyuanp/nerdtree-git-plugin',             {'on': ['NERDTreeToggle', 'NERDTree'] }
 Plug 'scrooloose/nerdtree'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
-" TODO Only in gitdir
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
-" if has('python')
-" Plug 'ervandew/supertab'
-" Plug 'SirVer/ultisnips'
-" Plug 'Chiel92/vim-autoformat'
-" if v:version >= 800
-" Plug 'w0rp/ale'
-" Plug 'maralla/completor.vim'
-" endif
-" endif
-
-if executable('ctags')
-  Plug 'ludovicchabant/vim-gutentags', {'for': ['c', 'python', 'php']}
-  Plug 'majutsushi/tagbar',            {'for': ['c', 'python', 'php']}
-endif
-
-Plug 'panozzaj/vim-autocorrect', {'for': ['text', 'markdown'] }
-Plug 'mattn/emmet-vim',          {'for': ['html', 'xml', 'php', 'markdown', 'css', 'less']}
-Plug 'chrisbra/Colorizer',       {'for': ['vim', 'html', 'css', 'scss', 'sass']}
-
-" Theme Plugins
 Plug 'Yggdroot/indentLine'
 " Plug 'kien/rainbow_parentheses.vim'
 Plug 'luochen1990/rainbow'
@@ -76,16 +44,13 @@ Plug 'vim-airline/vim-airline'
 Plug 'ryanoasis/vim-devicons'
 Plug 'morhetz/gruvbox'
 
-" TESTING
-" Plug 'Shougo/neocomplcache'
-" Plug 'Shougo/neocomplete'
-" Plug 'Shougo/neosnippet'
-" Plug 'Shougo/neosnippet-snippets'
-" Plug 'sbdchd/neoformat'
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'panozzaj/vim-autocorrect', {'for': ['text', 'markdown'] }
+Plug 'mattn/emmet-vim',          {'for': ['html', 'xml', 'php', 'markdown', 'css', 'less']}
+Plug 'chrisbra/Colorizer',       {'for': ['vim', 'html', 'css', 'scss', 'sass']}
 
-" has python/lua?
-Plug 'davidhalter/jedi-vim'
+if has("python")
+    Plug 'davidhalter/jedi-vim'
+endif
 
 if has("lua")
   Plug 'Shougo/neocomplete'
@@ -94,162 +59,12 @@ if has("lua")
   Plug 'sbdchd/neoformat'
 endif
 
+if executable('ctags')
+  Plug 'ludovicchabant/vim-gutentags', {'for': ['c', 'python', 'php']}
+  Plug 'majutsushi/tagbar',            {'for': ['c', 'python', 'php']}
+endif
 
 call plug#end()
-
-" TESTING CONFIGURATION
-
-" TODO try not showing menu, max_list = 1
-
-" let g:neocomplete#force_overwrite_completefunc = 1
-let g:acp_enableAtStartup = 0
-
-let g:neocomplete#enable_at_startup = 1
-" let g:neocomplete#enable_at_startup = 0
-let g:neocomplete#max_list = 20
-let g:neocomplete#max_keyword_width = 40
-let g:neocomplete#auto_completion_start_length = 2
-let g:neocomplete#min_keyword_length = 4
-let g:neocomplete#enable_auto_delimiter = 1
-
-" TODO
-" TODO no completion in comments
-let g:neocomplete#enable_auto_select = 1
-" let g:neocomplete#text_mode_filetypes
-" let g:neocomplete#enable_quick_match = 1
-" let g:neocomplete#delimiter_patterns
-" let g:neocomplete#sources
-
-" let g:neocomplete#enable_auto_clone_preview = 1
-
-if has("timers")
-  let g:neocomplete#auto_complete_delay = 200
-endif
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#keyword_patterns')
-  let g:neocomplete#keyword_patterns = {}
-endif
-" let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-let g:neocomplete#keyword_patterns._ = '\h\w*'
-" let g:neocomplete#keyword_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-" let g:neocomplete#keyword_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-" let g:neocomplete#keyword_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-" let g:neocomplete#keyword_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-" let g:neocomplete#force_omni_input_patterns.python = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
-
-" if !exists('g:neocomplete#sources')
-"   let g:neocomplete#sources = {}
-" endif
-
-" let g:neocomplete#sources#tags#cache_limit_size = 1000000
-" let g:neocomplete#sources.python = ['tag']
-
-" let g:neocomplete#sources._ = ['buffer', 'member', 'tag', 'dictionary', 'file', 'omni', 'vim', 'syntax', 'include']
-" let g:neocomplete#sources._ = ['buffer', 'member', 'tag', 'dictionary', 'file', 'omni', 'neosnippet']
-
-" call neocomplete#custom#source('ultisnips', 'rank', 1000)
-
-
-" let g:neocomplete#sources._ = ['buffer', 'UltiSnips', '']
-" let g:neocomplete#sources.cpp = ['buffer', 'dictionary']
-
-
-" inoremap <expr><C-g> neocomplete#undo_completion()
-" inoremap <expr><C-l> neocomplete#complete_common_string()
-" TODO <TAB> does above (feelin lucky)
-
-
-" inoremap <silent> <expr> <TAB> pumvisible() ?
-"                              \     "\<C-n>" :
-"                              \     neosnippet#expandable_or_jumpable() ?
-"                              \         "\<Plug>(neosnippet_expand_or_jump)" :
-"                              \         "\<TAB>"
-
-
-inoremap <silent> <expr> <BS> neocomplete#smart_close_popup()."\<BS>"
-" inoremap <silent> <expr> <CR> CR_Handler()
-" inoremap <silent> <expr> <S-CR> S-CR_Handler()
-
-" snoremap <silent> <expr> <CR> TAB_Handler()
-inoremap <silent> <expr> <TAB> TAB_Handler()
-" snoremap <silent> <expr> <TAB> TAB_Handler()
-smap <expr> <TAB> neosnippet#expandable_or_jumpable() ?
-      \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-" TODO normal mode <TAB> jumps first
-
-" set cmdheight=2
-
-" function! S_CR_Handler()
-" endfunction
-" function! CR_Handler()
-"     let l:out = ""
-"     if pumvisible()
-"         let l:out = l:out.neocomplete#close_popup()
-"     endif
-"     if neosnippet#expandable()
-"         let l:out = l:out.neosnippet#mappings#expand_impl()
-"     elseif !pumvisible()
-"         let l:out = l:out."\<CR>"
-"     endif
-"     return l:out
-" endfunction
-
-function! TAB_Handler()
-  " If at end of line and clike langs get {}
-  let l:out = ""
-  if pumvisible()
-    let l:out = l:out.neocomplete#close_popup()
-    return l:out
-    "C-y"
-  endif
-  if neosnippet#expandable_or_jumpable()
-    let l:out = l:out.neosnippet#mappings#jump_or_expand_impl()
-  elseif !pumvisible()
-    " TODO remove, this is part of 'semicolon-magic'
-    " And last word is keyword
-    " echom getline('.')
-    " if col('.') == col('$') && col('.') > 1 &&
-    "  \ match(getline('.'), '\s\+$') == -1 && (
-    "  \ &filetype == 'css'  ||
-    "  \ &filetype == 'less' ||
-    "  \ &filetype == 'php ' ||
-    "  \ &filetype == 'c'    ||
-    "  \ &filetype == 'javascript'
-    "  \ )
-    "     let l:out = l:out." {\<CR>}\<ESC>O"
-    " else
-    "   let l:out = l:out."\<TAB>"
-    " endif
-    let l:out = l:out."\<TAB>"
-  endif
-  return l:out
-endfunction
-
-
-autocmd FileType c             setlocal omnifunc=ccomplete#Complete
-autocmd FileType css           setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html          setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript    setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType java          setlocal omnifunc=javacomplete#Complete
-autocmd FileType markdown      setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType php           setlocal omnifunc=phpcomplete#CompletePHP
-autocmd FileType python        setlocal omnifunc=jedi#completions
-" autocmd FileType python        setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType ruby          setlocal omnifunc=rubycomplete#Complete
-autocmd FileType xml           setlocal omnifunc=xmlcomplete#CompleteTags
-
-" TODO respect local sw
-let g:neoformat_basic_format_align = 1
-let g:neoformat_basic_format_retab = 1
-let g:neoformat_basic_format_trim = 1
-nnoremap <silent> <buffer> <F4> :Neoformat<CR>
-"TODO vmode
-
-let g:jedi#completions_enabled = 0
-let g:jedi#auto_vim_configuration = 0
-
 
 " ===================================================================== Options
 
@@ -279,13 +94,14 @@ let g:jedi#auto_vim_configuration = 0
 " Disable completion inside comments (or manual completion via C-<Space>?)
 " TODO fix amiguous width characters have black beside
 " TODO search hl off once edit action started
-
 " syntax sync fromstart on open tags?
-
 " TODO syntax for divider (any non-whitespace char repeated 20+ times, starting from starting of line)
-
 " TODO vmode select up/down to whitespace
 " Solution: { } and use A instead of I (^V{A instead of ^V{llllllI)
+" Divider syntax
+" Auto fold dividers (or cleverly hide {{{, }}}
+" In somecases add / to keyword chars
+
 
 filetype plugin indent on
 syntax enable
@@ -384,12 +200,7 @@ set cinoptions=(0,u0,U0
 " set foldcolumn=2
 " set foldmethod=syntax
 
-" Divider syntax
-" Auto fold dividers (or cleverly hide {{{, }}}
-" In somecases add / to keyword chars
-
 " ===================================================================== Clipboard
-
 
 " TODO fix: this glitches out sometimes
 if has("clipboard")
@@ -401,7 +212,6 @@ if has("clipboard")
 
   " Paste from clipboard (requires unimpaired)
   nmap yop yo<C-R><C-O>*<ESC>
-  " nmap yp i<C-R><C-O>*<ESC>
 endif
 
 " ===================================================================== Folds
@@ -444,19 +254,17 @@ let g:indentLine_color_gui='#3c3836'
 let g:indentLine_char=''
 
 let g:gruvbox_italic=1
-" let g:gruvbox_bold=1
 let g:gruvbox_contrast_dark='hard'
 let g:gruvbox_sign_column='bg0'
 let g:gruvbox_invert_selection=0
 
-" TODO
-syntax match nonascii "[^\x00-\x7f]"
-highlight nonascii guibg='#000000' ctermbg=232
 " TODO group for escape sequences
 " TODO non-visible chars
 " syntax match unicode "[^\x100-\xffff]"
 " highlight nonascii guibg='#000000' ctermbg=232
 " TODO syntax for regular expressions in different languages
+syntax match nonascii "[^\x00-\x7f]"
+highlight nonascii guibg='#000000' ctermbg=232
 
 try
   colorscheme gruvbox
@@ -465,10 +273,6 @@ catch /^Vim\%((\a\+)\)\=:E185/
 endtry
 
 set background=dark
-
-" highlight ALEErrorSign   ctermbg=234 ctermfg=124
-" highlight ALEWarningSign ctermbg=234 ctermfg=227
-" highlight CursorLine     ctermbg=235
 
 highlight CursorLine     ctermbg=235 guibg=#282828
 
@@ -482,21 +286,6 @@ endif
 let g:targets_quotes='"q ''s `'
 " Only seek if next/last targets touch current line
 let g:targets_seekRanges='cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
-
-" let g:targets_
-
-" let g:ale_sign_error="\u00a0x"
-" let g:ale_sign_warning="\u00a0!"
-
-" let g:ale_lint_delay=2000
-" let g:ale_lint_on_enter=1
-" let g:ale_lint_on_save=1
-" let g:ale_lint_on_text_changed=0
-
-" let g:ale_set_open_list=0
-" let g:ale_set_loclist=1
-" let g:ale_set_quickfix=1
-" let g:ale_keep_list_window_open=0
 
 let g:WebDevIconsUnicodeDecorateFolderNodes=1
 let g:DevIconsEnableFoldersOpenClose=1
@@ -515,7 +304,6 @@ let g:airline_section_z='%{g:airline_symbols.linenr}% %l:%v'
 " let g:airline_section_a=
 let g:airline_crypt_symbol="\ue0a2"
 
-
 let g:webdevicons_enable_airline_tabline=0
 let g:airline#extensions#tabline#buffer_nr_show=0
 let g:airline#extensions#tabline#fnamemod=':t'
@@ -531,106 +319,48 @@ let g:tcommentMapLeaderUncommentAnyway='g<'
 let g:tcommentMapLeaderCommentAnyway='g>'
 let g:tcommentTextObjectInlineComment='ic'
 
-" let g:UltiSnipsEditSplit='horizontal'
-" let g:UltiSnipsExpandTrigger='<TAB>'
-" let g:UltiSnipsJumpForwardTrigger='<TAB>'
-" let g:UltiSnipsJumpBackwardTrigger='<C-Z>'
-
-
-" let g:rbpt_colorpairs = [
-"     \ ['DarkRed',     'DarkRed'],
-"     \ ['DarkCyan',    'DarkCyan'],
-"     \ ['DarkMagenta', 'DarkMagenta'],
-"     \ ['DarkGreen',   'DarkGreen'],
-"     \ ['DarkBlue',    'DarkBlue'],
-"     \ ]
-" let g:rbpt_colorpairs = [
-"     \ ['LightRed',     'LightRed'],
-"     \ ['LightCyan',    'LightCyan'],
-"     \ ['LightMagenta', 'LightMagenta'],
-"     \ ['LightGreen',   'LightGreen'],
-"     \ ['LightBlue',    'LightBlue'],
-"     \ ]
-" " let g:rbpt_max=16
-
-" if !exists('g:rbpt_colorpairs')
-" let g:rbpt_colorpairs =
-"   \ [
-"     \ ['blue', '#458588'], ['magenta', '#b16286'],
-"     \ ['red',  '#cc241d'], ['166',     '#d65d0e']
-"   \ ]
-" \ ['108',   '#8ec07c'],
-" \ ['109',   '#83a598'],
-
-" \ ['167',   '#fabd2f'],
-" \ ['LightAqua',    '#8ec07c'],
-" endif
-
-" let g:rbpt_colorpairs = [
-"     \ ['Orange1',      '#fabd2f'],
-"     \ ['DarkSeaGreen', '#83a598'],
-"     \ ['IndianRed1',   '#fb4934'],
-"     \ ['LightPink3',   '#d3869b'],
-"     \ ['DarkOrange',   '#fe8019']
-"     \ ]
-
-" let g:rbpt_colorpairs = [
-"     \ ['167',   '#fb4934'],
-"     \ ['175',   '#d3869b'],
-"     \ ['142',   '#b8bb26'],
-"     \ ['214',   '#fabd2f'],
-"     \ ['208',   '#fe8019'],
-"     \ ]
-
-" let g:rbpt_colorpairs = [
-"     \ ['167',   '#fb4934'],
-"     \ ['175',   '#d3869b'],
-"     \ ['214',   '#fabd2f'],
-"     \ ['208',   '#fe8019'],
-"     \ ['142',   '#b8bb26'],
-"     \ ]
-
-" let g:rbpt_colorpairs = [
-"       \ ['142',   '#b8bb26'],
-"       \ ['214',   '#fabd2f'],
-"       \ ['208',   '#fe8019'],
-"       \ ['167',   '#fb4934'],
-"       \ ['175',   '#d3869b'],
-"       \ ['66',    '#83a598'],
-"       \ ]
+" $
+" ->
+" =>
+" ,:
+" !
+" ==
+" <=
+" >=
+" >
+" <
+" ++
+" --
+" +-/*%
 
 let g:rainbow_active = 1
 let g:rainbow_conf = {
-      \   'guifgs': ['#fb4934', '#fe8019', '#fabd2f', '#b8bb26', '#83a598', '#d3869b'],
-      \   'ctermfgs': ['167', '208', '214', '142', '66', '175'],
-      \   'operators': '_\~\|!\|@\|#\|\$\|%\|\^\|&\|\*\|+\|-\|=\|\\\|:\||\|,\|<\|>\|\/\|?_',
-      \ }
-"       \   'operators1': '_,\|:_',
-"       \   'operators2': '_,\|:\|+\|-\|*\|\/\|%_',
-"       \   'operators3': '_,\|:\|+\|-\|*\|\/\|%\|&\||\|!\|=\|<\|>_',
-"       \   'operators4': '_,\|:\|+\|-\|*\|\/\|%\|\^\|&\||\|!\|=\|<\|>_',
-"       \   'operators5': '_~\|!\|@\|#\|%\|\^\|&\|*\|+\|-\|=\|\\\|:\|,\|<\|>\|\/_',
-"       \   'operators6': '_\~\|!\|@\|#\|\$\|%\|\^\|&\|\*\|+\|-\|=\|\\\|:\||\|,\|<\|>\|\/\|?_',
-"       \   'operators': '_\~\|!\|@\|#\|%\|\^\|&\|\*\|+\|-\|=\|\\\|:\||\|,\|<\|>\|\/\|?_',
-"       \   'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
-"       \   'separately': {
-"       \       '*': {},
-"       \       'vim': {
-"       \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'],
-"       \       },
-"       \       'php': {
-"       \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=phpRegion', 'start=/\[/ end=/\]/ containedin=phpRegion', 'start=/{/ end=/}/ fold containedin=phpRegion'],
-"       \       },
-"       \       'html': {
-"       \           'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'],
-"       \       },
-"       \       'css': 0,
-"       \   }
-"       \}
+\   'guifgs': ['#fb4934', '#fe8019', '#fabd2f', '#b8bb26', '#83a598', '#d3869b'],
+\   'ctermfgs': ['167', '208', '214', '142', '66', '175'],
+\   'operators': '_,\|:_',
+\   'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/'],
+\}
+" \   'operators': '_\~\|!\|@\|#\|\$\|%\|\^\|&\|\*\|+\|-\|=\|\\\|:\||\|,\|<\|>\|\/\|?_',
+" \   'operators': '_\~\|!\|@\|#\|\$\|%\|\^\|&\|\*\|+\|-\|=\|\\\|:\||\|,\|<\|>\|\/\|?_',
+" \   'operators1': '_,_',
+" \   'operators': '_\~\|!\|@\|#\|\$\|%\|\^\|&\|\*\|+\|-\|=\|\\\|:\||\|,\|<\|>\|\/\|?_',
+" \   'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
+" \   'separately': {
+" \       'php': {
+" \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=phpRegion', 'start=/\[/ end=/\]/ containedin=phpRegion', 'start=/{/ end=/}/ fold containedin=phpRegion'],
+" \				},
+" \       'vim': {
+" \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'],
+" \       },
+" \       'html': {
+" \           'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'],
+" \       },
+" \   }
 
 " let g:rainbow_conf = {
 "       \   'guifgs': ['#fb4934', '#fe8019', '#fabd2f', '#b8bb26', '#83a598', '#d3869b'],
 "       \   'ctermfgs': ['167', '208', '214', '142', '66', '175'],
+"       \ }
 "       \   'operators1': '_,\|:_',
 "       \   'operators2': '_,\|:\|+\|-\|*\|\/\|%_',
 "       \   'operators3': '_,\|:\|+\|-\|*\|\/\|%\|&\||\|!\|=\|<\|>_',
@@ -654,17 +384,9 @@ let g:rainbow_conf = {
 "       \   }
 "       \}
 
-
-
-" syntax region Parens matchgroup=Function start=/\(\)/ contains=ALL keepend
-" syntax region CustomParenRegion matchgroup=CustomParenMatch start=+START+ end=+END+ contains=ALL
-" highlight CustomParenMatch gui=bold cterm=bold
-
-" highlight Menu
-" highlight Scollbar
-" highlight Tooltip
-
-
+" TODO highlight Menu
+" TODO highlight Scollbar
+" TODO highlight Tooltip
 
 let g:user_emmet_mode='iv'
 imap <silent> <expr> <C-@> emmet#expandAbbrIntelligent("\<C-@>")
@@ -676,44 +398,104 @@ nnoremap cog :GitGutterToggle<CR>
 let g:NERDTreeShowHidden=1
 let g:NERDTreeIgnore=['\.pyc$','^.git$']
 
-" let g:SuperTabDefaultCompletionType='<C-n>'
-
-" let g:completor_python_binary='/usr/bin/python'
-" let g:completor_node_binary='/home/optroot/.nvm/versions/node/v6.3.1/bin/node'
-" let g:completor_clang_binary='/usr/bin/clang'
-
-" let g:autoformat_autoindent=1
-" let g:autoformat_remove_trailing_spaces=1
-" let g:autoformat_retab=1
-
-" let g:formatdef_astyle_c='"astyle --mode=c -A2ps4CSKNwpUjCk3fH"'
-" let g:formatdef_jsbcss='"js-beautify --editorconfig --type css -L -N -n -s 2"'
-" let g:formatdef_jsb='"js-beautify --editorconfig --type js -j -a -k -n -s 2 -b collapse-preserve-inline"'
-" let g:formatdef_pylint_args='--disable=C0111'
-" let g:formatdef_python_pylint_args='--disable=C0111'
-" let g:formatdef_tidy_html='"tidy -config ~/.tidy.conf"'
-" let g:formatters_c=['astyle_c']
-" let g:formatters_php=['astyle_c']
-" let g:formatters_css=['jsbcss']
-" let g:formatters_javascript=['jsb']
-" let g:formatters_javascript_jsx=['jsb']
-" let g:formatters_json=['jsb']
-" let g:formatters_jsx=['jsb']
-" let g:formatters_less=['jsbcss']
-
 let g:gutentags_enabled=0
 let g:gutentags_tagfile='.tags'
 let g:gutentags_project_root=['.git']
 
-" ===================================================================== Autocmds
+" TODO try not showing menu, max_list = 1
+" let g:neocomplete#force_overwrite_completefunc = 1
+let g:acp_enableAtStartup = 0
 
-" TODO
-augroup NERDTree
-  autocmd!
-  " autocmd StdinReadPre * let s:std_in=1
-  " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | wincmd l | endif
-  " autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-augroup END
+let g:neocomplete#enable_at_startup = 1
+" let g:neocomplete#enable_at_startup = 0
+let g:neocomplete#max_list = 20
+let g:neocomplete#max_keyword_width = 40
+let g:neocomplete#auto_completion_start_length = 2
+let g:neocomplete#min_keyword_length = 4
+let g:neocomplete#enable_auto_delimiter = 1
+
+" TODO no completion in comments
+let g:neocomplete#enable_auto_select = 1
+" let g:neocomplete#text_mode_filetypes
+" let g:neocomplete#enable_quick_match = 1
+" let g:neocomplete#delimiter_patterns
+" let g:neocomplete#sources
+" let g:neocomplete#enable_auto_clone_preview = 1
+
+if has("timers")
+  let g:neocomplete#auto_complete_delay = 200
+endif
+
+" Enable heavy omni completion.
+if !exists('g:neocomplete#keyword_patterns')
+  let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns._ = '\h\w*'
+" let g:neocomplete#keyword_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+" let g:neocomplete#keyword_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+" let g:neocomplete#keyword_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+" let g:neocomplete#keyword_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+" let g:neocomplete#force_omni_input_patterns.python = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
+
+inoremap <silent> <expr> <BS> neocomplete#smart_close_popup()."\<BS>"
+inoremap <silent> <expr> <TAB> TAB_Handler()
+smap <expr> <TAB> neosnippet#expandable_or_jumpable() ?
+      \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+function! TAB_Handler()
+  " If at end of line and clike langs get {}
+  let l:out = ""
+  if pumvisible()
+    let l:out = l:out.neocomplete#close_popup()
+    return l:out
+    "C-y"
+  endif
+  if neosnippet#expandable_or_jumpable()
+    let l:out = l:out.neosnippet#mappings#jump_or_expand_impl()
+  elseif !pumvisible()
+    " TODO remove, this is part of 'semicolon-magic'
+    " And last word is keyword
+    " echom getline('.')
+    " if col('.') == col('$') && col('.') > 1 &&
+    "  \ match(getline('.'), '\s\+$') == -1 && (
+    "  \ &filetype == 'css'  ||
+    "  \ &filetype == 'less' ||
+    "  \ &filetype == 'php ' ||
+    "  \ &filetype == 'c'    ||
+    "  \ &filetype == 'javascript'
+    "  \ )
+    "     let l:out = l:out." {\<CR>}\<ESC>O"
+    " else
+    "   let l:out = l:out."\<TAB>"
+    " endif
+    let l:out = l:out."\<TAB>"
+  endif
+  return l:out
+endfunction
+
+autocmd FileType c             setlocal omnifunc=ccomplete#Complete
+autocmd FileType css           setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html          setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript    setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType java          setlocal omnifunc=javacomplete#Complete
+autocmd FileType markdown      setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType php           setlocal omnifunc=phpcomplete#CompletePHP
+autocmd FileType python        setlocal omnifunc=jedi#completions
+autocmd FileType ruby          setlocal omnifunc=rubycomplete#Complete
+autocmd FileType xml           setlocal omnifunc=xmlcomplete#CompleteTags
+
+" TODO respect local sw
+let g:neoformat_basic_format_align = 1
+let g:neoformat_basic_format_retab = 1
+let g:neoformat_basic_format_trim = 1
+nnoremap <silent> <buffer> <F4> :Neoformat<CR>
+"TODO vmode
+
+let g:jedi#completions_enabled = 0
+let g:jedi#auto_vim_configuration = 0
+
+
+" ===================================================================== Autocmds
 
 augroup VimOptions
   autocmd!
@@ -724,23 +506,14 @@ augroup Filetypes
   autocmd BufRead,BufNewFile *.zsh-theme silent! setfiletype=zsh
 augroup END
 
-" TODO add guibg
 augroup Theme
   autocmd!
-  "autocmd VimEnter                      * highlight ALEErrorSign   ctermbg=234 ctermfg=124
-  "autocmd VimEnter                      * highlight ALEWarningSign ctermbg=234 ctermfg=227
-  " autocmd InsertEnter                   * highlight CursorLine     ctermbg=234 guibg=#1d2021
-  " autocmd VimEnter,InsertLeave          * highlight CursorLine     ctermbg=235 guibg=#282828
   autocmd WinLeave,FocusLost                        * setlocal nocursorline
   autocmd VimEnter,WinEnter,BufWinEnter,FocusGained * setlocal cursorline
 augroup END
 
 augroup Startup
   autocmd!
-  " autocmd VimEnter    * silent! RainbowParenthesesToggle
-  " autocmd Syntax      * silent! RainbowParenthesesLoadRound
-  " autocmd Syntax      * silent! RainbowParenthesesLoadSquare
-  " autocmd Syntax      * silent! RainbowParenthesesLoadBraces
   autocmd VimEnter    * silent! GitGutterDisable
   autocmd BufEnter    * silent! call SetTmuxTitle()
   autocmd VimEnter    * silent! call SetTmuxTitle()
@@ -754,8 +527,6 @@ augroup LanguageOptions
 
   autocmd FileType javascript,json,css,less,html,vim setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
   autocmd FileType Makefile                          setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
-  " autocmd FileType python   silent! nnoremap <silent> <buffer> K :<C-u>execute "!pydoc " . expand("<cword>")<CR>
-
   autocmd FileType html,markdown,css,text setlocal textwidth=78
   autocmd FileType html,markdown,css,text setlocal wrap
 
@@ -792,6 +563,9 @@ endfunction
 " augroup AutoSpellCheck
 "   autocmd FileType markdown,text setlocal spell
 " augroup END
+" if exists(':Autoformat')
+"   nnoremap <silent> <buffer> <F4> :Autoformat<CR>
+" endif
 "
 " Autocorrect and set spell in git commit
 
@@ -824,21 +598,6 @@ iabbrev retyrn    return
 iabbrev improt    import
 iabbrev ciel      ceil
 
-
-" Fix comment typos
-" TODO use autocorrect, in relevant sections
-" iabbrev necesarry necessary
-" iabbrev neccesary necessary
-" iabbrev necesarry necessary
-" iabbrev nessesary necessary
-" iabbrev nessisary necessary
-" iabbrev garuntee  guarantee
-" iabbrev garantee  guarantee
-" iabbrev guaruntee guarantee
-" iabbrev aparently apparently
-" iabbrev apparantly apparently
-
-
 " ===================================================================== Mappings
 
 " RSI commands
@@ -856,7 +615,6 @@ nnoremap \t   :e ~/projects/util/todo/todo.md<CR>
 " Fkey mappings (F2 paste, F5 eval)
 " TODO if exists
 nnoremap <silent> <F1> :call TmuxSplitCmd()<CR>
-"nnoremap <silent> <F3> :SyntasticCheck<CR>
 noremap <silent> <F6> :call EvalCmd('python')<CR>
 
 " TODO make the command show in history
@@ -870,10 +628,6 @@ noremap <F7> ^y$:<C-R>"<CR>
 nnoremap <silent> <F10>  :call GetColors()<CR>
 nnoremap <silent> <F11> :call SyntaxStack()<CR>
 " nnoremap <silent> <F12> :so $MYVIMRC<CR>
-
-" if exists(':Autoformat')
-"   nnoremap <silent> <buffer> <F4> :Autoformat<CR>
-" endif
 
 " Fix behavior
 inoremap <C-U> <C-G>u<C-U>
@@ -907,14 +661,6 @@ vmap <DOWN> xpgV
 vmap <UP> xkkpgV
 vnoremap <LEFT> <gv
 vnoremap <RIGHT> >gv
-
-" nmap <LEFT> V<LEFT>
-" nmap <RIGHT> V<RIGHT>
-" nnoremap <LEFT> <<<CR>
-" nnoremap <RIGHT> >><CR>
-
-" xnoremap <TAB> >gv
-" xnoremap <S-TAB> <gv
 
 nnoremap <UP> {
 nnoremap <DOWN> }
@@ -964,9 +710,7 @@ nmap snb cxibcxinb
 " nmap snt cxitcxint
 " nmap snt cxatcxant
 
-
 " TODO surround + welle quotes
-
 
 " TODO if targets+surround
 nmap dsq ds"
@@ -1120,7 +864,6 @@ function! ChangeExt(ext)
     execute 'file '.l:base.'.'.a:ext
   endif
 endfunction
-
 
 " ===================================================================== Plugin - Buffer
 
