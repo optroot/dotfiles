@@ -22,6 +22,11 @@ settings = {
     'home': os.path.expanduser("~"),
     'force': False,
 }
+(((((((((((((((((((())))))))))))))))))))
+
+def function(): 
+    return 7
+
 
 
 def home(p):

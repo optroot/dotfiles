@@ -24,7 +24,7 @@ Plug 'tpope/vim-repeat'
 Plug 'wellle/targets.vim'
 Plug 'godlygeek/tabular'
 Plug 'mbbill/undotree'
-Plug 'sheerun/vim-polyglot'
+Plug 'sheerun/vim-polyglot', { 'do': './build' }
 
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tmux-plugins/vim-tmux-focus-events'
@@ -38,9 +38,12 @@ Plug 'airblade/vim-gitgutter'
 
 Plug 'Yggdroot/indentLine'
 " Plug 'kien/rainbow_parentheses.vim'
-Plug 'luochen1990/rainbow'
+" Plug 'luochen1990/rainbow'
+" Plug 'junegunn/rainbow_parentheses.vim'
+" Plug 'losingkeys/vim-niji'
+Plug 'eapache/rainbow_parentheses.vim'
+
 Plug 'vim-airline/vim-airline'
-" Plug 'vim-airline/vim-airline-themes'
 Plug 'ryanoasis/vim-devicons'
 Plug 'morhetz/gruvbox'
 
@@ -129,7 +132,6 @@ set noerrorbells
 set noshowmatch
 set nostartofline
 set noswapfile
-set nowrap
 set nrformats-=octal
 set number
 set pastetoggle=<F2>
@@ -141,10 +143,7 @@ set showcmd
 set showmode
 set sidescrolloff=5
 set smartcase
-set smartindent
-set smarttab
 set tabpagemax=50
-set textwidth=0 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 set undodir=~/.vim/undo
 set undofile
 set viewdir=~/.vim/view
@@ -164,41 +163,25 @@ set ttimeoutlen=100
 " TODO move to gutentags
 setglobal tags-=./tags tags-=./tags; tags^=./tags;
 
+" ===================================================================== Indent & Wrap
+
+set textwidth=0 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+set smartindent
+set smarttab
 set cindent
-set cinoptions=(0,u0,U0
+set nowrap
+
+let g:PHP_outdentphpescape = 0
+let g:PHP_vintage_case_default_indent = 1
+
 " set cinoptions=
-" set cinoptions+=>s " Normal indent by shiftwidth
-" set cinoptions+=e0 " modify indent ±0 when /{$/
-" set cinoptions+=n0 " modify indent ±0 for braceless control block
-" set cinoptions+=f0 " first brace in column 0
-" set cinoptions+={0 " modify opening brace indent by ±0
-" set cinoptions+=}0 " modify closing brace indent by ±0
-" set cinoptions+=^0 " modify indent inside braces by ±0
-" set cinoptions+=:s " case labels are <sw> from switch()
-" set cinoptions+==0 " modify case statement indent by ±0
-" set cinoptions+=l1 " align statements relative to case label
-" set cinoptions+=b0 " align break with statements, not case label
-" set cinoptions+=g0 " scope declarations align with braces
-" set cinoptions+=hs " statements after scope statements are indented <sw>
-" set cinoptions+=ps " K&R parameters are indented <sw>
-" set cinoptions+=ts " return type declarations are indented <sw>
-" set cinoptions+=is " indent C++ base classes and cinits <sw>
-" set cinoptions+=+s " indent continuation lines <sw>
-" set cinoptions+=c3 " indent comment lines +3 after comment opener.
-" set cinoptions+=C0 " Comments behave correctly
-" set cinoptions+=/0 " Indent comments <sw> extra
-" set cinoptions+=(0 " Indent continuation in unclosed parens 2<sw>
-" set cinoptions+=u0 " Same as above, one level deeper, add <sw>
-" set cinoptions+=U0 " Ignore (/u if parens is first non-ws char.
-" set cinoptions+=w1 " Line up with first unclosed paren.
-" set cinoptions+=W0 " Unclosed paren change.
-" set cinoptions+=m0 " Parens line up properly
-" set cinoptions+=M0 " Parens line up properly
-" set cinoptions+=j1 " Anonymous classes are indented correctly.
-" set cinoptions+=)20 " Unclosed parens up to 20 lines away
-" set cinoptions+=*30 " Unclosed comments up to 30 lines away
-" set foldcolumn=2
-" set foldmethod=syntax
+"       \>s,e0,n0,f0,{0,}0,
+"       \^0,L-1,:s,=s,l0,b0,
+"       \gs,hs,ps,ts,is,+s,
+"       \c3,C0,/0,(0,u0,U0,
+"       \w0,W1s,m1s,j1,J1,)20,*70,#0
+" set cinoptions=(0,u0,U0,W1s,ms,j1,J1
+set cinoptions=(0,u0,U0,W1s,ms,j1,J1
 
 " ===================================================================== Clipboard
 
@@ -219,6 +202,10 @@ endif
 " TODO
 set foldenable
 set foldmethod=manual
+" set foldmethod=marker
+" set foldcolumn=2
+" set foldmethod=syntax
+set foldnestmax=2
 
 " ===================================================================== Conceal
 
@@ -242,6 +229,7 @@ let &t_ts="\e]2;"
 
 set t_ut=
 set t_Co=256
+" set t_Co=88
 set t_ZH=[3m
 set t_ZR=[23m
 
@@ -263,11 +251,11 @@ let g:gruvbox_invert_selection=0
 " syntax match unicode "[^\x100-\xffff]"
 " highlight nonascii guibg='#000000' ctermbg=232
 " TODO syntax for regular expressions in different languages
-syntax match nonascii "[^\x00-\x7f]"
-highlight nonascii guibg='#000000' ctermbg=232
+" syntax match nonascii "[^\x00-\x7f]"
+" highlight nonascii guibg='#000000' guifg='#ff0000' ctermbg=232
 
 try
-  colorscheme gruvbox
+    colorscheme gruvbox
 catch /^Vim\%((\a\+)\)\=:E185/
   colorscheme default
 endtry
@@ -275,6 +263,14 @@ endtry
 set background=dark
 
 highlight CursorLine     ctermbg=235 guibg=#282828
+
+autocmd Syntax php highlight! link phpFunction GruvboxGreenBold
+autocmd Syntax php highlight! link phpClass GruvboxGreenBold
+autocmd Syntax php highlight! link phpFunctions GruvboxOrange
+
+" TODO highlight Menu
+" TODO highlight Scollbar
+" TODO highlight Tooltip
 
 " ===================================================================== Configuration
 
@@ -319,74 +315,41 @@ let g:tcommentMapLeaderUncommentAnyway='g<'
 let g:tcommentMapLeaderCommentAnyway='g>'
 let g:tcommentTextObjectInlineComment='ic'
 
-" $
-" ->
-" =>
-" ,:
-" !
-" ==
-" <=
-" >=
-" >
-" <
-" ++
-" --
-" +-/*%
 
-let g:rainbow_active = 1
-let g:rainbow_conf = {
-\   'guifgs': ['#fb4934', '#fe8019', '#fabd2f', '#b8bb26', '#83a598', '#d3869b'],
-\   'ctermfgs': ['167', '208', '214', '142', '66', '175'],
-\   'operators': '_,\|:_',
-\   'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/'],
-\}
-" \   'operators': '_\~\|!\|@\|#\|\$\|%\|\^\|&\|\*\|+\|-\|=\|\\\|:\||\|,\|<\|>\|\/\|?_',
-" \   'operators': '_\~\|!\|@\|#\|\$\|%\|\^\|&\|\*\|+\|-\|=\|\\\|:\||\|,\|<\|>\|\/\|?_',
-" \   'operators1': '_,_',
-" \   'operators': '_\~\|!\|@\|#\|\$\|%\|\^\|&\|\*\|+\|-\|=\|\\\|:\||\|,\|<\|>\|\/\|?_',
-" \   'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
-" \   'separately': {
-" \       'php': {
-" \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=phpRegion', 'start=/\[/ end=/\]/ containedin=phpRegion', 'start=/{/ end=/}/ fold containedin=phpRegion'],
-" \				},
-" \       'vim': {
-" \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'],
-" \       },
-" \       'html': {
-" \           'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'],
-" \       },
-" \   }
+" let g:rbpt_colorpairs = [
+"     \ ['brown',       'RoyalBlue3'],
+"     \ ['Darkblue',    'SeaGreen3'],
+"     \ ['darkgray',    'DarkOrchid3'],
+"     \ ['darkgreen',   'firebrick3'],
+"     \ ['darkcyan',    'RoyalBlue3'],
+"     \ ['darkred',     'SeaGreen3'],
+"     \ ['darkmagenta', 'DarkOrchid3'],
+"     \ ['brown',       'firebrick3'],
+"     \ ['gray',        'RoyalBlue3'],
+"     \ ['black',       'SeaGreen3'],
+"     \ ['darkmagenta', 'DarkOrchid3'],
+"     \ ['Darkblue',    'firebrick3'],
+"     \ ['darkgreen',   'RoyalBlue3'],
+"     \ ['darkcyan',    'SeaGreen3'],
+"     \ ['darkred',     'DarkOrchid3'],
+"     \ ['red',         'firebrick3'],
+"     \ ]
 
-" let g:rainbow_conf = {
-"       \   'guifgs': ['#fb4934', '#fe8019', '#fabd2f', '#b8bb26', '#83a598', '#d3869b'],
-"       \   'ctermfgs': ['167', '208', '214', '142', '66', '175'],
-"       \ }
-"       \   'operators1': '_,\|:_',
-"       \   'operators2': '_,\|:\|+\|-\|*\|\/\|%_',
-"       \   'operators3': '_,\|:\|+\|-\|*\|\/\|%\|&\||\|!\|=\|<\|>_',
-"       \   'operators4': '_,\|:\|+\|-\|*\|\/\|%\|\^\|&\||\|!\|=\|<\|>_',
-"       \   'operators5': '_~\|!\|@\|#\|%\|\^\|&\|*\|+\|-\|=\|\\\|:\|,\|<\|>\|\/_',
-"       \   'operators6': '_\~\|!\|@\|#\|\$\|%\|\^\|&\|\*\|+\|-\|=\|\\\|:\||\|,\|<\|>\|\/\|?_',
-"       \   'operators': '_\~\|!\|@\|#\|%\|\^\|&\|\*\|+\|-\|=\|\\\|:\||\|,\|<\|>\|\/\|?_',
-"       \   'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
-"       \   'separately': {
-"       \       '*': {},
-"       \       'vim': {
-"       \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'],
-"       \       },
-"       \       'php': {
-"       \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=phpRegion', 'start=/\[/ end=/\]/ containedin=phpRegion', 'start=/{/ end=/}/ fold containedin=phpRegion'],
-"       \       },
-"       \       'html': {
-"       \           'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'],
-"       \       },
-"       \       'css': 0,
-"       \   }
-"       \}
+let g:rbpt_colorpairs = [
+    \ ['167', '#fb4934'],
+    \ ['208', '#fe8019'],
+    \ ['214', '#fabd2f'],
+    \ ['142', '#b8bb26'],
+    \ ['66',  '#83a598'],
+    \ ['175', '#d3869b'],
+    \ ]
+let g:rbpt_max = 12
+let g:bold_parentheses = 1 
 
-" TODO highlight Menu
-" TODO highlight Scollbar
-" TODO highlight Tooltip
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
 
 let g:user_emmet_mode='iv'
 imap <silent> <expr> <C-@> emmet#expandAbbrIntelligent("\<C-@>")
@@ -394,6 +357,8 @@ vmap <silent> <C-@> :call emmet#expandAbbr(0,'')
 
 let g:gitgutter_max_signs=999
 nnoremap cog :GitGutterToggle<CR>
+
+nnoremap cof :let &foldcolumn=2-&foldcolumn<CR>
 
 let g:NERDTreeShowHidden=1
 let g:NERDTreeIgnore=['\.pyc$','^.git$']
@@ -438,7 +403,9 @@ let g:neocomplete#keyword_patterns._ = '\h\w*'
 " let g:neocomplete#force_omni_input_patterns.python = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
 
 inoremap <silent> <expr> <BS> neocomplete#smart_close_popup()."\<BS>"
+inoremap <silent> <expr> <CR> neocomplete#smart_close_popup()."\<CR>"
 inoremap <silent> <expr> <TAB> TAB_Handler()
+
 smap <expr> <TAB> neosnippet#expandable_or_jumpable() ?
       \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
@@ -446,28 +413,15 @@ function! TAB_Handler()
   " If at end of line and clike langs get {}
   let l:out = ""
   if pumvisible()
+    " let l:out = "\<C-y>"
     let l:out = l:out.neocomplete#close_popup()
     return l:out
     "C-y"
+    return neocomplete#smart_close_popup()
   endif
   if neosnippet#expandable_or_jumpable()
     let l:out = l:out.neosnippet#mappings#jump_or_expand_impl()
   elseif !pumvisible()
-    " TODO remove, this is part of 'semicolon-magic'
-    " And last word is keyword
-    " echom getline('.')
-    " if col('.') == col('$') && col('.') > 1 &&
-    "  \ match(getline('.'), '\s\+$') == -1 && (
-    "  \ &filetype == 'css'  ||
-    "  \ &filetype == 'less' ||
-    "  \ &filetype == 'php ' ||
-    "  \ &filetype == 'c'    ||
-    "  \ &filetype == 'javascript'
-    "  \ )
-    "     let l:out = l:out." {\<CR>}\<ESC>O"
-    " else
-    "   let l:out = l:out."\<TAB>"
-    " endif
     let l:out = l:out."\<TAB>"
   endif
   return l:out
@@ -532,10 +486,10 @@ augroup LanguageOptions
 
   " TODO finish set iskeyword=@,48-57,_,192-255
   " TODO _ not part of word for some operations?
-  autocmd FileType c,cpp,php,css,less,markdown,html,xml,javascript setlocal iskeyword+=-
-  autocmd FileType php,css,less,javascript                setlocal iskeyword+=$
-  autocmd FileType c,cpp,php                              setlocal iskeyword+=>
-  autocmd FileType css,less                               setlocal iskeyword+=.,#,\@
+  " autocmd FileType c,cpp,php,css,less,markdown,html,xml,javascript setlocal iskeyword+=-
+  " autocmd FileType php,css,less,javascript                setlocal iskeyword+=$
+  " autocmd FileType c,cpp,php                              setlocal iskeyword+=>
+  " autocmd FileType css,less                               setlocal iskeyword+=.,#,\@
 
   autocmd FileType c,cpp,php,javascript,python let g:gutentags_enabled=1
   autocmd FileType c,cpp,php,javascript,python call GutenTagsDisableFileSize(1*1024*1024)
@@ -715,6 +669,9 @@ nmap snb cxibcxinb
 " TODO if targets+surround
 nmap dsq ds"
 nmap dss ds'
+
+nmap ssb ys$b
+nmap swb ysiWb
 
 " ===================================================================== Plugin - Hide Vim Meta
 " TODO
@@ -969,6 +926,43 @@ augroup DetectEncryption
   autocmd!
   autocmd BufReadPre,FileReadPre *.gpg.* call SetStealthMode()
 augroup END
+
+" ===================================================================== Plugin - Folding
+
+" TODO fold first function/class only
+"  -> variable for filetype delimiters
+" TODO fold between comment dividers
+
+" set foldmethod=expr
+" set foldexpr=GetFold
+
+" function! GetFold(lnum)
+"
+"     " Determine the current folding level
+"     let line=getline(a:lnum)
+"     let cind=indent(a:lnum)
+"
+"     " Get the next non-blank line
+"     let nnum  = nextnonblank(a:lnum + 1)
+"     let nind  = indent(nnum)
+"     let nline = getline(nnum)
+"
+"     " Get the previous non-blank line
+"     let pnum = prevnonblank(a:lnum - 1)
+"
+"     " Get the previous line indent level
+"     let plvlnum = a:lnum - 1
+"     let lvl = foldlevel(plvlnum)
+"
+"     " let retStr = "<" . (cind / &sw + 1)
+"
+"     " if line =~ '^\(class\|def\)\s'
+"     "     return '>'
+"     " endif
+"
+"     return '='
+" endfunction
+
 
 " ===================================================================== EXPERIMENTAL
 
