@@ -402,12 +402,14 @@ let g:neocomplete#keyword_patterns._ = '\h\w*'
 " let g:neocomplete#keyword_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 " let g:neocomplete#force_omni_input_patterns.python = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
 
-inoremap <silent> <expr> <BS> neocomplete#smart_close_popup()."\<BS>"
-inoremap <silent> <expr> <CR> neocomplete#smart_close_popup()."\<CR>"
-inoremap <silent> <expr> <TAB> TAB_Handler()
-
-smap <expr> <TAB> neosnippet#expandable_or_jumpable() ?
-      \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+" TODO more accurate way of doing this?
+if has("lua")
+  inoremap <silent> <expr> <BS> neocomplete#smart_close_popup()."\<BS>"
+  inoremap <silent> <expr> <CR> neocomplete#smart_close_popup()."\<CR>"
+  inoremap <silent> <expr> <TAB> TAB_Handler()
+  smap <expr> <TAB> neosnippet#expandable_or_jumpable() ?
+        \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+endif
 
 function! TAB_Handler()
   " If at end of line and clike langs get {}

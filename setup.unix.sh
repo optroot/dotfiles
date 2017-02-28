@@ -59,10 +59,14 @@ fi
 # Subsystem sftp /usr/lib/openssh/sftp-server
 # UsePAM yes
 
-
-if [ -s "~/.ssh/authorized_keys2" ]; then
-    # echo "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAhhrCQumubxL3af1c+jB5dE+6+tsfwfgni015N6yeG1A3ANDvwBAFa5X6trB6qDoXIkuixty+Vg5ZaODVqO7DRJ/+HnOxdY/42/u35k/yiwBPHQ9OyOmG0OV4pNQPqZTCHA0cnUbkF7uN1rChnCUbqXP3Qw3n6oT13PJKetJTLVVY50wQnJ+Z+kub5/2rAB/KrYCRJeQFblNCy6/ZwnAiNw3iRZkyk7DTwFLilu848/cfOja24l42L7Y46a9hEm1S0QxQhopu/ef+Ub6SW8XS0vSxNnGyPA51tG9JqewF0GzqQvKDBJXFQ/sQnp15Rx9Q7/UOkaWiK0+yQurxD5TkjQ== rsa-key-20150615" >> ~/.ssh/authorized_keys2
-    echo "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAhhrCQumubxL3af1c+jB5dE+6+tsfwfgni015N6yeG1A3ANDvwBAFa5X6trB6qDoXIkuixty+Vg5ZaODVqO7DRJ/+HnOxdY/42/u35k/yiwBPHQ9OyOmG0OV4pNQPqZTCHA0cnUbkF7uN1rChnCUbqXP3Qw3n6oT13PJKetJTLVVY50wQnJ+Z+kub5/2rAB/KrYCRJeQFblNCy6/ZwnAiNw3iRZkyk7DTwFLilu848/cfOja24l42L7Y46a9hEm1S0QxQhopu/ef+Ub6SW8XS0vSxNnGyPA51tG9JqewF0GzqQvKDBJXFQ/sQnp15Rx9Q7/UOkaWiK0+yQurxD5TkjQ== rsa-key-20150615" # >> ~/.ssh/authorized_keys2
+SSHKEY="ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAhhrCQumubxL3af1c+jB5dE+6+tsfwfgni015N6yeG1A3ANDvwBAFa5X6trB6qDoXIkuixty+Vg5ZaODVqO7DRJ/+HnOxdY/42/u35k/yiwBPHQ9OyOmG0OV4pNQPqZTCHA0cnUbkF7uN1rChnCUbqXP3Qw3n6oT13PJKetJTLVVY50wQnJ+Z+kub5/2rAB/KrYCRJeQFblNCy6/ZwnAiNw3iRZkyk7DTwFLilu848/cfOja24l42L7Y46a9hEm1S0QxQhopu/ef+Ub6SW8XS0vSxNnGyPA51tG9JqewF0GzqQvKDBJXFQ/sQnp15Rx9Q7/UOkaWiK0+yQurxD5TkjQ== rsa-key-20150615"
+keyfile="~/.ssh/authorized_keys2" 
+if [ -s "$keyfile" ]; then echo  "$SSHKEY" > "$keyfile" 
+    chmod 644 ~/.ssh/authorized_keys2 
+    echo 'mk ak' 
+elif cat "$keyfile" | grep "$SSHKEY" > /dev/null 2>&1; then 
+else 
+    echo "no ak" 
 fi
 
 $INSTALLER update
