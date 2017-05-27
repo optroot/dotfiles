@@ -1,7 +1,9 @@
 priority -50
 
 global !p
+
 import vim
+from snippet_helpers import *
 
 # Tests for the existence of a variable declared by Vim's filetype detection
 # suggesting the type of shell script of the current file
@@ -22,6 +24,11 @@ def getShell():
 	return "sh"
 endglobal
 
+snippet --- "Code divider (#)" b
+`!p snip.rv = divider(char'#')` ${1:Section Title}
+$0
+endsnippet
+
 ###########################################################################
 #                            TextMate Snippets                            #
 ###########################################################################
@@ -30,7 +37,7 @@ snippet #!
 `!p snip.rv = '#!/bin/' + getShell() + "\n\n" `
 endsnippet
 
-snippet cd. "Change to script directory" b
+snippet cd "Change to script directory" b
 cd "$(dirname "\$0")"
 $0
 endsnippet
@@ -42,9 +49,6 @@ endsnippet
 snippet &> "Redirect all to void"
 > /dev/null 2>&1 $0
 endsnippet
-
-
-
 
 snippet !env "#!/usr/bin/env (!env)"
 `!p snip.rv = '#!/usr/bin/env ' + getShell() + "\n\n" `

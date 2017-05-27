@@ -1,0 +1,73 @@
+
+[style]
+
+align_closing_bracket_with_visual_indent = true
+allow_multiline_lambdas = false
+allow_multiline_dictionary_keys = true
+blank_line_before_nested_class_or_def = false
+blank_line_before_class_docstring = false
+coalesce_brackets = true
+column_limit = 160
+continuation_indent_width = 4
+dedent_closing_brackets = true
+each_dict_entry_on_separate_line = true
+indent_dictionary_value = true
+indent_width = 4
+join_multiple_lines = true
+spaces_around_power_operator = false
+spaces_around_default_or_named_assign = false
+spaces_before_comment = 1
+space_between_ending_comma_and_closing_bracket = true
+split_arguments_when_comma_terminated = true
+split_before_bitwise_operator = false
+split_before_dict_set_generator = true
+split_before_first_argument = true
+split_before_logical_operator = false
+split_before_named_assigns = true
+split_penalty_after_opening_bracket = 30
+split_penalty_after_unary_operator = 10000
+split_penalty_before_if_expr = 0
+split_penalty_bitwise_operator = 300
+split_penalty_excess_character = 4500
+split_penalty_for_added_line_split = 30
+split_penalty_import_names = 0
+split_penalty_logical_operator = 300
+use_tabs = false
+
+# Comparison
+#
+# My Configuration                               | This    | PEP8    | Google  | Chrome  | Facebook|
+#                                                +---------+---------+---------+---------+---------+
+# align_closing_bracket_with_visual_indent       |  true   |  true   | *false  | *false  | *false  | 
+# allow_multiline_lambdas                        |  false  |  false  |  false  |  false  |  false  | 
+# allow_multiline_dictionary_keys                |  true   | *false  | *false  |  true   | *false  | 
+# blank_line_before_nested_class_or_def          |  false  |  false  | *true   | *true   |  false  | 
+# blank_line_before_class_docstring              |  false  |  false  |  false  |  false  |  false  | 
+# coalesce_brackets                              |  true   | *false  | *false  | *false  | *false  | 
+# column_limit                                   |  160    | *79     | *80     | *80     | *80     | 
+# continuation_indent_width                      |  4      |  4      |  4      |  4      |  4      | 
+# dedent_closing_brackets                        |  true   | *false  | *false  | *false  |  true   | 
+# each_dict_entry_on_separate_line               |  true   |  true   |  true   |  true   |  true   | 
+# indent_dictionary_value                        |  true   | *false  | *false  |  true   | *false  | 
+# indent_width                                   |  4      |  4      |  4      | *2      |  4      | 
+# join_multiple_lines                            |  true   |  true   |  true   | *false  | *false  | 
+# space_between_ending_comma_and_closing_bracket |  true   |  true   | *false  | *false  |  true   | 
+# spaces_around_power_operator                   |  false  |  false  |  false  |  false  |  false  | 
+# spaces_around_default_or_named_assign          |  false  |  false  |  false  |  false  |  false  | 
+# spaces_before_comment                          |  1      | *2      | *2      | *2      | *2      | 
+# split_arguments_when_comma_terminated          |  true   | *false  | *false  | *false  | *false  | 
+# split_before_bitwise_operator                  |  false  |  false  |  false  | *true   |  false  | 
+# split_before_dict_set_generator                |  true   |  true   |  true   |  true   |  true   | 
+# split_before_first_argument                    |  false  |  false  |  false  |  false  |  false  | 
+# split_before_logical_operator                  |  false  |  false  |  false  |  false  |  false  | 
+# split_before_named_assigns                     |  true   |  true   |  true   |  true   |  true   | 
+# split_penalty_after_opening_bracket            |  30     |  30     |  30     |  30     | *0      | 
+# split_penalty_after_unary_operator             |  10000  |  10000  |  10000  |  10000  |  10000  | 
+# split_penalty_before_if_expr                   |  0      |  0      |  0      |  0      | *30     | 
+# split_penalty_bitwise_operator                 |  300    |  300    |  300    |  300    |  300    | 
+# split_penalty_excess_character                 |  4500   |  4500   |  4500   |  4500   |  4500   | 
+# split_penalty_for_added_line_split             |  30     |  30     |  30     |  30     |  30     | 
+# split_penalty_import_names                     |  0      |  0      |  0      |  0      |  0      | 
+# split_penalty_logical_operator                 |  300    |  300    |  300    |  300    |  300    | 
+# use_tabs                                       |  false  |  false  |  false  |  false  |  false  | 
+                                                            

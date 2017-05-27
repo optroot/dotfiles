@@ -1,0 +1,12 @@
+
+
+[pep8]
+
+# E226 = missing whitespace around arithmetic operator
+# E266 = too many leading ‘#’ for block comment
+# E301 = expected 1 blank lines found 0
+# E302 = expected 2 blank lines found 0
+
+ignore = E226,E266
+max-line-length = 160
+

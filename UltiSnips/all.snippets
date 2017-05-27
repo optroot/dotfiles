@@ -6,14 +6,48 @@
 # ~-55 so that other filetypes will still overwrite.
 priority -60
 
+# post_jump "create_row_placeholders(snip)"
+# snippet "tr(\d+)" "latex table row variable" br
+# `!p snip.rv = match.group(1)`
+# endsnippet
+
+# TODO 
+
+# options biwrtsmeA
+
+# b   Beginning of line
+# i   In-word expansion
+# w   Word boundary
+# r   Regular expression
+# t   Do not expand tabs
+# s   Remove whitespace immediately before the cursor
+# m   Trim all whitespaces from right side of snippet lines.
+# e   Context snippets
+# A   automatically
+
+# Only in markdown/gitcommit?
+
+# snippet date "Current Date"
+# `!p snip.rv = now('%Y-%m-%d')`
+# endsnippet
+
+# snippet today "Current Date (pretty)"
+# `!p snip.rv = now('%A %B %-d, %Y')`
+# endsnippet
+
+# snippet now "Current Time (pretty)"
+# `!p snip.rv = now('%A %B %-d, %Y @ %I:%M %p')`
+# endsnippet
+
+
 ##########################
 # LOREM IPSUM GENERATORS #
 ##########################
 snippet lorem "Lorem Ipsum - 50 Words" b
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
 tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
-vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
-no sea takimata sanctus est Lorem ipsum dolor sit amet.
+vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
+gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 endsnippet
 
 ##########################

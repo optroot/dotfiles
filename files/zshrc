@@ -66,15 +66,16 @@ setopt hist_reduce_blanks
 setopt hist_verify
 setopt inc_append_history
 setopt prompt_subst
-setopt share_history
+# setopt share_history
+setopt no_share_history
 # TODO bindkey set-local-history
 # OR use fc -RI with this off
 
 # TODO (C-s/C-q)
-# stty stop ''
-# stty start ''
-# stty -ixon
-# stty -ixoff
+stty stop ''
+stty start ''
+stty -ixon
+stty -ixoff
 unsetopt flowcontrol
 
 # Window Title
@@ -136,9 +137,14 @@ bindkey '^x ' no-magic-abbrev-expand
 bindkey -M isearch ' ' self-insert
 
 # TODO force C-u instead of C-c
+# bindkey '^C' "DONT PRESS THIS"
 
-# up arrow to history-search-backward
-bindkey '^R'      history-incremental-pattern-search-backward
+bindkey '^R'    history-incremental-pattern-search-backward
+bindkey '^B'    beginning-of-line
+bindkey '\e\e'  edit-command-line
+bindkey '^xe'   edit-command-line
+# bindkey '^k'   edit-command-line
+
 #bindkey 'OD' dirhistory_zle_dirhistory_back
 #bindkey 'OC' dirhistory_zle_dirhistory_future
 #bindkey '^ ' autosuggest-accept
@@ -175,6 +181,12 @@ alias thon='python'
 alias sl='ls'
 
 #TODO minimum size
-alias t='tree -tACaqshL 3 --dirsfirst --noreport --filelimit 20'
+# alias t='tree -tACaqshL 3 --dirsfirst --noreport --filelimit 20'
+# use -L N and --filelimit N to control
+alias t='tree -shF --du --dirsfirst --noreport -I node_module'
+alias ta='tree -shFa --du --dirsfirst --noreport -I ".git|node_modules"'
+
+# TODO check for conflicts in regular use
+alias ??='sudo apt-cache search'
 
 

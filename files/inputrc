@@ -1,7 +1,11 @@
 
-# Visual Helpers
+# Colors and Indicators
 set bell-style visible
 set blink-matching-paren on
+set colored-stats on
+set visible-stats off
+set mark-symlinked-directories on
+set colored-completion-prefix on
 
 # Completion
 set completion-ignore-case on
@@ -11,16 +15,31 @@ set page-completions off
 set completion-query-items 100
 set skip-completed-text on
 
-# Colors and Marking
-set colored-stats on
-set visible-stats off
-set mark-symlinked-directories on
-
-# UTF-8
+# Keyboard and UTF-8
 set input-meta on
 set meta-flag on
 set convert-meta off
 set output-meta on
+set enable-keypad on    
+# default
+set enable-meta-key on 
+
+
+
+# Experimental
+set echo-control-characters off
+set expand-tilde
+# set editing-mode emacs
+
+# "\C-x\C-r": re-read-init-file
+# "\e\e": edit-and-execute-command
+# "\C-x\C-e": edit-and-execute-command
+
+# "\X1B[27;5;9~": beginning-of-line
+# "\X1B[27;6;9~": end-of-line
+
+# "\C-b": backwards-kill-word
+# Control-b: backwards-kill-word
 
 # Use Alt/Meta + Delete to delete the preceding word
 #"\e[3;3~": kill-word

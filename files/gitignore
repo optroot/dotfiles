@@ -19,13 +19,17 @@
 *.out
 *.py[cod]
 *.so
+*.txt
 
 # Lock files
+.~*
 
 # Archives
 *.tgz
 *.tar.gz
 *.zip
+*_old
+*.bak
 
 # Media Files
 *.jpg
@@ -37,17 +41,23 @@ build/
 dist/
 lib/
 logs/
-node_modules/
 data/
-data_old/
+.credentials/
+
+# Library/Lang
+node_modules/
 
 # Editor Related Files
 .tags
 .eslintcache
+.tidy.conf
 
 # Local Storage
-.grunt
-.npm
+.grunt/
+.npm/
+.cache/
 
-# Project Specific Configuration
+# Project Specific
+
+
 
