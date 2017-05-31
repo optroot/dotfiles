@@ -1,18 +1,17 @@
 #! header
 
-
 global !p
 from snippet_helpers import *
 endglobal
 
 snippet --- "Code divider (#)" b
-`!p snip.rv = divider(char'#')` ${1:Section Title}
+`!p snip.rv = divider(char='#')` ${1:Section Title}
 $0
 endsnippet
 
 # TODO `which python2`
 snippet #! "Shebang header for python scripts" b
-#!/usr/bin/python
+#!/usr/bin/env python2
 $0
 endsnippet
 
@@ -26,19 +25,14 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 $0
 endsnippet
 
-snippet ifn "if name" b
-if __name__ == '__main__':
-
-	${1:${VISUAL:main()}}
+snippet usage "Print the scripts usage" b
+if len(sys.argv) <= 1:
+	sys.stderr.write("Usage: %s ..."%(sys.argv[0]))
+	sys.exit(2)
+$0
 endsnippet
 
-snippet name "if name" b
-if __name__ == '__main__':
-
-	${1:${VISUAL:main()}}
-endsnippet
-
-snippet ifname "if name" b
+snippet main "if name == main" b
 if __name__ == '__main__':
 
 	${1:${VISUAL:main()}}
@@ -47,6 +41,10 @@ endsnippet
 snippet for "for loop" b
 for ${1:item} in ${2:iterable}:
 	${3:${VISUAL:pass}}
+endsnippet
+
+snippet super "super init" b
+super(self.__class__, self)
 endsnippet
 
 snippet class "class with docstrings" b

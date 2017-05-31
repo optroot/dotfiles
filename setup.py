@@ -95,9 +95,9 @@ if __name__ == '__main__':
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
     optlist, args = getopt.getopt(sys.argv[1:], 'dvfyh:n:', [
-                                  'dryrun', 'verbose', 'home'])
+                                  'dryrun', 'dry-run', 'verbose', 'home'])
     for opt, arg in optlist:
-        if opt in ['-d', '--dryrun']:
+        if opt in ['-d', '--dryrun', '--dry-run']:
             settings['dryrun'] = True
             settings['verbose'] = True
         if opt in ['-v', '--verbose']:
@@ -135,9 +135,17 @@ if __name__ == '__main__':
     # don't run, leave to bash/zsh?
     # system('tic "files/xterm-256color-italic.terminfo"')
 
-    for src_file in glob.glob("files/*"):
-        name = os.path.basename(src_file)
+    # for src_file in glob.glob("files/*"):
+    for src_file in glob.glob("files/**/*")+glob.glob("files/*"):
+        # name = os.path.basename(src_file)
+        name = src_file[6:]
         dst_file = home('.' + name)
+        dst_dir = os.path.dirname(dst_file)
+
+        if os.path.isdir(src_file): continue
+
+        if not os.path.exists(dst_dir):
+            system('mkdir %s' % dst_dir)
 
         if not os.path.exists(dst_file):
             system('ln "%s" "%s"' % (src_file, dst_file))
