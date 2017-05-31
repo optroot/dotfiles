@@ -1848,6 +1848,8 @@ augroup END
 
 " ======================================================== EXPERIMENTAL
 
+vnoremap Y y
+
 " set cmdheight=2
 " set scrollbind
 
