@@ -92,7 +92,7 @@ $INSTALLER update
 
 $INSTALLER install build-essential libreadline-gplv2-dev libssl-dev libsqlite3-dev libgdbm-dev libc6-dev libbz2-dev ncurses-dev libncurses-dev libncursesw5-dev imagemagick 
 $INSTALLER install checkinstall curl git
-$INSTALLER install php5 ruby ruby-full python27 lua5.2 perl
+$INSTALLER install php5 python27 perl
 $INSTALLER install php5-mcrypt php5-mysql python-setuptools python-pip 
 $INSTALLER install apache2 mysql-server libapache2-mod-auth-mysql libapache2-mod-php5 
 
