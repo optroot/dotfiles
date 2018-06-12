@@ -1,3 +1,26 @@
+# # TODO
+# - fix copy/paste
+# - fix connecting to xterm device
+#
+# - add tmux ls to welcome message
+#
+# - remove tmux themes
+# - tmux C-g search with ack
+# - add linewise search
+# <!-- tmux update for truecolor -->
+#
+# - better reverse search, and up arrow
+# map various click actions to paste
+#
+# - USE ACKP (formatted ack output)
+# - USE ^U instead of ^C
+#
+# ## Commands
+#
+#     awesomeness of history (`man history`) + zle commands
+#     readline commands (`alt-t`, `alt-.`)
+#     cd -     # cd last directory
+#     cd -N    # cd nth-last directory
 
 # TODO consistent quoting
 
