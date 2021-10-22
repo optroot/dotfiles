@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bsh
 
 # TODO case/case for OS and whether we are root
 # Add ~/bin/ 
@@ -68,7 +68,9 @@ fi
 
 SSHKEY="ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAhhrCQumubxL3af1c+jB5dE+6+tsfwfgni015N6yeG1A3ANDvwBAFa5X6trB6qDoXIkuixty+Vg5ZaODVqO7DRJ/+HnOxdY/42/u35k/yiwBPHQ9OyOmG0OV4pNQPqZTCHA0cnUbkF7uN1rChnCUbqXP3Qw3n6oT13PJKetJTLVVY50wQnJ+Z+kub5/2rAB/KrYCRJeQFblNCy6/ZwnAiNw3iRZkyk7DTwFLilu848/cfOja24l42L7Y46a9hEm1S0QxQhopu/ef+Ub6SW8XS0vSxNnGyPA51tG9JqewF0GzqQvKDBJXFQ/sQnp15Rx9Q7/UOkaWiK0+yQurxD5TkjQ== rsa-key-20150615"
 
-"~/.ssh/authorized_keys2" 
+# "~/.ssh/authorized_keys2" 
+
+# TODO chown?
 
 if [ ! -d ~/.ssh ]; then
     mkdir ~/.ssh
@@ -83,7 +85,9 @@ fi
 if cat "~/.ssh/authorized_keys2" | grep "$SSHKEY" > /dev/null 2>&1; then 
     echo "ssh_key exists" 
 else 
-    echo "$SSHKEY" > ~/.ssh/authorized_keys2 
+    # TODO
+    echo "$SSHKEY" >> ~/.ssh/authorized_keys2 
+    # echo "$SSHKEY" > ~/.ssh/authorized_keys2 
 fi
 
 # TODO ask/confirm before each
@@ -103,7 +107,6 @@ $INSTALLER install apache2 mysql-server libapache2-mod-auth-mysql libapache2-mod
 # $INSTALLER install php5-mcrypt php5-mysql python-setuptools python-pip 
 # $INSTALLER install apache2 mysql-server libapache2-mod-auth-mysql libapache2-mod-php5 
 # $INSTALLER install exuberant-ctags astyle autopep8 
-
 
 # Libraries
 # $INSTALLER install build-essential libreadline-gplv2-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev ncurses-dev libncurses-dev libncursesw5-dev imagemagick 
