@@ -59,7 +59,23 @@ require("lazy").setup({
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
   { "rebelot/kanagawa.nvim", priority = 1000 },
 
-  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate", config = true },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = {
+          "lua", "vim", "vimdoc", "python", "rust", "go",
+          "javascript", "typescript", "html", "css", "json",
+          "yaml", "toml", "markdown", "markdown_inline", "bash",
+          "dockerfile", "sql", "gitignore", "regex",
+        },
+        auto_install = true,
+        highlight = { enable = true },
+        indent = { enable = true },
+      })
+    end,
+  },
 
   { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
   { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
@@ -93,7 +109,7 @@ require("lazy").setup({
 
   { "kylechui/nvim-surround", config = true },
 
-  { "neorg/neorg", config = true },
+  { "nvim-neorg/neorg", build = "make", config = true },
   { "vimwiki/vimwiki" },
 
   { "mbbill/undotree" },
@@ -203,7 +219,7 @@ local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 local lsp_servers = {
   "pyright",
-  "ruff_lsp",
+  "ruff",
   "ts_ls",
   "eslint",
   "lua_ls",
@@ -221,10 +237,21 @@ local lsp_servers = {
   "vimls",
 }
 
+require("mason").setup()
+require("mason-lspconfig").setup({
+  ensure_installed = lsp_servers,
+  automatic_installation = true,
+})
+
 for _, server in ipairs(lsp_servers) do
-  lspconfig[server].setup({
-    capabilities = capabilities,
-  })
+  local ok, _ = pcall(function()
+    lspconfig[server].setup({
+      capabilities = capabilities,
+    })
+  end)
+  if not ok then
+    vim.notify("LSP server '" .. server .. "' not available", vim.log.levels.WARN)
+  end
 end
 
 vim.api.nvim_create_autocmd("LspAttach", {
