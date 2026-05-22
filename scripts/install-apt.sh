@@ -25,7 +25,7 @@ sudo apt-get install -y -qq \
   fzf \
   jq \
   pkg-config \
-  task \
+  taskwarrior \
   vivid \
   libssl-dev \
   libreadline-dev \
