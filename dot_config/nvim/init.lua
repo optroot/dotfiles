@@ -55,6 +55,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
+  rocks = { enabled = false },
   { "folke/tokyonight.nvim", priority = 1000 },
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
   { "rebelot/kanagawa.nvim", priority = 1000 },
@@ -63,7 +64,7 @@ require("lazy").setup({
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     config = function()
-      require("nvim-treesitter.configs").setup({
+      require("nvim-treesitter.config").setup({
         ensure_installed = {
           "lua", "vim", "vimdoc", "python", "rust", "go",
           "javascript", "typescript", "html", "css", "json",
@@ -109,7 +110,6 @@ require("lazy").setup({
 
   { "kylechui/nvim-surround", config = true },
 
-  { "nvim-neorg/neorg", build = "make", config = true },
   { "vimwiki/vimwiki" },
 
   { "mbbill/undotree" },
@@ -168,19 +168,6 @@ require("noice").setup({
 require("Comment").setup()
 require("nvim-autopairs").setup()
 require("nvim-surround").setup()
-
-require("neorg").setup({
-  load = {
-    ["core.defaults"] = {},
-    ["core.concealer"] = {},
-    ["core.dirman"] = {
-      config = {
-        workspaces = { notes = "~/notes" },
-        default_workspace = "notes",
-      },
-    },
-  },
-})
 
 local cmp = require("cmp")
 cmp.setup({
