@@ -1,0 +1,3 @@
+#!/bin/bash
+# Quick weather info
+curl -s "wttr.in/${1:-}" | head -7

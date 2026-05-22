@@ -1,0 +1,25 @@
+[user]
+  name = Brendan Op't Root
+  email = optroot@optroot.com
+
+[core]
+  editor = nvim
+  pager = delta
+  excludesfile = ~/.gitignore
+
+[init]
+  defaultBranch = main
+
+[push]
+  default = current
+
+[fetch]
+  prune = true
+
+[delta]
+  features = decorations
+  line-numbers = true
+  side-by-side = false
+
+[interactive]
+  diffFilter = delta --color-only

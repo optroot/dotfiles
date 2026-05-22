@@ -1,0 +1,6 @@
+--theme=Catppuccin-mocha
+--style=numbers,changes
+--pager=less -FR
+--map-syntax=.build:Makefile
+--map-syntax=*.tf:HCL
+--map-syntax=*.tfvars:HCL

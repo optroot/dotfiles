@@ -1,0 +1,8 @@
+#!/bin/bash
+# Fuzzy-find projects and create/attach tmux session
+selected=$(find ~/projects -mindepth 2 -maxdepth 2 -type d | fzf)
+if [ -z "$selected" ]; then
+  exit 0
+fi
+name=$(basename "$selected" | tr . _)
+tmux new-session -A -s "$name" -c "$selected"

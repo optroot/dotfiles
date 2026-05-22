@@ -1,0 +1,53 @@
+% workflow
+
+# Open project directory
+p <project-name>
+
+# Quick project switch with fzf
+p
+
+# List all projects
+p -l
+
+# Git commit
+gc <message>
+
+# Git checkout branch
+gco <branch>
+
+# Open nvim here
+v
+
+# Open nvim on file
+v <file>
+
+# Open terminal file manager
+nvim .
+
+# Tree view of directory
+t
+
+# Tree view including hidden
+ta
+
+# Search files (fd/find replacement)
+fd <pattern>
+
+# Search code (ripgrep/grep replacement)
+rg <pattern>
+
+# View file with syntax highlighting (bat/cat replacement)
+bat <file>
+
+# FZF search
+<C-t>   # files
+<C-r>   # history
+**<TAB> # path completion
+
+# Zoxide (smart cd)
+z <dir>
+z <partial-path>
+zi    # interactive
+
+# Git diff with delta
+git diff

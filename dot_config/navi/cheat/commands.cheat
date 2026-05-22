@@ -1,0 +1,90 @@
+% commands
+
+# Find large files
+dust
+
+# View markdown files
+glow README.md
+
+# Monitor system
+htop
+
+# Uptime
+uptime
+
+# Disk usage
+df -h
+
+# Disk usage by directory
+du -sh */
+
+# Search apt packages
+?? <search>
+
+# SSH key management
+ssh-keygen -t ed25519 -C "optroot@optroot.com"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+
+# Python venv with uv
+uv venv
+source .venv/bin/activate
+uv pip install -r requirements.txt
+uv add <package>
+
+# Python run script
+uv run <script.py>
+
+# Node with fnm
+fnm install <version>
+fnm use <version>
+fnm default <version>
+
+# Terraform
+terraform init
+terraform plan
+terraform apply
+terraform destroy
+
+# Docker
+docker compose up -d
+docker compose down
+docker ps
+docker logs -f <container>
+
+# AWS
+aws s3 ls
+aws sts get-caller-identity
+cdk synth
+cdk deploy
+cdk destroy
+
+# Taskwarrior
+task add <description> project:<name>
+task list
+task done <id>
+task project:<name> list
+
+# Navi (this)
+navi
+
+# Tmux
+tm new -s <name>
+tm ls
+tm attach -t <name>
+
+# Zellij
+zj
+zj ls
+zj attach <name>
+
+# Neovim LSP keymaps
+gd    # go to definition
+gr    # find references
+K     # hover documentation
+<leader>rn   # rename symbol
+<leader>ca   # code action
+<leader>ff   # find files
+<leader>fg   # live grep
+<leader>fb   # buffers
+<leader>f    # format

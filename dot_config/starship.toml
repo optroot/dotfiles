@@ -1,0 +1,46 @@
+format = """
+[](#9A348E)\
+$directory\
+$git_branch\
+$git_status\
+$python\
+$nodejs\
+$cmd_duration\
+$fill\
+[](#9A348E)\
+$line_break\
+$character"""
+
+[directory]
+truncation_length = 3
+style = "bold #9A348E"
+
+[git_branch]
+style = "bold purple"
+format = " [$symbol$branch]($style)"
+symbol = "\U000f0a1b "
+
+[git_status]
+style = "bold green"
+format = "\[$all_status$ahead_behind\]"
+
+[python]
+symbol = "\U000f0359 "
+style = "bold yellow"
+format = " [$symbol$version]($style)"
+
+[nodejs]
+symbol = "\U000f1003 "
+style = "bold green"
+format = " [$symbol$version]($style)"
+
+[cmd_duration]
+style = "yellow"
+format = " took [$duration]($style)"
+
+[fill]
+symbol = "\u2800"
+
+[character]
+success_symbol = "[>](bold #9A348E)"
+error_symbol = "[>](bold red)"

@@ -1,0 +1,153 @@
+scriptencoding utf-8
+set nocompatible
+
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent! execute '!mkdir -p ~/.vim/undo'
+  silent! execute '!mkdir -p ~/.vim/view'
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'wellle/targets.vim'
+Plug 'tomtom/tcomment_vim'
+Plug 'tommcdo/vim-exchange'
+Plug 'godlygeek/tabular'
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-repeat'
+Plug 'mbbill/undotree'
+Plug 'scrooloose/nerdtree'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'ryanoasis/vim-devicons'
+Plug 'eapache/rainbow_parentheses.vim'
+Plug 'morhetz/gruvbox'
+Plug 'machakann/vim-highlightedyank'
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'preservim/tagbar'
+Plug 'kshenoy/vim-signature'
+Plug 'Yggdroot/indentLine'
+Plug 'mattn/emmet-vim',          {'for': ['html', 'xml', 'php', 'markdown', 'css', 'less']}
+Plug 'chrisbra/Colorizer',       {'for': ['vim', 'html', 'css', 'scss', 'sass', 'less']}
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'tmux-plugins/vim-tmux-focus-events'
+
+call plug#end()
+
+filetype plugin indent on
+syntax enable
+
+set autoindent
+set autoread
+set backspace=indent,eol,start
+set encoding=utf-8
+set hidden
+set ignorecase smartcase
+set history=1000
+set showcmd laststatus=2
+let &showbreak="\u21aa "
+let &listchars="tab:\u25b8 ,precedes:\u2039,extends:\u203a"
+set noerrorbells visualbell
+set number
+set noshowmatch
+set pastetoggle=<F2>
+set scrolloff=8 sidescrolloff=8
+set cmdheight=1
+set sessionoptions-=options
+set showmode showcmd
+set virtualedit=all
+set shortmess=filmnrwxaoOstTWAIcqF
+set timeout timeoutlen=1000 ttimeoutlen=0 updatetime=4000
+set mouse=cnv
+
+let g:airline_theme='gruvbox'
+let g:airline_powerline_fonts=1
+let g:airline#extensions#tabline#enabled=1
+let g:airline#extensions#whitespace#enabled=0
+
+let g:rbpt_colorpairs = [
+      \ ['167', '#fb4934'],
+      \ ['208', '#fe8019'],
+      \ ['214', '#fabd2f'],
+      \ ['142', '#b8bb26'],
+      \ ['66',  '#83a598'],
+      \ ['175', '#d3869b'],
+      \ ]
+let g:rbpt_max = 12
+
+let g:tcomment_maps=1
+let g:tcomment_mapleader1='<C-_>'
+let g:tcomment_mapleader2=''
+let g:tcomment_opleader1='gc'
+
+let g:NERDTreeShowHidden=1
+let g:NERDTreeIgnore=['\.pyc$','^.git$']
+let g:NERDTreeFileExtensionHighlightFullName = 1
+let g:NERDTreeExactMatchHighlightFullName = 1
+let g:NERDTreePatternMatchHighlightFullName = 1
+let g:WebDevIconsUnicodeDecorateFolderNodes=1
+
+let g:gitgutter_max_signs=999
+let g:gitgutter_map_keys=0
+
+set noswapfile
+set undodir=~/.vim/undo
+set undofile
+set viewdir=~/.vim/view
+
+set wildignorecase
+set wildignore+=*/.git/*,*/.svn/*,*.o,*.pyc,*~,*.so,*.swp,*.zip,*.tar,*.tar.gz,
+set wildmenu
+set wildmode=longest:full,full
+
+set textwidth=0 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+set smartindent smarttab
+set cindent
+set cinoptions=(0,u0,j1,J1
+set nowrap
+set title
+
+let g:gruvbox_italic=1
+let g:gruvbox_contrast_dark='hard'
+let g:gruvbox_sign_column='bg0'
+let g:gruvbox_invert_selection=0
+set background=dark
+set termguicolors
+set t_ut=
+colorscheme gruvbox
+
+set cursorline
+
+augroup LanguageOptions
+  autocmd!
+  autocmd FileType javascript,json,css,less,html,vim setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+  autocmd FileType Makefile                          setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
+  autocmd FileType html,markdown,css,less setlocal wrap
+  autocmd FileType help nnoremap <buffer> <CR> <C-]>
+  autocmd FileType help nnoremap <buffer> <BS> <C-t>
+  autocmd FileType vim nnoremap <buffer> <silent> K :execute ':help '.expand('<cword>')<CR>
+augroup END
+
+noremap  \\   :NERDTreeToggle<CR>
+noremap  \n   :NERDTreeToggle<CR>
+noremap  \t   :TagbarToggle<CR>
+inoremap <C-u> <C-g>u<C-u>
+inoremap <C-c> <C-[>
+xnoremap <silent> . :norm .<CR>
+nnoremap <silent> j gj
+nnoremap <silent> k gk
+vnoremap Y y
+vnoremap <C-a> g<C-a>
+vnoremap <C-x> g<C-x>
+
+let g:mapleader=' '
+nnoremap <leader>s2  :setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab<CR>
+nnoremap <leader>s4  :setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab<CR>
+nnoremap <leader>t4  :setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab<CR>

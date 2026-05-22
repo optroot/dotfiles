@@ -1,0 +1,53 @@
+if command -v zsh >/dev/null 2>&1; then
+  exec zsh
+fi
+
+case $- in
+  *i*) ;;
+  *) return;;
+esac
+
+HISTCONTROL=ignoreboth:erasedups
+HISTIGNORE=$HISTIGNORE:"history*:exit:clear"
+shopt -s histappend
+HISTSIZE=10000
+HISTFILESIZE=20000
+shopt -s checkwinsize
+
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+  debian_chroot=$(cat /etc/debian_chroot)
+fi
+
+if [ -x /usr/bin/dircolors ]; then
+  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+  alias ls='ls -h --color=auto'
+  alias dir='dir --color=auto'
+  alias vdir='vdir --color=auto'
+  alias grep='grep --color=auto'
+  alias fgrep='fgrep --color=auto'
+  alias egrep='egrep --color=auto'
+fi
+
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+alias :e='nvim'
+alias :q=''
+alias vi='nvim'
+alias vim='nvim'
+alias sl='ls -CF'
+alias tmux='tmux -u2'
+alias ack='ack-grep'
+alias thon='python'
+
+stty stop ''
+stty start ''
+stty -ixon
+stty -ixoff

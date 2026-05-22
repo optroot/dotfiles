@@ -1,0 +1,119 @@
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt bang_hist
+setopt complete_in_word
+setopt extended_glob
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
+setopt hist_reduce_blanks
+setopt hist_verify
+setopt inc_append_history
+setopt prompt_subst
+setopt no_share_history
+
+stty stop ''
+stty start ''
+stty -ixon
+stty -ixoff
+unsetopt flowcontrol
+
+if [[ -z "$ZINIT" ]] && [[ -f ~/.local/share/zinit/zinit.git/zinit.zsh ]]; then
+  ZINIT_HOME=~/.local/share/zinit
+  source "$ZINIT_HOME/zinit.git/zinit.zsh"
+
+  zinit light zsh-users/zsh-autosuggestions
+  zinit light zsh-users/zsh-completions
+  zinit light zsh-users/zsh-history-substring-search
+  zinit light zdharma-continuum/fast-syntax-highlighting
+  zinit light MichaelAquilina/zsh-you-should-use
+
+  autoload -U compinit && compinit
+fi
+
+eval "$(dircolors ~/.dircolors 2>/dev/null || dircolors -b)"
+
+zstyle ':completion:*' menu select=2
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+
+typeset -Ag abbreviations
+abbreviations=(
+"..."    "../.."
+"...."   "../../.."
+"w"      "watch "
+"lw"     "| wc"
+"lx"     "| xargs"
+"ll"     "| less"
+"lg"     "| grep"
+"tx"     "tar zxvf"
+"tc"     "tar zcvf"
+"gco"    "git checkout"
+"gc"     "git commit -m"
+"gl"     "git ls-tree --name-only -r HEAD"
+)
+
+magic-abbrev-expand() {
+  local MATCH
+  LBUFFER=${LBUFFER%%(#m)[_a-zA-Z0-9]#}
+  LBUFFER+=${abbreviations[$MATCH]:-$MATCH}
+  zle self-insert
+}
+
+no-magic-abbrev-expand() {
+  LBUFFER+=' '
+}
+
+zle -N magic-abbrev-expand
+zle -N no-magic-abbrev-expand
+
+bindkey -e
+bindkey ' ' magic-abbrev-expand
+bindkey '^x ' no-magic-abbrev-expand
+bindkey -M isearch ' ' self-insert
+
+bindkey '^R'    history-incremental-pattern-search-backward
+bindkey '^B'    beginning-of-line
+bindkey '\e\e'  edit-command-line
+bindkey '^xe'   edit-command-line
+
+bindkey '^[[A'  history-substring-search-up
+bindkey '^[[B'  history-substring-search-down
+
+alias p=' . project -za'
+alias project='. project'
+alias ack='ack-grep'
+alias tmux='tmux -u2'
+alias tm='tmux -u2'
+alias zj='zellij'
+alias vi='nvim'
+alias v='nvim'
+alias sl='ls'
+alias todo='task'
+alias notes='nvim ~/README.md'
+
+alias :e='nvim'
+alias :q=''
+alias thon='python'
+
+alias t='tree -shF --du --dirsfirst --noreport -I node_modules'
+alias ta='tree -shFa --du --dirsfirst --noreport -I ".git|node_modules"'
+alias ??='sudo apt-cache search'
+
+alias ls='eza --icons'
+alias lt='eza --icons --tree'
+alias cat='bat'
+alias grep='rg'
+alias find='fd'
+alias cd='z'
+alias diff='delta'
+
+if command -v navi >/dev/null 2>&1; then
+  eval "$(navi widget zsh)"
+fi
+
+case "$TERM" in
+  xterm-256color) export TERM=xterm-256color-italic ;;
+esac
+
+history -a
+history -n

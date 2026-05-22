@@ -1,0 +1,72 @@
+theme "catppuccin-mocha"
+
+pane_frames {
+  hide_frame_for_single_pane true
+  rounded_corners true
+}
+
+keybinds {
+    normal {
+        bind "Alt n" { NewPane "Down"; }
+        bind "Alt p" { NewPane "Right"; }
+        bind "Alt w" { CloseFocus; }
+        bind "Alt h" { MoveFocus "Left"; }
+        bind "Alt l" { MoveFocus "Right"; }
+        bind "Alt k" { MoveFocus "Up"; }
+        bind "Alt j" { MoveFocus "Down"; }
+        bind "Alt 1" { GoToTab 1; }
+        bind "Alt 2" { GoToTab 2; }
+        bind "Alt 3" { GoToTab 3; }
+        bind "Alt 4" { GoToTab 4; }
+        bind "Alt 5" { GoToTab 5; }
+        bind "Alt 6" { GoToTab 6; }
+        bind "Alt 7" { GoToTab 7; }
+        bind "Alt 8" { GoToTab 8; }
+        bind "Alt 9" { GoToTab 9; }
+        bind "Alt t" { NewTab; }
+        bind "Alt c" { SwitchTabFocus; }
+        bind "Alt s" { ToggleFocusFullscreen; }
+        bind "Alt z" { TogglePaneFrames; }
+        bind "Alt ." { EditScrollback; }
+        bind "Alt r" { "Resize": "IncreaseLeft"; }
+        bind "Alt R" { "Resize": "IncreaseRight"; }
+    }
+    locked {
+        bind "Alt g" { SwitchToMode "Normal"; }
+    }
+    resize {
+        bind "h" { "Resize": "IncreaseLeft"; }
+        bind "l" { "Resize": "IncreaseRight"; }
+        bind "k" { "Resize": "IncreaseUp"; }
+        bind "j" { "Resize": "IncreaseDown"; }
+        bind "Alt g" { SwitchToMode "Normal"; }
+    }
+    pane {
+        bind "h" { MoveFocus "Left"; }
+        bind "l" { MoveFocus "Right"; }
+        bind "k" { MoveFocus "Up"; }
+        bind "j" { MoveFocus "Down"; }
+        bind "Alt g" { SwitchToMode "Normal"; }
+    }
+    move {
+        bind "h" { MovePane "Left"; }
+        bind "l" { MovePane "Right"; }
+        bind "k" { MovePane "Up"; }
+        bind "j" { MovePane "Down"; }
+        bind "Alt g" { SwitchToMode "Normal"; }
+    }
+    scroll {
+        bind "Alt g" { SwitchToMode "Normal"; }
+    }
+    tab {
+        bind "h" { GoToPreviousTab; }
+        bind "l" { GoToNextTab; }
+        bind "Alt g" { SwitchToMode "Normal"; }
+    }
+}
+
+plugins {
+    tab_bar location="bottom"
+    status_bar location="bottom"
+    compact_bar location="bottom"
+}
