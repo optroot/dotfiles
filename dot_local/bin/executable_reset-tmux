@@ -1,6 +1,8 @@
-# First remove *all* keybindings
+#!/bin/bash
+# Reset tmux keybindings to defaults (removes custom bindings first).
+set -euo pipefail
+
 unbind-key -a
-# Now reinsert all the regular tmux keys
 bind-key C-b send-prefix
 bind-key C-o rotate-window
 bind-key C-z suspend-client
