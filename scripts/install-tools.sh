@@ -57,6 +57,11 @@ if [ ! -d "$TMUX_TPM_DIR" ]; then
 fi
 "$TMUX_TPM_DIR/bin/install_plugins" 2>/dev/null || true
 
+if command -v vivid &>/dev/null; then
+  info "Generating dircolors with vivid (catppuccin-mocha)..."
+  vivid generate catppuccin-mocha > "$HOME/.dircolors" 2>/dev/null || true
+fi
+
 if command -v uv &>/dev/null; then
   info "Installing Python tools via uv..."
   uv tool install ruff 2>/dev/null || true

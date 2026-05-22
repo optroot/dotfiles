@@ -25,6 +25,8 @@ sudo apt-get install -y -qq \
   fzf \
   jq \
   pkg-config \
+  task \
+  vivid \
   libssl-dev \
   libreadline-dev \
   libsqlite3-dev \
