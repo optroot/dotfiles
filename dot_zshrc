@@ -31,7 +31,7 @@ if [[ -z "$ZINIT" ]] && [[ -f ~/.local/share/zinit/zinit.git/zinit.zsh ]]; then
   autoload -U compinit && compinit
 fi
 
-eval "$(dircolors ~/.dircolors 2>/dev/null || dircolors -b)"
+eval "$(vivid generate catppuccin-mocha 2>/dev/null || dircolors -b)"
 
 zstyle ':completion:*' menu select=2
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
