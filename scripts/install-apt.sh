@@ -32,12 +32,11 @@ sudo apt-get install -y -qq \
   libsqlite3-dev \
   libbz2-dev \
   libncurses-dev \
+  lua5.1 \
+  luarocks \
   xclip \
   xsel
 
-info "Adding Neovim PPA..."
-sudo add-apt-repository -y ppa:neovim-ppa/unstable 2>/dev/null || true
-sudo apt-get install -y -qq neovim
 
 if [ ! -d ~/.local/share/zinit/zinit.git ]; then
   info "Installing zinit..."
@@ -78,9 +77,6 @@ info "Installing du-dust..."
 wget -q "https://github.com/bootandy/dust/releases/latest/download/dust-x86_64-unknown-linux-gnu.tar.gz" -O /tmp/dust.tar.gz
 sudo tar -xzf /tmp/dust.tar.gz -C /usr/local/bin dust 2>/dev/null || true
 rm -f /tmp/dust.tar.gz
-
-info "Installing taskwarrior..."
-sudo apt-get install -y -qq task
 
 info "Installing navi..."
 wget -q "https://github.com/denisidoro/navi/releases/latest/download/navi-x86_64-unknown-linux-gnu.tar.gz" -O /tmp/navi.tar.gz

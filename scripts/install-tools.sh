@@ -57,9 +57,14 @@ if [ ! -d "$TMUX_TPM_DIR" ]; then
 fi
 "$TMUX_TPM_DIR/bin/install_plugins" 2>/dev/null || true
 
-if command -v vivid &>/dev/null; then
-  info "Generating dircolors with vivid (catppuccin-mocha)..."
-  vivid generate catppuccin-mocha > "$HOME/.dircolors" 2>/dev/null || true
+if ! command -v nvim &>/dev/null || [ "$(nvim --version 2>&1 | head -1 | cut -d' ' -f2 | cut -d'.' -f2)" -lt 10 ]; then
+  info "Installing Neovim >= 0.10..."
+  curl -sL "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz" -o /tmp/nvim.tar.gz
+  tar xzf /tmp/nvim.tar.gz -C /tmp
+  mkdir -p "$HOME/.local/neovim"
+  cp -r /tmp/nvim-linux-x86_64/* "$HOME/.local/neovim/"
+  ln -sf "$HOME/.local/neovim/bin/nvim" "$HOME/.local/bin/nvim"
+  rm -rf /tmp/nvim.tar.gz /tmp/nvim-linux-x86_64
 fi
 
 if command -v uv &>/dev/null; then
