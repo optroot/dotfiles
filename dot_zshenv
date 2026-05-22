@@ -3,6 +3,7 @@ export VISUAL=nvim
 export PAGER=less
 export MANPAGER="/bin/sh -c \"col -b | nvim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 export MANPATH="/usr/local/man:$MANPATH"
+module_path=($HOME/.local/lib/zsh $module_path)
 export GOPATH=$HOME
 export GOHOME=$HOME
 export ARCHFLAGS="-arch x86_64"
@@ -13,6 +14,6 @@ export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
 export NVM_DIR="$HOME/.nvm"
 export ZSH="$HOME/.oh-my-zsh"
 
-export PATH="$HOME/.local/bin:$HOME/bin:/usr/local/bin:$PATH"
-eval "$(fnm env --use-on-cd --shell zsh)" 2>/dev/null
-eval "$(uv generate-shell-completion zsh)" 2>/dev/null
+export PATH="$HOME/.local/bin:$HOME/.local/share/fnm:$HOME/bin:/usr/local/bin:$PATH"
+command -v fnm &>/dev/null && eval "$(fnm env --use-on-cd --shell zsh)"
+command -v uv &>/dev/null && eval "$(uv generate-shell-completion zsh)"
